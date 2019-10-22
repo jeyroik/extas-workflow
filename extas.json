@@ -1,0 +1,75 @@
+{
+  "name": "extas/workflow",
+  "schemas": [
+    {
+      "name": "demo",
+      "title": "",
+      "description": "",
+      "states": ["todo", "in_work", "done", "not_actual"],
+      "transitions": ["get_in_work", "done", "not_actual"],
+      "parameters": [
+        {
+          "name": "author",
+          "value": "jeyroik"
+        },
+        {
+          "name": "created_at",
+          "value": 123456789
+        },
+        {
+          "name": "updated_at",
+          "value": 123546789
+        }
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "name": "get_in_work",
+      "title": "",
+      "description": "",
+      "state_from": "todo",
+      "state_to": "in_work"
+    },
+    {
+      "name": "done",
+      "title": "",
+      "description": "",
+      "state_from": "in_work",
+      "state_to": "done"
+    },
+    {
+      "name": "not_actual",
+      "title": "",
+      "description": "",
+      "state_from": "*",
+      "state_to": "not_actual"
+    }
+  ],
+  "states": [
+    {
+      "name": "todo",
+      "title": "",
+      "description": "",
+      "parameters": []
+    },
+    {
+      "name": "in_work",
+      "title": "",
+      "description": "",
+      "parameters": []
+    },
+    {
+      "name": "done",
+      "title": "",
+      "description": "",
+      "parameters": []
+    },
+    {
+      "name": "not_actual",
+      "title": "",
+      "description": "",
+      "parameters": []
+    }
+  ]
+}
