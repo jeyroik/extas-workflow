@@ -8,6 +8,12 @@ use extas\interfaces\workflows\IWorkflow;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\states\IWorkflowState;
 
+/**
+ * Class Workflow
+ *
+ * @package extas\components\workflows
+ * @author jeyroik@gmail.com
+ */
 class Workflow extends Item implements IWorkflow
 {
     /**
@@ -30,16 +36,22 @@ class Workflow extends Item implements IWorkflow
         if ($bySchema->canTransit($entity->getStateName(), $toState)) {
             $toState = $toState instanceof IWorkflowState ? $toState->getName() : (string) $toState;
             $transition = $bySchema->getTransition($entity->getStateName(), $toState);
+
             $stage = 'workflow.transition';
             foreach ($static->getPluginsByStage($stage) as $plugin) {
                 $plugin($entity, $toState, $transition, $bySchema, $withContext);
             }
 
-            $stage = 'workflow.from.' . $entity->getStateName() . '.to.' . $toState;
+            $stage = 'workflow.from.' . $entity->getStateName();
             foreach ($static->getPluginsByStage($stage) as $plugin) {
                 $plugin($entity, $toState, $transition, $bySchema, $withContext);
             }
-            
+
+            $stage = 'workflow.to.' . $toState;
+            foreach ($static->getPluginsByStage($stage) as $plugin) {
+                $plugin($entity, $toState, $transition, $bySchema, $withContext);
+            }
+
             $stage = 'workflow.' . $transition->getName();
             foreach ($static->getPluginsByStage($stage) as $plugin) {
                 $plugin($entity, $toState, $transition, $bySchema, $withContext);

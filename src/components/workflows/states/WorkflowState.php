@@ -13,7 +13,7 @@ use extas\interfaces\workflows\states\IWorkflowState;
  * @package extas\components\states
  * @author jeyroik@gmail.com
  */
-class State extends Item implements IWorkflowState
+class WorkflowState extends Item implements IWorkflowState
 {
     use THasName;
     use THasDescription;

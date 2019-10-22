@@ -1,6 +1,34 @@
 {
   "name": "extas/workflow",
-  "schemas": [
+  "package_classes": [
+    {
+      "interfaces": "extas\\interfaces\\workflows\\schemas\\IWorkflowSchemaRepository",
+      "class": "extas\\components\\workflows\\schemas\\WorkflowSchemaRepository"
+    },
+    {
+      "interfaces": "extas\\interfaces\\workflows\\transitions\\IWorkflowTransitionRepository",
+      "class": "extas\\components\\workflows\\transitions\\WorkflowTransitionRepository"
+    },
+    {
+      "interfaces": "extas\\interfaces\\workflows\\states\\IWorkflowStateRepository",
+      "class": "extas\\components\\workflows\\states\\WorkflowStateRepository"
+    }
+  ],
+  "plugins": [
+    {
+      "class": "extas\\components\\plugins\\PluginInstallWorkflowSchemas",
+      "stage": "extas.install"
+    },
+    {
+      "class": "extas\\components\\plugins\\PluginInstallWorkflowTransitions",
+      "stage": "extas.install"
+    },
+    {
+      "class": "extas\\components\\plugins\\PluginInstallWorkflowStates",
+      "stage": "extas.install"
+    }
+  ],
+  "workflow_schemas": [
     {
       "name": "demo",
       "title": "",
@@ -23,7 +51,7 @@
       ]
     }
   ],
-  "transitions": [
+  "workflow_transitions": [
     {
       "name": "get_in_work",
       "title": "",
@@ -46,7 +74,7 @@
       "state_to": "not_actual"
     }
   ],
-  "states": [
+  "workflow_states": [
     {
       "name": "todo",
       "title": "",

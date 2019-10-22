@@ -15,7 +15,7 @@ use extas\interfaces\workflows\transitions\IWorkflowTransition;
  * @package extas\components\workflows\transitions
  * @author jeyroik@gmail.com
  */
-class Transition extends Item implements IWorkflowTransition
+class WorkflowTransition extends Item implements IWorkflowTransition
 {
     use THasName;
     use THasDescription;
