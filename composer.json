@@ -1,0 +1,13 @@
+{
+  "name": "jeyroik/extas-workflow",
+  "description": "Extas workflow package",
+  "require": {
+    "jeyroik/extas-foundation": "*",
+    "jeyroik/extas-installer": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "extas\\": "src/"
+    }
+  }
+}
