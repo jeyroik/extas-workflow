@@ -12,6 +12,14 @@
     {
       "interfaces": "extas\\interfaces\\workflows\\states\\IWorkflowStateRepository",
       "class": "extas\\components\\workflows\\states\\WorkflowStateRepository"
+    },
+    {
+      "interfaces": "extas\\interfaces\\workflows\\transitions\\dispatchers\\ITransitionDispatcherRepository",
+      "class": "extas\\components\\workflows\\transitions\\dispatchers\\TransitionDispatcherRepository"
+    },
+    {
+      "interfaces": "extas\\interfaces\\workflows\\transitions\\dispatchers\\ITransitionDispatcherTemplateRepository",
+      "class": "extas\\components\\workflows\\transitions\\dispatchers\\TransitionDispatcherTemplateRepository"
     }
   ],
   "plugins": [
