@@ -1,7 +1,7 @@
 <?php
 namespace extas\components\plugins;
 
-use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherTemplate;
+use extas\components\workflows\transitions\dispatchers\TransitionDispatcherTemplate;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherTemplateRepository;
 
 /**
@@ -12,9 +12,9 @@ use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherTemp
  */
 class PluginInstallTransitionDispatcherTemplates extends PluginInstallDefault
 {
-    protected $selfItemClass = ITransitionDispatcherTemplate::class;
+    protected $selfItemClass = TransitionDispatcherTemplate::class;
     protected $selfName = 'workflow transition dispatcher template';
     protected $selfSection = 'workflow_transition_dispatcher_templates';
-    protected $selfUID = ITransitionDispatcherTemplate::FIELD__NAME;
+    protected $selfUID = TransitionDispatcherTemplate::FIELD__NAME;
     protected $selfRepositoryClass = ITransitionDispatcherTemplateRepository::class;
 }
