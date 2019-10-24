@@ -2,7 +2,7 @@
 namespace extas\components\workflows;
 
 use extas\components\Item;
-use extas\interfaces\contexts\IContext;
+use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\IWorkflow;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
@@ -21,7 +21,7 @@ class Workflow extends Item implements IWorkflow
      * @param IWorkflowEntity $entity
      * @param IWorkflowState|string $toState
      * @param IWorkflowSchema $bySchema
-     * @param IContext $withContext
+     * @param IItem $withContext
      *
      * @return bool
      */
@@ -29,7 +29,7 @@ class Workflow extends Item implements IWorkflow
         IWorkflowEntity &$entity,
         $toState,
         IWorkflowSchema $bySchema,
-        IContext $withContext
+        IItem $withContext
     ): bool
     {
         $static = new static();
@@ -72,7 +72,7 @@ class Workflow extends Item implements IWorkflow
      * @param IWorkflowTransition $transition
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $bySchema
-     * @param IContext $withContext
+     * @param IItem $withContext
      *
      * @return bool
      */
@@ -91,7 +91,7 @@ class Workflow extends Item implements IWorkflow
      * @param IWorkflowTransition $transition
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $bySchema
-     * @param IContext $withContext
+     * @param IItem $withContext
      *
      * @return bool
      */

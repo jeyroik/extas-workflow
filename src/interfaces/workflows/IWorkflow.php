@@ -1,7 +1,6 @@
 <?php
 namespace extas\interfaces\workflows;
 
-use extas\interfaces\contexts\IContext;
 use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
@@ -21,7 +20,7 @@ interface IWorkflow extends IItem
      * @param IWorkflowEntity $entity
      * @param string|IWorkflowState $toState
      * @param IWorkflowSchema $bySchema
-     * @param IContext $withContext
+     * @param IItem $withContext
      *
      * @return bool
      */
@@ -29,6 +28,6 @@ interface IWorkflow extends IItem
         IWorkflowEntity &$entity,
         $toState,
         IWorkflowSchema $bySchema,
-        IContext $withContext
+        IItem $withContext
     ): bool;
 }

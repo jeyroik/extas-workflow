@@ -2,7 +2,7 @@
 namespace extas\components\plugins\workflows\triggers;
 
 use extas\components\plugins\Plugin;
-use extas\interfaces\contexts\IContext;
+use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
@@ -22,7 +22,7 @@ class TriggerHelloWorld extends Plugin implements ITransitionDispatcherExecutor
      * @param IWorkflowTransition $transition
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $schema
-     * @param IContext $context
+     * @param IItem $context
      *
      * @return bool
      */
@@ -31,7 +31,7 @@ class TriggerHelloWorld extends Plugin implements ITransitionDispatcherExecutor
         IWorkflowTransition $transition,
         IWorkflowEntity $entity,
         IWorkflowSchema $schema,
-        IContext $context
+        IItem $context
     )
     {
         $map = [

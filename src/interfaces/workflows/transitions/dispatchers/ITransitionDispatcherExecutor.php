@@ -1,7 +1,7 @@
 <?php
 namespace extas\interfaces\workflows\transitions\dispatchers;
 
-use extas\interfaces\contexts\IContext;
+use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
@@ -19,7 +19,7 @@ interface ITransitionDispatcherExecutor
      * @param IWorkflowTransition $transition
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $schema
-     * @param IContext $context
+     * @param IItem $context
      *
      * @return bool
      */
@@ -28,6 +28,6 @@ interface ITransitionDispatcherExecutor
         IWorkflowTransition $transition,
         IWorkflowEntity $entity,
         IWorkflowSchema $schema,
-        IContext $context
+        IItem $context
     );
 }

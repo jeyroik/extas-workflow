@@ -19,6 +19,7 @@ use extas\components\SystemContainer;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\schemas\IWorkflowSchemaRepository;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
+use extas\components\Item;
 
 class MyEntity implements IWorkflowEntity
 {
