@@ -48,7 +48,7 @@
     {
       "type": "trigger",
       "name": "demo_hello_world_trigger",
-      "template": "demo_hello_world",
+      "template": "demo_trigger_hello_world",
       "schema_name": "demo",
       "transition_name": "get_in_work",
       "parameters": [
@@ -61,7 +61,7 @@
     {
       "type": "validator",
       "name": "demo_hello_world_validator",
-      "template": "demo_hello_world",
+      "template": "demo_validator_hello_world",
       "schema_name": "demo",
       "transition_name": "get_in_work",
       "parameters": [

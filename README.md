@@ -56,7 +56,7 @@ $schema = $schemaRepo->one([IWorkflowSchema::FIELD__NAME => 'demo']);
 $testEntity = new \MyEntity('todo');
 $transited = Workflow::transit($testEntity, 'done', $schema, new MyContext(['name' => 'jeyroik']));
 // $transited == false, так как нет перехода из todo в done
-echo $testEnity->getStateName(); // todo
+echo $testEntity->getStateName(); // todo
 
 $transited = Workflow::transit($testEntity, 'in_work', $schema, new MyContext(['name' => 'jeyroik']));
 echo $testEntity->getStateName(); // in_work
