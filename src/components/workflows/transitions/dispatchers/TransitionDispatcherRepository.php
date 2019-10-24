@@ -12,9 +12,9 @@ use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherRepo
  */
 class TransitionDispatcherRepository extends Repository implements ITransitionDispatcherRepository
 {
-    protected $idAs = TransitionDispatcher::FIELD__ID;
+    protected $idAs = '';
     protected $scope = 'extas';
-    protected $pk = TransitionDispatcher::FIELD__ID;
+    protected $pk = TransitionDispatcher::FIELD__NAME;
     protected $name = 'workflow_transition_dispatchers';
     protected $itemClass = TransitionDispatcher::class;
 }
