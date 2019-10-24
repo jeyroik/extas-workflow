@@ -26,6 +26,44 @@
     {
       "class": "extas\\components\\plugins\\PluginInstallWorkflowStates",
       "stage": "extas.install"
+    },
+    {
+      "class": "extas\\components\\plugins\\PluginInstallTransitionDispatchers",
+      "stage": "extas.install"
+    },
+    {
+      "class": "extas\\components\\plugins\\PluginInstallTransitionDispatcherTemplates",
+      "stage": "extas.install"
+    }
+  ],
+  "workflow_transition_dispatchers": [
+    {
+      "type": "trigger",
+      "name": "demo_hello_world",
+      "title": "",
+      "description": "",
+      "template": "demo_hello_world",
+      "schema_name": "demo",
+      "transition_name": "get_in_work",
+      "parameters": [
+        {
+          "name": "lang",
+          "value": "ru"
+        }
+      ]
+    },
+    {
+      "type": "validator",
+      "name": "demo_hello_world",
+      "template": "demo_hello_world",
+      "schema_name": "demo",
+      "transition_name": "get_in_work",
+      "parameters": [
+        {
+          "name": "name",
+          "value": "jeyroik"
+        }
+      ]
     }
   ],
   "workflow_schemas": [
@@ -47,6 +85,42 @@
         {
           "name": "updated_at",
           "value": 123546789
+        }
+      ]
+    }
+  ],
+  "workflow_transition_dispatcher_templates": [
+    {
+      "name": "demo_trigger_hello_world",
+      "title": "Demo",
+      "description": "Print Hello World",
+      "class": "extas\\components\\plugins\\workflows\\triggers\\TriggerHelloWorld",
+      "parameters": [
+        {
+          "name": "lang",
+          "value": "",
+          "template": "string",
+          "template@string": {
+            "min": 2,
+            "max": 4
+          }
+        }
+      ]
+    },
+    {
+      "name": "demo_validator_hello_world",
+      "title": "Demo",
+      "description": "Check for param `name` in a context",
+      "class": "extas\\components\\plugins\\workflows\\validators\\ValidatorHelloWorld",
+      "parameters": [
+        {
+          "name": "name",
+          "value": "",
+          "template": "string",
+          "string": {
+            "min": 1,
+            "max": 256
+          }
         }
       ]
     }

@@ -6,7 +6,10 @@ use extas\interfaces\IHasName;
 use extas\interfaces\IItem;
 use extas\interfaces\parameters\IHasParameters;
 use extas\interfaces\workflows\states\IWorkflowState;
+use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
+use extas\interfaces\workflows\triggers\IWorkflowTrigger;
+use extas\interfaces\workflows\validators\IWorkflowValidator;
 
 /**
  * Interface IWorkflowSchema
@@ -20,6 +23,32 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
 
     const FIELD__STATES = 'states';
     const FIELD__TRANSITIONS = 'transitions';
+    const FIELD__VALIDATORS = 'validators';
+    const FIELD__TRIGGERS = 'triggers';
+
+    /**
+     * @return ITransitionDispatcher[]
+     */
+    public function getValidators(): array;
+
+    /**
+     * @param string|IWorkflowTransition $transition
+     *
+     * @return ITransitionDispatcher[]
+     */
+    public function getValidatorsByTransition($transition): array;
+
+    /**
+     * @return ITransitionDispatcher[]
+     */
+    public function getTriggers(): array;
+
+    /**
+     * @param string|IWorkflowTransition $transition
+     *
+     * @return ITransitionDispatcher[]
+     */
+    public function getTriggersByTransition($transition): array;
 
     /**
      * @return IWorkflowState[]
@@ -84,6 +113,24 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
      * @return bool
      */
     public function canTransit($stateFrom, $stateTo): bool;
+
+    /**
+     * @param string|IWorkflowTransition $transition
+     * @param string|IWorkflowValidator $validator
+     * @param array $parameters
+     *
+     * @return IWorkflowSchema
+     */
+    public function setValidatorByTransition($transition, $validator, array $parameters): IWorkflowSchema;
+
+    /**
+     * @param string|IWorkflowTransition $transition
+     * @param string|IWorkflowTrigger $trigger
+     * @param array $parameters
+     *
+     * @return IWorkflowSchema
+     */
+    public function setTriggerByTransition($transition, $trigger, array $parameters): IWorkflowSchema;
 
     /**
      * @param string[]|IWorkflowState[] $states

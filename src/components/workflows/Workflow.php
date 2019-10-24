@@ -7,6 +7,7 @@ use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\IWorkflow;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\states\IWorkflowState;
+use extas\interfaces\workflows\transitions\IWorkflowTransition;
 
 /**
  * Class Workflow
@@ -56,12 +57,55 @@ class Workflow extends Item implements IWorkflow
             foreach ($static->getPluginsByStage($stage) as $plugin) {
                 $plugin($entity, $toState, $transition, $bySchema, $withContext);
             }
-            $entity = $entity->setStateName($toState);
 
-            return true;
+            if ($static->isTransitionValid($transition, $entity, $bySchema, $withContext)) {
+                $entity = $entity->setStateName($toState);
+                $static->triggerTransitionEnd($transition, $entity, $bySchema, $withContext);
+                return true;
+            }
         }
 
         return false;
+    }
+
+    /**
+     * @param IWorkflowTransition $transition
+     * @param IWorkflowEntity $entity
+     * @param IWorkflowSchema $bySchema
+     * @param IContext $withContext
+     *
+     * @return bool
+     */
+    protected function triggerTransitionEnd($transition, $entity, $bySchema, $withContext)
+    {
+        $triggers = $bySchema->getTriggersByTransition($transition);
+
+        foreach ($triggers as $trigger) {
+            $trigger->dispatch($transition, $entity, $bySchema, $withContext);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param IWorkflowTransition $transition
+     * @param IWorkflowEntity $entity
+     * @param IWorkflowSchema $bySchema
+     * @param IContext $withContext
+     *
+     * @return bool
+     */
+    protected function isTransitionValid($transition, $entity, $bySchema, $withContext): bool
+    {
+        $validators = $bySchema->getValidatorsByTransition($transition);
+
+        foreach ($validators as $validator) {
+            if (!$validator->dispatch($transition, $entity, $bySchema, $withContext)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
