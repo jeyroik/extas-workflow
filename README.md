@@ -41,15 +41,23 @@ class MyEntity implements IWorkflowEntity
     }
 }
 
+class MyContext extends Item
+{
+    public function getSubjectForExtension(): string
+    {
+        return 'my.context';
+    }
+}
+
 $schemaRepo = SystemContainer::getItem(IWorkflowSchemaRepository::class);
 $schema = $schemaRepo->one([IWorkflowSchema::FIELD__NAME => 'demo']);
 
 $testEntity = new \MyEntity('todo');
-$transited = Workflow::transit($testEntity, 'done', $schema, new Context(['name' => 'jeyroik']));
+$transited = Workflow::transit($testEntity, 'done', $schema, new MyContext(['name' => 'jeyroik']));
 // $transited == false, так как нет перехода из todo в done
 echo $testEnity->getStateName(); // todo
 
-$transited = Workflow::transit($testEntity, 'in_work', $schema, new Context(['name' => 'jeyroik']));
+$transited = Workflow::transit($testEntity, 'in_work', $schema, new MyContext(['name' => 'jeyroik']));
 echo $testEntity->getStateName(); // in_work
 ```
 

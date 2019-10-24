@@ -5,10 +5,9 @@ use extas\components\Item;
 use extas\components\parameters\THasParameters;
 use extas\components\SystemContainer;
 use extas\components\templates\THasTemplate;
-use extas\components\THasId;
 use extas\components\THasName;
 use extas\components\THasType;
-use extas\interfaces\contexts\IContext;
+use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
@@ -33,7 +32,7 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
      * @param IWorkflowTransition $transition
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $schema
-     * @param IContext $context
+     * @param IItem $context
      *
      * @return bool
      */
@@ -41,7 +40,7 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
         IWorkflowTransition $transition,
         IWorkflowEntity $entity,
         IWorkflowSchema $schema,
-        IContext $context
+        IItem $context
     ): bool
     {
         /**
