@@ -3,6 +3,7 @@ namespace extas\interfaces\workflows\transitions\dispatchers;
 
 use extas\interfaces\contexts\IContext;
 use extas\interfaces\IHasId;
+use extas\interfaces\IHasName;
 use extas\interfaces\IHasType;
 use extas\interfaces\IItem;
 use extas\interfaces\parameters\IHasParameters;
@@ -17,7 +18,7 @@ use extas\interfaces\workflows\transitions\IWorkflowTransition;
  * @package extas\interfaces\workflows\transitions\dispatchers
  * @author jeyroik@gmail.com
  */
-interface ITransitionDispatcher extends IItem, IHasId, IHasParameters, IHasTemplate, IHasType
+interface ITransitionDispatcher extends IItem, IHasParameters, IHasTemplate, IHasType, IHasName
 {
     const SUBJECT = 'extas.workflow.transition.dispatcher';
 

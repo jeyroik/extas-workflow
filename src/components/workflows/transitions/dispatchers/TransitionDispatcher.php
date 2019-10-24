@@ -6,6 +6,7 @@ use extas\components\parameters\THasParameters;
 use extas\components\SystemContainer;
 use extas\components\templates\THasTemplate;
 use extas\components\THasId;
+use extas\components\THasName;
 use extas\components\THasType;
 use extas\interfaces\contexts\IContext;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
@@ -23,10 +24,10 @@ use extas\interfaces\workflows\transitions\IWorkflowTransition;
  */
 class TransitionDispatcher extends Item implements ITransitionDispatcher
 {
-    use THasId;
     use THasParameters;
     use THasTemplate;
     use THasType;
+    use THasName;
 
     /**
      * @param IWorkflowTransition $transition

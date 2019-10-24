@@ -13,7 +13,7 @@ use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherRepo
 class PluginInstallTransitionDispatchers extends PluginInstallDefault
 {
     protected $selfRepositoryClass = ITransitionDispatcherRepository::class;
-    protected $selfUID = TransitionDispatcher::FIELD__ID;
+    protected $selfUID = TransitionDispatcher::FIELD__NAME;
     protected $selfSection = 'workflow_transition_dispatchers';
     protected $selfName = 'workflow transition dispatcher';
     protected $selfItemClass = TransitionDispatcher::class;

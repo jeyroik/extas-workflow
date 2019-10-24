@@ -47,9 +47,7 @@
   "workflow_transition_dispatchers": [
     {
       "type": "trigger",
-      "name": "demo_hello_world",
-      "title": "",
-      "description": "",
+      "name": "demo_hello_world_trigger",
       "template": "demo_hello_world",
       "schema_name": "demo",
       "transition_name": "get_in_work",
@@ -62,7 +60,7 @@
     },
     {
       "type": "validator",
-      "name": "demo_hello_world",
+      "name": "demo_hello_world_validator",
       "template": "demo_hello_world",
       "schema_name": "demo",
       "transition_name": "get_in_work",
