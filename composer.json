@@ -4,6 +4,7 @@
   "require": {
     "jeyroik/extas-foundation": "*",
     "jeyroik/extas-base": "*",
+    "jeyroik/extas-templates": "*",
     "jeyroik/extas-installer": "*"
   },
   "autoload": {
