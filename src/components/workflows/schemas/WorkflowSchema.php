@@ -55,7 +55,8 @@ class WorkflowSchema extends Item implements IWorkflowSchema
 
         return $validatorRepo->all([
             ITransitionDispatcher::FIELD__SCHEMA_NAME => $this->getName(),
-            ITransitionDispatcher::FIELD__TRANSITION_NAME => $transition->getName()
+            ITransitionDispatcher::FIELD__TRANSITION_NAME => $transition->getName(),
+            ITransitionDispatcher::FIELD__TYPE => ITransitionDispatcher::TYPE__VALIDATOR
         ]);
     }
 
@@ -85,7 +86,8 @@ class WorkflowSchema extends Item implements IWorkflowSchema
 
         return $validatorRepo->all([
             ITransitionDispatcher::FIELD__SCHEMA_NAME => $this->getName(),
-            ITransitionDispatcher::FIELD__TRANSITION_NAME => $transition->getName()
+            ITransitionDispatcher::FIELD__TRANSITION_NAME => $transition->getName(),
+            ITransitionDispatcher::FIELD__TYPE => ITransitionDispatcher::TYPE__TRIGGER
         ]);
     }
 
