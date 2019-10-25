@@ -236,7 +236,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
 
         return $transitionRepo->one([
             IWorkflowTransition::FIELD__NAME => $this->getTransitionsNames(),
-            IWorkflowTransition::FIELD__STATE_FROM => $stateFrom,
+            IWorkflowTransition::FIELD__STATE_FROM => [$stateFrom, ITransitionDispatcher::TRANSITION__ANY],
             IWorkflowTransition::FIELD__STATE_TO => $stateTo
         ]);
     }
