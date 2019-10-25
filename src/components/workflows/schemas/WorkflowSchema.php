@@ -6,8 +6,7 @@ use extas\components\parameters\THasParameters;
 use extas\components\SystemContainer;
 use extas\components\THasDescription;
 use extas\components\THasName;
-use extas\interfaces\IHasName;
-use extas\interfaces\parameters\IHasParameters;
+use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\states\IWorkflowState;
 use extas\interfaces\workflows\states\IWorkflowStateRepository;
@@ -47,17 +46,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
      */
     public function getValidatorsByTransition($transition): array
     {
-        /**
-         * @var $validatorRepo ITransitionDispatcherRepository
-         * @var $transitionValidators ITransitionDispatcher[]
-         */
-        $validatorRepo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
-
-        return $validatorRepo->all([
-            ITransitionDispatcher::FIELD__SCHEMA_NAME => $this->getName(),
-            ITransitionDispatcher::FIELD__TRANSITION_NAME => $transition->getName(),
-            ITransitionDispatcher::FIELD__TYPE => ITransitionDispatcher::TYPE__VALIDATOR
-        ]);
+        return $this->getDispatchersByTransition($transition, ITransitionDispatcher::TYPE__VALIDATOR);
     }
 
     /**
@@ -78,17 +67,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
      */
     public function getTriggersByTransition($transition): array
     {
-        /**
-         * @var $validatorRepo ITransitionDispatcherRepository
-         * @var $transitionValidators ITransitionDispatcher[]
-         */
-        $validatorRepo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
-
-        return $validatorRepo->all([
-            ITransitionDispatcher::FIELD__SCHEMA_NAME => $this->getName(),
-            ITransitionDispatcher::FIELD__TRANSITION_NAME => $transition->getName(),
-            ITransitionDispatcher::FIELD__TYPE => ITransitionDispatcher::TYPE__TRIGGER
-        ]);
+        return $this->getDispatchersByTransition($transition, ITransitionDispatcher::TYPE__TRIGGER);
     }
 
     /**
@@ -158,36 +137,50 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     }
 
     /**
-     * @param IWorkflowTransition|string $transition
-     * @param ITransitionDispatcher|string $validator
+     * @param IWorkflowTransition $transition
+     * @param string $validatorName
+     * @param string $templateName
      * @param array $parameters
      *
      * @return IWorkflowSchema
      */
-    public function setValidatorByTransition($transition, $validator, array $parameters): IWorkflowSchema
+    public function setValidatorByTransition(
+        IWorkflowTransition $transition,
+        string $validatorName,
+        string $templateName,
+        array $parameters
+    ): IWorkflowSchema
     {
         return $this->setDispatcherByTransition(
             $transition,
-            $validator,
+            $validatorName,
             $parameters,
-            static::FIELD__VALIDATORS
+            ITransitionDispatcher::TYPE__VALIDATOR,
+            $templateName
         );
     }
 
     /**
-     * @param IWorkflowTransition|string $transition
-     * @param ITransitionDispatcher|string $trigger
+     * @param IWorkflowTransition $transition
+     * @param string $triggerName
+     * @param string $templateName
      * @param array $parameters
      *
      * @return IWorkflowSchema
      */
-    public function setTriggerByTransition($transition, $trigger, array $parameters): IWorkflowSchema
+    public function setTriggerByTransition(
+        IWorkflowTransition $transition,
+        string $triggerName,
+        string $templateName,
+        array $parameters
+    ): IWorkflowSchema
     {
         return $this->setDispatcherByTransition(
             $transition,
-            $trigger,
+            $triggerName,
             $parameters,
-            static::FIELD__TRIGGERS
+            ITransitionDispatcher::TYPE__TRIGGER,
+            $templateName
         );
     }
 
@@ -309,40 +302,60 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     }
 
     /**
-     * @param string|IWorkflowTransition $transition
-     * @param string|IHasName $dispatcher
-     * @param array $parameters
-     * @param string $dispatcherType
+     * @param IWorkflowTransition $transition
+     * @param string $type
      *
-     * @return $this
+     * @return ITransitionDispatcher[]
      */
-    protected function setDispatcherByTransition($transition, $dispatcher, array $parameters, string $dispatcherType)
+    protected function getDispatchersByTransition(IWorkflowTransition $transition, string $type): array
     {
-        $validators = $this->config[$dispatcherType] ?? [];
-        $validators[$transition] = [
-            IHasName::FIELD__NAME => $dispatcher instanceof IHasName
-                ? $dispatcher->getName()
-                : (string) $dispatcher,
-            IHasParameters::FIELD__PARAMETERS => $parameters
-        ];
-        $this->config[$dispatcherType] = $validators;
+        /**
+         * @var $repo ITransitionDispatcherRepository
+         * @var $transitionValidators ITransitionDispatcher[]
+         */
+        $repo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
 
-        return $this;
+        return $repo->all([
+            ITransitionDispatcher::FIELD__SCHEMA_NAME => $this->getName(),
+            ITransitionDispatcher::FIELD__TRANSITION_NAME => [
+                $transition->getName(),
+                ITransitionDispatcher::TRANSITION__ANY
+            ],
+            ITransitionDispatcher::FIELD__TYPE => $type
+        ]);
     }
 
     /**
-     * @param $transition
+     * @param IWorkflowTransition $transition
+     * @param string $dispatcherName
+     * @param array $parameters
      * @param string $dispatcherType
+     * @param string $templateName
      *
-     * @return array
+     * @return $this
      */
-    protected function getDispatchersNamesByTransition($transition, string $dispatcherType)
+    protected function setDispatcherByTransition(
+        IWorkflowTransition $transition,
+        string $dispatcherName,
+        array $parameters,
+        string $dispatcherType,
+        string $templateName
+    )
     {
-        $transitionName = $transition instanceof IWorkflowTransition ? $transition->getName() : (string) $transition;
-        $all = $this->config[$dispatcherType] ?? [];
-        $byTransition = $all[$transitionName] ?? [];
+        /**
+         * @var $repo ITransitionDispatcherRepository
+         */
+        $repo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
+        $dispatcher = new TransitionDispatcher();
+        $dispatcher->setName($dispatcherName)
+            ->setType($dispatcherType)
+            ->setSchemaName($this->getName())
+            ->setTransitionName($transition->getName())
+            ->setParameters($parameters)
+            ->setTemplateName($templateName);
+        $repo->create($dispatcher);
 
-        return array_column($byTransition, IHasName::FIELD__NAME);
+        return $this;
     }
 
     /**

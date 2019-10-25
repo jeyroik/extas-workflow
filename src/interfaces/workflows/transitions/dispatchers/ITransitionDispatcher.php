@@ -26,6 +26,8 @@ interface ITransitionDispatcher extends IItem, IHasParameters, IHasTemplate, IHa
     const TYPE__VALIDATOR = 'validator';
     const TYPE__TRIGGER = 'trigger';
 
+    const TRANSITION__ANY = '*';
+
     /**
      * @param IWorkflowTransition $transition
      * @param IWorkflowEntity $entity

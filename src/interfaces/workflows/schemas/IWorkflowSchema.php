@@ -115,22 +115,34 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
     public function canTransit($stateFrom, $stateTo): bool;
 
     /**
-     * @param string|IWorkflowTransition $transition
-     * @param string|IWorkflowValidator $validator
+     * @param IWorkflowTransition $transition
+     * @param string $validatorName
+     * @param string $templateName
      * @param array $parameters
      *
      * @return IWorkflowSchema
      */
-    public function setValidatorByTransition($transition, $validator, array $parameters): IWorkflowSchema;
+    public function setValidatorByTransition(
+        IWorkflowTransition $transition,
+        string $validatorName,
+        string $templateName,
+        array $parameters
+    ): IWorkflowSchema;
 
     /**
-     * @param string|IWorkflowTransition $transition
-     * @param string|IWorkflowTrigger $trigger
+     * @param IWorkflowTransition $transition
+     * @param string $triggerName
+     * @param string $templateName
      * @param array $parameters
      *
      * @return IWorkflowSchema
      */
-    public function setTriggerByTransition($transition, $trigger, array $parameters): IWorkflowSchema;
+    public function setTriggerByTransition(
+        IWorkflowTransition $transition,
+        string $triggerName,
+        string $templateName,
+        array $parameters
+    ): IWorkflowSchema;
 
     /**
      * @param string[]|IWorkflowState[] $states
