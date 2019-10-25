@@ -3,6 +3,7 @@
   "description": "Extas workflow package",
   "require": {
     "jeyroik/extas-foundation": "*",
+    "jeyroik/extas-base": "*",
     "jeyroik/extas-installer": "*"
   },
   "autoload": {
