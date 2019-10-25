@@ -1,78 +1,118 @@
 # extas-workflow
-Workflow package for Extas
+
+Пакет предоставляет механизм для организации перевода сущности из одного состояния в другое.
 
 # Установка пакета
 
 `# composer require jeyroik/extas-workflow:*`
 
-# Установка workflow
+# Термины
 
-`# vendor/bin/extas i`
+В рамках пакет используется следующее:
 
-# Использование
+- Сущность `IWorkflowEntity` - объект, который требуется перевести из одного состояния в другое.
+- Состояния `IWorkflowState` - состояние сущности, имеет описание и название.
+- Переход `IWorkflowTransition` - объект, описывающий возможность перехода сущности из одного состояния в другое. 
+  - Кроме переходов из конкретных состояний, попускается переход из любого (`*`) состояния.
+- Схема `IWorkflowSchema` - объект, описывающий все доступные переходы для сущности.
+- Обработчик перехода `ITransitionDispatcher` - обработчик, запускающийся для конкретных переходов в конкретных схемах.
+  - На текущий момент данные обработчики используются для реализации валидаторов и триггеров.
+  - Валидатор - проверка до перехода.
+  - Триггер - функция, запускающаяся после перехода.
+- Шаблон обработчика перехода `ITransitionDispatcherTemplate` - объект, описывающий функциональность, необходимые параметры и т.п.
+- Рабочий процесс `IWorkflow` - объект совершающий перевод сущности из одного состояния в другое.
 
-Сразу после установки можно поиграть с демо-воркфлоу:
+# Краткое описание процесса
 
-```php
-use extas\components\workflows\Workflow;
-use extas\components\SystemContainer;
-use extas\interfaces\workflows\schemas\IWorkflowSchema;
-use extas\interfaces\workflows\schemas\IWorkflowSchemaRepository;
-use extas\interfaces\workflows\entities\IWorkflowEntity;
-use extas\components\Item;
+При запуске перевода сущности из одного состояния в другое, происходит следующее:
 
-class MyEntity implements IWorkflowEntity
+- По схеме определяется возможен ли переход.
+- Если переход возможен, то запускаются следующие стадии (см. `jeyroik/extas-foundation`):
+  - `workflow.transition`,
+  - `workflow.from.<state.name>`
+  - `workflow.to.<state.name>`
+  - `workflow.<transition.name>`
+- После этого запускаются все валидаторы для данного перехода.
+- Если валидация прошла успешно, то у сущности меняется состояние.
+  - Управление сменой состояния осуществляется с помощью интерфейса `IWorkflowEntity`. Т.е. все сущности, которые планируются гонять с помощью данного механизма, обязаны реализовывать данный интерфейс.
+- После этого запускаются все триггеры для данного перехода.
+
+# Предварительная установка компонентов workflow
+
+Данный пакет предоставляет следующие установщики для extas-совместимой конфигурации (см. `jeyroik/extas-installer`):
+
+- Устанавщик состояния:
+```json
 {
-    protected $state = '';
-    
-    public function __construct($initState)
+  "workflow_states": [
     {
-        $this->state = $initState;
+      "name": "",
+      "title": "",
+      "description": "",
+      "parameters": [
+        {
+          "name": ""
+        }
+      ]
     }
-    
-    public function getStateName(): string
-    {
-        return $this->state;
-    }
-    
-    public function setStateName(string $stateName): IWorkflowEntity
-    {
-        $this->state = $stateName;
-        return $this;
-    }
+  ]
 }
-
-class MyContext extends Item
-{
-    public function getSubjectForExtension(): string
-    {
-        return 'my.context';
-    }
-}
-
-$schemaRepo = SystemContainer::getItem(IWorkflowSchemaRepository::class);
-$schema = $schemaRepo->one([IWorkflowSchema::FIELD__NAME => 'demo']);
-
-$testEntity = new \MyEntity('todo');
-$transited = Workflow::transit($testEntity, 'done', $schema, new MyContext(['name' => 'jeyroik']));
-// $transited == false, так как нет перехода из todo в done
-echo $testEntity->getStateName(); // todo
-
-$transited = Workflow::transit($testEntity, 'in_work', $schema, new MyContext(['name' => 'jeyroik']));
-echo $testEntity->getStateName(); // in_work
 ```
-
-В рамках перевода сущности из одного состояния в другое, существует четыре стадии. Рассмотрим их на нашем примере:
-
-- `workflow.transition` - общая стадия, означает запуск перевода сущности.
-- `workflow.from.todo` - стадия, означающая перевод из конкретного состояния.
-- `workflow.to.in_work` - стадия, означающая перевод в конкретное состояние.
-- `workflow.get_in_work` - стадия, означающая запуск конкретного перехода.
-
-Таким образом, реализовав плагин для желаемой стадии, можно совершить дополнительные действия при переводе сущности из одного состояния в другое.
-
-(i) Контекст рекомендуется использовать для передачи дополнительной информации о контексте смены состояния сущности.
-
-# TODO
-
-- Валидация параметров контекста по параметрам конечного состояния.
+- Установщик переходов:
+```json
+{
+  "workflow_transitions": [
+    {
+      "name": "",
+      "title": "",
+      "description": "",
+      "state_from": "<state.name>",
+      "state_to": "<state.name>"
+    }
+  ]
+}
+```
+- Установщик шаблонов обработчиков переходов:
+```json
+{
+  "workflow_transition_dispatcher_templates": [
+    {
+      "name": "",
+      "title": "",
+      "description": "",
+      "class": "",
+      "parameters": []
+    }
+  ]
+}
+```
+- Установщик схем:
+```json
+{
+  "workflow_schemas": [
+    {
+      "name": "",
+      "title": "",
+      "description": "",
+      "states": ["<state.name>"],
+      "transitions": ["<transition.name>"],
+      "parameters": []
+    }
+  ]
+}
+```
+- Установщик обработчиков переходов:
+```json
+{
+  "workflow_transition_dispatchers": [
+    {
+      "type": "trigger|validator",
+      "name": "",
+      "template": "<template.name>",
+      "schema_name": "<schema.name>",
+      "transition_name": "<transition.name>|*",
+      "parameters": []
+    }
+  ]
+}
+```
