@@ -346,14 +346,16 @@ class WorkflowSchema extends Item implements IWorkflowSchema
             IWorkflowTransition::FIELD__STATE_TO => $stateTo
         ]);
 
-        $conditions = $dispatcherRepo->all([
-            ITransitionDispatcher::FIELD__TYPE => ITransitionDispatcher::TYPE__CONDITION,
-            ITransitionDispatcher::FIELD__TRANSITION_NAME => $transition->getName()
-        ]);
+        if ($transition) {
+            $conditions = $dispatcherRepo->all([
+                ITransitionDispatcher::FIELD__TYPE => ITransitionDispatcher::TYPE__CONDITION,
+                ITransitionDispatcher::FIELD__TRANSITION_NAME => $transition->getName()
+            ]);
 
-        foreach ($conditions as $condition) {
-            if (!$condition->dispatch($transition, $entity, $this, $context)) {
-                return null;
+            foreach ($conditions as $condition) {
+                if (!$condition->dispatch($transition, $entity, $this, $context)) {
+                    return null;
+                }
             }
         }
 
