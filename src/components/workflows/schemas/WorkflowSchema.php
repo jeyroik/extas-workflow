@@ -7,6 +7,8 @@ use extas\components\SystemContainer;
 use extas\components\THasDescription;
 use extas\components\THasName;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
+use extas\interfaces\workflows\entities\IWorkflowEntityTemplate;
+use extas\interfaces\workflows\entities\IWorkflowEntityTemplateRepository;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\states\IWorkflowState;
 use extas\interfaces\workflows\states\IWorkflowStateRepository;
@@ -26,6 +28,55 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     use THasName;
     use THasDescription;
     use THasParameters;
+
+    /**
+     * @param string $templateName
+     *
+     * @return bool
+     */
+    public function isApplicableEntityTemplate(string $templateName): bool
+    {
+        return $this->getEntityTemplateName() == $templateName;
+    }
+
+    /**
+     * @return IWorkflowEntityTemplate
+     */
+    public function getEntityTemplate(): IWorkflowEntityTemplate
+    {
+        return SystemContainer::getItem(IWorkflowEntityTemplateRepository::class)->all([
+            IWorkflowEntityTemplate::FIELD__NAME => $this->getEntityTemplateName()
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityTemplateName(): string
+    {
+        return $this->config[static::FIELD__ENTITY_TEMPLATE] ?? [];
+    }
+
+    /**
+     * @return ITransitionDispatcher[]
+     */
+    public function getConditions(): array
+    {
+        return SystemContainer::getItem(ITransitionDispatcherRepository::class)->all([
+            ITransitionDispatcher::FIELD__SCHEMA_NAME => $this->getName(),
+            ITransitionDispatcher::FIELD__TYPE => ITransitionDispatcher::TYPE__CONDITION
+        ]);
+    }
+
+    /**
+     * @param IWorkflowTransition|string $transition
+     *
+     * @return ITransitionDispatcher[]
+     */
+    public function getConditionsByTransition($transition): array
+    {
+        return $this->getDispatchersByTransition($transition, ITransitionDispatcher::TYPE__CONDITION);
+    }
 
     /**
      * @return ITransitionDispatcher[]
@@ -134,6 +185,54 @@ class WorkflowSchema extends Item implements IWorkflowSchema
         $transitions = $this->getTransitionsNames();
 
         return in_array($transitionName, $transitions);
+    }
+
+    /**
+     * @param IWorkflowEntityTemplate $template
+     *
+     * @return IWorkflowSchema
+     */
+    public function setEntityTemplate(IWorkflowEntityTemplate $template): IWorkflowSchema
+    {
+        $this->setEntityTemplateName($template->getName());
+
+        return $this;
+    }
+
+    /**
+     * @param string $templateName
+     *
+     * @return IWorkflowSchema
+     */
+    public function setEntityTemplateName(string $templateName): IWorkflowSchema
+    {
+        $this->config[static::FIELD__ENTITY_TEMPLATE] = $templateName;
+
+        return $this;
+    }
+
+    /**
+     * @param IWorkflowTransition $transition
+     * @param string $conditionName
+     * @param string $templateName
+     * @param array $parameters
+     *
+     * @return IWorkflowSchema
+     */
+    public function setConditionByTransition(
+        IWorkflowTransition $transition,
+        string $conditionName,
+        string $templateName,
+        array $parameters
+    ): IWorkflowSchema
+    {
+        return $this->setDispatcherByTransition(
+            $transition,
+            $conditionName,
+            $parameters,
+            ITransitionDispatcher::TYPE__CONDITION,
+            $templateName
+        );
     }
 
     /**

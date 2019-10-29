@@ -20,4 +20,9 @@ interface IWorkflowEntity
      * @return IWorkflowEntity
      */
     public function setStateName(string $stateName): IWorkflowEntity;
+
+    /**
+     * @return string
+     */
+    public function getTemplateName(): string;
 }

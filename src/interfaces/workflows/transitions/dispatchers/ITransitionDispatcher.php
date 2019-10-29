@@ -23,6 +23,7 @@ interface ITransitionDispatcher extends IItem, IHasParameters, IHasTemplate, IHa
     const FIELD__SCHEMA_NAME = 'schema_name';
     const FIELD__TRANSITION_NAME = 'transition_name';
 
+    const TYPE__CONDITION = 'condition';
     const TYPE__VALIDATOR = 'validator';
     const TYPE__TRIGGER = 'trigger';
 

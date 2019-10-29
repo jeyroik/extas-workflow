@@ -20,6 +20,10 @@
     {
       "interface": "extas\\interfaces\\workflows\\transitions\\dispatchers\\ITransitionDispatcherTemplateRepository",
       "class": "extas\\components\\workflows\\transitions\\dispatchers\\TransitionDispatcherTemplateRepository"
+    },
+    {
+      "interface": "extas\\interfaces\\workflows\\entities\\IWorkflowEntityTemplateRepository",
+      "class": "extas\\components\\workflows\\entities\\WorkflowEntityTemplateRepository"
     }
   ],
   "plugins": [
@@ -41,6 +45,10 @@
     },
     {
       "class": "extas\\components\\plugins\\PluginInstallTransitionDispatcherTemplates",
+      "stage": "extas.install"
+    },
+    {
+      "class": "extas\\components\\plugins\\PluginInstallWorkflowEntityTemplates",
       "stage": "extas.install"
     }
   ]

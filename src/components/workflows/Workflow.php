@@ -34,6 +34,10 @@ class Workflow extends Item implements IWorkflow
     {
         $static = new static();
 
+        if (!$bySchema->isApplicableEntityTemplate($entity->getTemplateName())) {
+            return false;
+        }
+
         if ($bySchema->canTransit($entity->getStateName(), $toState)) {
             $toState = $toState instanceof IWorkflowState ? $toState->getName() : (string) $toState;
             $transition = $bySchema->getTransition($entity->getStateName(), $toState);
