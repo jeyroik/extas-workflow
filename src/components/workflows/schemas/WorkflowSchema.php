@@ -338,6 +338,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
          * @var $conditions ITransitionDispatcher[]
          */
         $transitionRepo = SystemContainer::getItem(IWorkflowTransitionRepository::class);
+        $dispatcherRepo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
 
         $transition = $transitionRepo->one([
             IWorkflowTransition::FIELD__NAME => $this->getTransitionsNames(),
