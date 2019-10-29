@@ -5,6 +5,7 @@ use extas\interfaces\IHasDescription;
 use extas\interfaces\IHasName;
 use extas\interfaces\IItem;
 use extas\interfaces\parameters\IHasParameters;
+use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\entities\IWorkflowEntityTemplate;
 use extas\interfaces\workflows\states\IWorkflowState;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
@@ -112,34 +113,38 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
     public function hasTransition(string $transitionName): bool;
 
     /**
-     * @param string|IWorkflowState $state
+     * @param IWorkflowEntity $entity
+     * @param IItem $context
      *
      * @return IWorkflowTransition[]
      */
-    public function getAvailableTransitionsByFromState($state): array;
+    public function getAvailableTransitionsByFromState(IWorkflowEntity $entity, IItem $context): array;
 
     /**
-     * @param string|IWorkflowState $state
+     * @param IWorkflowEntity $entity
+     * @param IItem $context
      *
      * @return IWorkflowTransition[]
      */
-    public function getAvailableTransitionsByToState($state): array;
+    public function getAvailableTransitionsByToState(IWorkflowEntity $entity, IItem $context): array;
 
     /**
-     * @param string|IWorkflowState $stateFrom
+     * @param IWorkflowEntity $entity
+     * @param IItem $context
      * @param string|IWorkflowTransition $stateTo
      *
      * @return IWorkflowTransition|null
      */
-    public function getTransition($stateFrom, $stateTo): ?IWorkflowTransition;
+    public function getTransition(IWorkflowEntity $entity, IItem $context, $stateTo): ?IWorkflowTransition;
 
     /**
-     * @param string|IWorkflowState $stateFrom
+     * @param IWorkflowEntity $entity
+     * @param IItem $context
      * @param string|IWorkflowState $stateTo
      *
      * @return bool
      */
-    public function canTransit($stateFrom, $stateTo): bool;
+    public function canTransit(IWorkflowEntity $entity, IItem $context, $stateTo): bool;
 
     /**
      * @param IWorkflowEntityTemplate $template

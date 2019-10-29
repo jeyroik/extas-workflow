@@ -38,9 +38,9 @@ class Workflow extends Item implements IWorkflow
             return false;
         }
 
-        if ($bySchema->canTransit($entity->getStateName(), $toState)) {
+        if ($bySchema->canTransit($entity, $withContext, $toState)) {
             $toState = $toState instanceof IWorkflowState ? $toState->getName() : (string) $toState;
-            $transition = $bySchema->getTransition($entity->getStateName(), $toState);
+            $transition = $bySchema->getTransition($entity, $withContext, $toState);
 
             $stage = 'workflow.transition';
             foreach ($static->getPluginsByStage($stage) as $plugin) {

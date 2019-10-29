@@ -7,6 +7,8 @@ use extas\components\SystemContainer;
 use extas\components\THasDescription;
 use extas\components\THasName;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
+use extas\interfaces\IItem;
+use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\entities\IWorkflowEntityTemplate;
 use extas\interfaces\workflows\entities\IWorkflowEntityTemplateRepository;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
@@ -54,7 +56,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
      */
     public function getEntityTemplateName(): string
     {
-        return $this->config[static::FIELD__ENTITY_TEMPLATE] ?? [];
+        return $this->config[static::FIELD__ENTITY_TEMPLATE] ?? '';
     }
 
     /**
@@ -318,58 +320,78 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     }
 
     /**
-     * @param IWorkflowState|string $stateFrom
+     * @param IWorkflowEntity $entity
+     * @param IItem $context
      * @param IWorkflowTransition|string $stateTo
      *
      * @return IWorkflowTransition|null
      */
-    public function getTransition($stateFrom, $stateTo): ?IWorkflowTransition
+    public function getTransition(IWorkflowEntity $entity, IItem $context, $stateTo): ?IWorkflowTransition
     {
-        $stateFrom = $stateFrom instanceof IWorkflowState ? $stateFrom->getName() : (string) $stateFrom;
+        $stateFrom = $entity->getStateName();
         $stateTo = $stateTo instanceof IWorkflowState ? $stateTo->getName() : (string) $stateTo;
 
         /**
          * @var $transitionRepo IWorkflowTransitionRepository
+         * @var $dispatcherRepo ITransitionDispatcherRepository
+         * @var $transition IWorkflowTransition
+         * @var $conditions ITransitionDispatcher[]
          */
         $transitionRepo = SystemContainer::getItem(IWorkflowTransitionRepository::class);
 
-        return $transitionRepo->one([
+        $transition = $transitionRepo->one([
             IWorkflowTransition::FIELD__NAME => $this->getTransitionsNames(),
             IWorkflowTransition::FIELD__STATE_FROM => [$stateFrom, ITransitionDispatcher::TRANSITION__ANY],
             IWorkflowTransition::FIELD__STATE_TO => $stateTo
         ]);
+
+        $conditions = $dispatcherRepo->all([
+            ITransitionDispatcher::FIELD__TYPE => ITransitionDispatcher::TYPE__CONDITION,
+            ITransitionDispatcher::FIELD__TRANSITION_NAME => $transition->getName()
+        ]);
+
+        foreach ($conditions as $condition) {
+            if (!$condition->dispatch($transition, $entity, $this, $context)) {
+                return null;
+            }
+        }
+
+        return $transition;
     }
 
     /**
-     * @param IWorkflowState|string $stateFrom
+     * @param IWorkflowEntity $entity
+     * @param IItem $context
      * @param IWorkflowState|string $stateTo
      *
      * @return bool
      */
-    public function canTransit($stateFrom, $stateTo): bool
+    public function canTransit(IWorkflowEntity $entity, IItem $context, $stateTo): bool
     {
-        $transition = $this->getTransition($stateFrom, $stateTo);
+        $transition = $this->getTransition($entity, $context, $stateTo);
         return $transition ? true : false;
     }
 
     /**
-     * @param IWorkflowState|string $state
+     * @param IWorkflowEntity $entity
+     * @param IItem $context
      *
      * @return IWorkflowTransition[]
      */
-    public function getAvailableTransitionsByFromState($state): array
+    public function getAvailableTransitionsByFromState(IWorkflowEntity $entity, IItem $context): array
     {
-        return $this->getAvailableTransitionByState($state, true);
+        return $this->getAvailableTransitionByState($entity, $context, true);
     }
 
     /**
-     * @param IWorkflowState|string $state
+     * @param IWorkflowEntity $entity
+     * @param IItem $context
      *
      * @return array
      */
-    public function getAvailableTransitionsByToState($state): array
+    public function getAvailableTransitionsByToState(IWorkflowEntity $entity, IItem $context): array
     {
-        return $this->getAvailableTransitionByState($state, false);
+        return $this->getAvailableTransitionByState($entity, $context, false);
     }
 
     /**
@@ -458,25 +480,51 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     }
 
     /**
-     * @param string|IWorkflowState$state
+     * @param IWorkflowEntity $entity
+     * @param IItem $context
      * @param bool $from
      *
      * @return IWorkflowTransition[]
      */
-    protected function getAvailableTransitionByState($state, bool $from = false)
+    protected function getAvailableTransitionByState(
+        IWorkflowEntity $entity,
+        IItem $context,
+        bool $from = false
+    )
     {
-        $stateField = $from ? IWorkflowTransition::FIELD__STATE_FROM : IWorkflowTransition::FIELD__STATE_TO;
         /**
          * @var $transitionRepo IWorkflowTransitionRepository
+         * @var $dispatcherRepo ITransitionDispatcherRepository
+         * @var $transitions IWorkflowTransition[]
+         * @var $conditions ITransitionDispatcher[]
          */
+        $dispatcherRepo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
+        $stateField = $from ? IWorkflowTransition::FIELD__STATE_FROM : IWorkflowTransition::FIELD__STATE_TO;
         $transitionRepo = SystemContainer::getItem(IWorkflowTransitionRepository::class);
-        return $transitionRepo->all([
+        $transitions = $transitionRepo->all([
             IWorkflowTransition::FIELD__NAME => $this->getTransitionsNames(),
-            $stateField => $state instanceof IWorkflowState
-                ? $state->getName()
-                : (string) $state
+            $stateField => $entity->getStateName()
+        ]);
+        $transitionNames = [];
+        foreach ($transitions as $transition) {
+            $transitionNames[$transition->getName()] = $transition;
+        }
+
+        $conditions = $dispatcherRepo->all([
+            ITransitionDispatcher::FIELD__TYPE => ITransitionDispatcher::TYPE__CONDITION,
+            ITransitionDispatcher::FIELD__TRANSITION_NAME => array_keys($transitionNames)
         ]);
 
+        foreach ($conditions as $condition) {
+            if (!isset($transitionNames[$condition->getTransitionName()])) {
+                continue;
+            }
+            if (!$condition->dispatch($transitionNames[$condition->getTransitionName()], $entity, $this, $context)) {
+                unset($transitionNames[$condition->getTransitionName()]);
+            }
+        }
+
+        return array_values($transitionNames);
     }
 
     /**
