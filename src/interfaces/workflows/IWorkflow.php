@@ -18,13 +18,28 @@ interface IWorkflow extends IItem
 
     /**
      * @param IWorkflowEntity $entity
+     * @param string $transitionName
+     * @param IWorkflowSchema $bySchema
+     * @param IItem $withContext
+     *
+     * @return bool
+     */
+    public static function transitByTransition(
+        IWorkflowEntity &$entity,
+        string $transitionName,
+        IWorkflowSchema $bySchema,
+        IItem $withContext
+    ): bool;
+
+    /**
+     * @param IWorkflowEntity $entity
      * @param string|IWorkflowState $toState
      * @param IWorkflowSchema $bySchema
      * @param IItem $withContext
      *
      * @return bool
      */
-    public static function transit(
+    public static function transitByState(
         IWorkflowEntity &$entity,
         $toState,
         IWorkflowSchema $bySchema,
