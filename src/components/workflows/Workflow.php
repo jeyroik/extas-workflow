@@ -112,6 +112,11 @@ class Workflow extends Item implements IWorkflow
             $plugin($entity, $toState, $transition, $bySchema, $withContext);
         }
 
+        $stage = 'workflow.' . $bySchema->getName();
+        foreach ($this->getPluginsByStage($stage) as $plugin) {
+            $plugin($entity, $toState, $transition, $bySchema, $withContext);
+        }
+
         $stage = 'workflow.' . $transition->getName();
         foreach ($this->getPluginsByStage($stage) as $plugin) {
             $plugin($entity, $toState, $transition, $bySchema, $withContext);
