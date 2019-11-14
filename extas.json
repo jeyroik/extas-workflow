@@ -51,5 +51,103 @@
       "class": "extas\\components\\plugins\\PluginInstallWorkflowEntityTemplates",
       "stage": "extas.install"
     }
+  ],
+  "workflow_transition_dispatcher_templates": [
+    {
+      "name": "condition__datetime",
+      "title": "Datetime condition",
+      "description": "Check current datetime, allow to restrict execution before the set time.",
+      "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionDateTime",
+      "parameters": [
+        {
+          "name": "datetime",
+          "template": "datetime",
+          "value": ""
+        },
+        {
+          "name": "compare",
+          "template": "string",
+          "template@string": {
+            "allowed": ["equal", "notEqual", "greater", "lower"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "validator__context_params",
+      "title": "Check context params.",
+      "description": "Check context has required by validator params.",
+      "class": "extas\\components\\plugins\\workflows\\validators\\ValidatorContextHasAllParams",
+      "parameters": []
+    },
+    {
+      "name": "validator__entity_params",
+      "title": "Check entity params",
+      "description": "Check entity has required by validator params",
+      "class": "extas\\components\\plugins\\workflows\\validators\\ValidatorEntityHasAllParams",
+      "parameters": []
+    },
+    {
+      "name": "condition__field_value_required",
+      "title": "Field value required",
+      "description": "Check field value is not empty",
+      "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionFieldValueRequired",
+      "parameters": [
+        {
+          "name": "field_name",
+          "template": "string",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "condition__field_value",
+      "title": "Field value",
+      "description": "Check field value is equal to specific data",
+      "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionFieldValue",
+      "parameters": [
+        {
+          "name": "field_name",
+          "template": "string"
+        },
+        {
+          "name": "field_value",
+          "template": "string"
+        }
+      ]
+    },
+    {
+      "name": "condition__field_value_compare",
+      "title": "Compare field value",
+      "description": "Compare field value with defined value",
+      "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionFieldValueCompare",
+      "parameters": [
+        {
+          "name": "field_name",
+          "template": "string"
+        },
+        {
+          "name": "field_value",
+          "template": "string"
+        },
+        {
+          "name": "field_compare",
+          "template": "string",
+          "template@string": {
+            "allow": [
+              "equal", "notEqual", "greater", "lower", "greaterOrEqual", "lowerOrEqual",
+              "empty", "notEmpty", "like", "notLike", "in", "notIn"
+            ]
+          }
+        },
+        {
+          "name": "field_type",
+          "template": "string",
+          "template@string": {
+            "allow": ["string", "number"]
+          }
+        }
+      ]
+    }
   ]
 }

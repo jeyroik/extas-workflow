@@ -418,9 +418,15 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     public function addTransition(IWorkflowTransition $transition): IWorkflowSchema
     {
         $this->config[static::FIELD__TRANSITIONS] = $this->config[static::FIELD__TRANSITIONS] ?? [];
-        $this->config[static::FIELD__TRANSITIONS][] = $transition instanceof IWorkflowTransition
-            ? $transition->getName()
-            : (string) $transition;
+        $this->config[static::FIELD__TRANSITIONS][] = $transition->getName();
+
+        if (!$this->hasState($transition->getStateToName())) {
+            $this->addState($transition->getStateToName());
+        }
+
+        if (!$this->hasState($transition->getStateFromName())) {
+            $this->addState($transition->getStateFromName());
+        }
 
         return $this;
     }
