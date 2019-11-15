@@ -7,7 +7,9 @@ use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherExecutor;
+use extas\interfaces\workflows\transitions\errors\ITransitionErrorVocabulary;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
+use extas\interfaces\workflows\transitions\results\ITransitionResult;
 
 /**
  * Class ConditionFieldValueCompare
@@ -26,6 +28,7 @@ class ConditionFieldValueCompare extends Plugin implements ITransitionDispatcher
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $schema
      * @param IItem $context
+     * @param ITransitionResult $result
      *
      * @return bool
      */
@@ -34,7 +37,8 @@ class ConditionFieldValueCompare extends Plugin implements ITransitionDispatcher
         IWorkflowTransition $transition,
         IWorkflowEntity $entity,
         IWorkflowSchema $schema,
-        IItem $context
+        IItem $context,
+        ITransitionResult &$result
     )
     {
         $fieldName = $dispatcher->getParameter('field_name');
@@ -43,20 +47,33 @@ class ConditionFieldValueCompare extends Plugin implements ITransitionDispatcher
         $fieldType = $dispatcher->getParameter('field_type');
 
         if (!$fieldName || !$fieldValue || !$fieldCompare || !$fieldType) {
+            $result->fail(ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED, [
+                'field_value_compare' =>
+                    'Missed on of `field_name`, `field_value`, `field_compare`, `field_type` in the `'
+                    . $dispatcher->getName() . '`'
+            ]);
             return false;
         }
 
         $entityValue = isset($entity[$fieldName->getValue()]) ? $entity[$fieldName->getValue()] : null;
 
         if (method_exists($this, $fieldCompare->getValue() . 'Compare')) {
-            return $this->{$fieldCompare->getValue() . 'Compare'}(
+            $valid = $this->{$fieldCompare->getValue() . 'Compare'}(
                 $fieldValue->getValue(),
                 $entityValue,
                 $fieldType->getValue(static::TYPE__STRING)
             );
+        } else {
+            $valid = $entityValue == $fieldValue->getValue();
         }
 
-        return $entityValue == $fieldValue->getValue();
+        if (!$valid) {
+            $result->fail(ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED, [
+                'field_value_compare' => '`' . $fieldName . '` is not `' . $fieldCompare . '` to `' . $fieldValue . '`'
+            ]);
+        }
+
+        return $valid;
     }
 
     /**

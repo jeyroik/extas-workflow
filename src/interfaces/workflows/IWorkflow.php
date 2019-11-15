@@ -5,6 +5,7 @@ use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\states\IWorkflowState;
+use extas\interfaces\workflows\transitions\results\ITransitionResult;
 
 /**
  * Interface IWorkflow
@@ -22,14 +23,14 @@ interface IWorkflow extends IItem
      * @param IWorkflowSchema $bySchema
      * @param IItem $withContext
      *
-     * @return bool
+     * @return ITransitionResult
      */
     public static function transitByTransition(
         IWorkflowEntity &$entity,
         string $transitionName,
         IWorkflowSchema $bySchema,
         IItem $withContext
-    ): bool;
+    ): ITransitionResult;
 
     /**
      * @param IWorkflowEntity $entity
@@ -37,12 +38,12 @@ interface IWorkflow extends IItem
      * @param IWorkflowSchema $bySchema
      * @param IItem $withContext
      *
-     * @return bool
+     * @return ITransitionResult
      */
     public static function transitByState(
         IWorkflowEntity &$entity,
         $toState,
         IWorkflowSchema $bySchema,
         IItem $withContext
-    ): bool;
+    ): ITransitionResult;
 }

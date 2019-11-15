@@ -3,13 +3,16 @@ namespace extas\components\workflows;
 
 use extas\components\Item;
 use extas\components\SystemContainer;
+use extas\components\workflows\transitions\results\TransitionResult;
 use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\IWorkflow;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\states\IWorkflowState;
+use extas\interfaces\workflows\transitions\errors\ITransitionErrorVocabulary;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
 use extas\interfaces\workflows\transitions\IWorkflowTransitionRepository;
+use extas\interfaces\workflows\transitions\results\ITransitionResult;
 
 /**
  * Class Workflow
@@ -25,19 +28,22 @@ class Workflow extends Item implements IWorkflow
      * @param IWorkflowSchema $bySchema
      * @param IItem $withContext
      *
-     * @return bool
+     * @return ITransitionResult
      */
     public static function transitByTransition(
         IWorkflowEntity &$entity,
         string $transitionName,
         IWorkflowSchema $bySchema,
         IItem $withContext
-    ): bool
+    ): ITransitionResult
     {
         $static = new static();
 
         if (!$bySchema->isApplicableEntityTemplate($entity->getTemplateName())) {
-            return false;
+            return (new TransitionResult())->fail(
+                ITransitionErrorVocabulary::ERROR__NOT_APPLICABLE_ENTITY_TEMPLATE,
+                ['template' => $entity->getTemplateName()]
+            );
         }
 
         if ($bySchema->hasTransition($transitionName)) {
@@ -46,7 +52,13 @@ class Workflow extends Item implements IWorkflow
             return $static->runTransit($entity, $toState, $bySchema, $withContext, $transition);
         }
 
-        return false;
+        return (new TransitionResult())->fail(
+            ITransitionErrorVocabulary::ERROR__UNKNOWN_TRANSITION,
+            [
+                'schema' => $bySchema->getName(),
+                'transition' => $transitionName
+            ]
+        );
     }
 
     /**
@@ -55,19 +67,22 @@ class Workflow extends Item implements IWorkflow
      * @param IWorkflowSchema $bySchema
      * @param IItem $withContext
      *
-     * @return bool
+     * @return ITransitionResult
      */
     public static function transitByState(
         IWorkflowEntity &$entity,
         $toState,
         IWorkflowSchema $bySchema,
         IItem $withContext
-    ): bool
+    ): ITransitionResult
     {
         $static = new static();
 
         if (!$bySchema->isApplicableEntityTemplate($entity->getTemplateName())) {
-            return false;
+            return (new TransitionResult())->fail(
+                ITransitionErrorVocabulary::ERROR__NOT_APPLICABLE_ENTITY_TEMPLATE,
+                ['template' => $entity->getTemplateName()]
+            );
         }
 
         if ($bySchema->canTransit($entity, $withContext, $toState)) {
@@ -77,7 +92,13 @@ class Workflow extends Item implements IWorkflow
             return $static->runTransit($entity, $toState, $bySchema, $withContext, $transition);
         }
 
-        return false;
+        return (new TransitionResult())->fail(
+            ITransitionErrorVocabulary::ERROR__CAN_NOT_TRANSIT_TO_STATE,
+            [
+                'schema' => $bySchema->getName(),
+                'transition' => $toState
+            ]
+        );
     }
 
     /**
@@ -87,7 +108,7 @@ class Workflow extends Item implements IWorkflow
      * @param IItem $withContext
      * @param IWorkflowTransition $transition
      *
-     * @return bool
+     * @return ITransitionResult
      */
     protected function runTransit(
         IWorkflowEntity &$entity,
@@ -95,8 +116,10 @@ class Workflow extends Item implements IWorkflow
         IWorkflowSchema $bySchema,
         IItem $withContext,
         IWorkflowTransition $transition
-    ): bool
+    ): ITransitionResult
     {
+        $result = new TransitionResult();
+
         $stage = 'workflow.transition';
         foreach ($this->getPluginsByStage($stage) as $plugin) {
             $plugin($entity, $toState, $transition, $bySchema, $withContext);
@@ -127,13 +150,19 @@ class Workflow extends Item implements IWorkflow
             $plugin($entity, $toState, $transition, $bySchema, $withContext);
         }
 
-        if ($this->isTransitionValid($transition, $entity, $bySchema, $withContext)) {
+        if ($this->isTransitionValid($transition, $entity, $bySchema, $withContext, $result)) {
             $entity = $entity->setStateName($toState);
-            $this->triggerTransitionEnd($transition, $entity, $bySchema, $withContext);
-            return true;
+            $this->triggerTransitionEnd($transition, $entity, $bySchema, $withContext, $result);
+
+            return $result;
         }
 
-        return false;
+        return $result->fail(
+            ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED,
+            [
+                'entity' => $entity->__toArray()
+            ]
+        );
     }
 
     /**
@@ -154,18 +183,19 @@ class Workflow extends Item implements IWorkflow
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $bySchema
      * @param IItem $withContext
+     * @param ITransitionResult $result
      *
-     * @return bool
+     * @return ITransitionResult
      */
-    protected function triggerTransitionEnd($transition, $entity, $bySchema, $withContext)
+    protected function triggerTransitionEnd($transition, $entity, $bySchema, $withContext, $result): ITransitionResult
     {
         $triggers = $bySchema->getTriggersByTransition($transition);
 
         foreach ($triggers as $trigger) {
-            $trigger->dispatch($transition, $entity, $bySchema, $withContext);
+            $trigger->dispatch($transition, $entity, $bySchema, $withContext, $result);
         }
 
-        return true;
+        return $result;
     }
 
     /**
@@ -173,20 +203,29 @@ class Workflow extends Item implements IWorkflow
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $bySchema
      * @param IItem $withContext
+     * @param ITransitionResult $result
      *
-     * @return bool
+     * @return ITransitionResult
      */
-    protected function isTransitionValid($transition, $entity, $bySchema, $withContext): bool
+    protected function isTransitionValid($transition, $entity, $bySchema, $withContext, $result): ITransitionResult
     {
-        $validators = $bySchema->getValidatorsByTransition($transition);
+        $conditions = $bySchema->getConditionsByTransition($transition);
 
-        foreach ($validators as $validator) {
-            if (!$validator->dispatch($transition, $entity, $bySchema, $withContext)) {
-                return false;
+        foreach ($conditions as $condition) {
+            if (!$condition->dispatch($transition, $entity, $bySchema, $withContext, $result)) {
+                return $result;
             }
         }
 
-        return true;
+        $validators = $bySchema->getValidatorsByTransition($transition);
+
+        foreach ($validators as $validator) {
+            if (!$validator->dispatch($transition, $entity, $bySchema, $withContext, $result)) {
+                return $result;
+            }
+        }
+
+        return $result;
     }
 
     /**

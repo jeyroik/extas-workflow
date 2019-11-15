@@ -7,7 +7,9 @@ use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherExecutor;
+use extas\interfaces\workflows\transitions\errors\ITransitionErrorVocabulary;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
+use extas\interfaces\workflows\transitions\results\ITransitionResult;
 
 /**
  * Class ValidatorHasAllParams
@@ -23,6 +25,8 @@ class ValidatorEntityHasAllParams extends Plugin implements ITransitionDispatche
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $schema
      * @param IItem $context
+     * @param ITransitionResult $result
+     *
      * @return bool
      */
     public function __invoke(
@@ -30,13 +34,18 @@ class ValidatorEntityHasAllParams extends Plugin implements ITransitionDispatche
         IWorkflowTransition $transition,
         IWorkflowEntity $entity,
         IWorkflowSchema $schema,
-        IItem $context
+        IItem $context,
+        ITransitionResult &$result
     )
     {
         $requiredParams = $dispatcher->getParameters();
 
         foreach ($requiredParams as $param) {
             if (!isset($entity[$param->getName()])) {
+                $result->fail(ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED, [
+                    'entity_has_all_params' => 'Missed `' . $param->getName() . '` in the current entity',
+                    'entity' => $context->__toArray()
+                ]);
                 return false;
             }
         }

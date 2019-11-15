@@ -14,6 +14,7 @@ use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherTemplate;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherTemplateRepository;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
+use extas\interfaces\workflows\transitions\results\ITransitionResult;
 
 /**
  * Class TransitionDispatcher
@@ -33,6 +34,7 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $schema
      * @param IItem $context
+     * @param ITransitionResult $result
      *
      * @return bool
      */
@@ -40,7 +42,8 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
         IWorkflowTransition $transition,
         IWorkflowEntity $entity,
         IWorkflowSchema $schema,
-        IItem $context
+        IItem $context,
+        ITransitionResult &$result
     ): bool
     {
         /**
@@ -49,7 +52,7 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
         $template = $this->getTemplate();
         $executor = $template->buildClassWithParameters();
 
-        return $executor($this, $transition, $entity, $schema, $context);
+        return $executor($this, $transition, $entity, $schema, $context, $result);
     }
 
     /**

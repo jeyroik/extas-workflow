@@ -9,6 +9,7 @@ use extas\interfaces\templates\IHasTemplate;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
+use extas\interfaces\workflows\transitions\results\ITransitionResult;
 
 /**
  * Interface ITransitionDispatcher
@@ -34,6 +35,7 @@ interface ITransitionDispatcher extends IItem, IHasParameters, IHasTemplate, IHa
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $schema
      * @param IItem $context
+     * @param ITransitionResult $result
      *
      * @return bool
      */
@@ -41,7 +43,8 @@ interface ITransitionDispatcher extends IItem, IHasParameters, IHasTemplate, IHa
         IWorkflowTransition $transition,
         IWorkflowEntity $entity,
         IWorkflowSchema $schema,
-        IItem $context
+        IItem $context,
+        ITransitionResult &$result
     ): bool;
 
     /**

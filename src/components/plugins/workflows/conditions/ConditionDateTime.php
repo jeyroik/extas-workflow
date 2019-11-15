@@ -7,7 +7,9 @@ use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherExecutor;
+use extas\interfaces\workflows\transitions\errors\ITransitionErrorVocabulary;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
+use extas\interfaces\workflows\transitions\results\ITransitionResult;
 
 /**
  * Class ConditionDateTime
@@ -23,6 +25,7 @@ class ConditionDateTime extends Plugin implements ITransitionDispatcherExecutor
      * @param IWorkflowEntity $entity
      * @param IWorkflowSchema $schema
      * @param IItem $context
+     * @param ITransitionResult $result
      *
      * @return bool
      */
@@ -31,7 +34,8 @@ class ConditionDateTime extends Plugin implements ITransitionDispatcherExecutor
         IWorkflowTransition $transition,
         IWorkflowEntity $entity,
         IWorkflowSchema $schema,
-        IItem $context
+        IItem $context,
+        ITransitionResult &$result
     )
     {
         $datetime = $dispatcher->getParameter('datetime');
@@ -49,6 +53,10 @@ class ConditionDateTime extends Plugin implements ITransitionDispatcherExecutor
                 }
             }
         }
+
+        $result->fail(ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED, [
+            'datetime' => 'Missed datetime parameter in the dispatcher "' . $dispatcher->getName() . '"'
+        ]);
 
         return false;
     }
