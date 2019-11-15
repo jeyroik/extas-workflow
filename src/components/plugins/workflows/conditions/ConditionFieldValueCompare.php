@@ -69,7 +69,10 @@ class ConditionFieldValueCompare extends Plugin implements ITransitionDispatcher
 
         if (!$valid) {
             $result->fail(ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED, [
-                'field_value_compare' => '`' . $fieldName . '` is not `' . $fieldCompare . '` to `' . $fieldValue . '`'
+                'field_value_compare' => '`'
+                    . $fieldName->getValue() . '` is not `'
+                    . $fieldCompare->getValue() . '` to `'
+                    . $fieldValue->getValue() . '`'
             ]);
         }
 

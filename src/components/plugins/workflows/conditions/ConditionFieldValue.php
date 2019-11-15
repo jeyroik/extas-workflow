@@ -60,7 +60,7 @@ class ConditionFieldValue extends Plugin implements ITransitionDispatcherExecuto
 
         if (!$equal) {
             $result->fail(ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED, [
-                'field_value' => '`' . $fieldName . '` is not equal to `' . $fieldValue->getValue() . '`'
+                'field_value' => '`' . $fieldName->getValue() . '` is not equal to `' . $fieldValue->getValue() . '`'
             ]);
         }
 

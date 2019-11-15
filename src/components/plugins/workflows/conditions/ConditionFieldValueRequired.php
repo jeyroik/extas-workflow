@@ -51,7 +51,7 @@ class ConditionFieldValueRequired extends Plugin implements ITransitionDispatche
 
         if (!$valid) {
             $result->fail(ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED, [
-                'field_value_required' => 'Missed required field `' . $fieldName . '`'
+                'field_value_required' => 'Missed required field `' . $fieldName->getValue() . '`'
             ]);
         }
 

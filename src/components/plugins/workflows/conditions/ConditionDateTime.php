@@ -49,13 +49,21 @@ class ConditionDateTime extends Plugin implements ITransitionDispatcherExecutor
                         ? $datetime->getValue()
                         : strtotime($datetime->getValue());
 
-                    return $this->{$compareCondition . 'Compare'}(time(), $conditionValue);
+                    $valid = $this->{$compareCondition . 'Compare'}(time(), $conditionValue);
+
+                    if (!$valid) {
+                        $result->fail(ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED, [
+                            'datetime' => 'Not valid datetime `' . $conditionValue . '`'
+                        ]);
+                    }
+
+                    return $valid;
                 }
             }
         }
 
         $result->fail(ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED, [
-            'datetime' => 'Missed datetime parameter in the dispatcher "' . $dispatcher->getName() . '"'
+            'datetime' => 'Missed datetime parameter in the dispatcher `' . $dispatcher->getName() . '`'
         ]);
 
         return false;
