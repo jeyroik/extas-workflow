@@ -79,23 +79,6 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
     public function getTriggersByTransition($transition): array;
 
     /**
-     * @return IWorkflowState[]
-     */
-    public function getStates(): array;
-
-    /**
-     * @return string[]
-     */
-    public function getStatesNames(): array;
-
-    /**
-     * @param string $stateName
-     *
-     * @return bool
-     */
-    public function hasState(string $stateName): bool;
-
-    /**
      * @return IWorkflowTransition[]
      */
     public function getTransitions(): array;
@@ -206,20 +189,6 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
     ): IWorkflowSchema;
 
     /**
-     * @param string[]|IWorkflowState[] $states
-     *
-     * @return IWorkflowSchema
-     */
-    public function setStates(array $states): IWorkflowSchema;
-
-    /**
-     * @param IWorkflowState|string $state
-     *
-     * @return IWorkflowSchema
-     */
-    public function addState($state): IWorkflowSchema;
-
-    /**
      * @param string[]|IWorkflowTransition[] $transitions
      *
      * @return IWorkflowSchema
@@ -232,4 +201,11 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
      * @return IWorkflowSchema
      */
     public function addTransition(IWorkflowTransition $transition): IWorkflowSchema;
+
+    /**
+     * @param IWorkflowTransition $transition
+     *
+     * @return IWorkflowSchema
+     */
+    public function removeTransition(IWorkflowTransition $transition): IWorkflowSchema;
 }
