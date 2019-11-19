@@ -265,6 +265,22 @@ class WorkflowSchema extends Item implements IWorkflowSchema
                 ? $transition->getName()
                 : (string) $transition;
         }
+        /**
+         * @var $transitRepo IWorkflowTransitionRepository
+         * @var $transitionsExisting IWorkflowTransition[]
+         */
+        $transitRepo = SystemContainer::getItem(IWorkflowTransitionRepository::class);
+        $transitionsExisting = $transitRepo->all([IWorkflowTransition::FIELD__NAME => $transitionsNames]);
+
+        if (count($transitionsNames) != count($transitionsExisting)) {
+            $byNameExist = [];
+            foreach ($transitionsExisting as $transition) {
+                $byNameExist[] = $transition->getName();
+            }
+            $transitionsNames = array_intersect($transitionsNames, $byNameExist);
+        }
+
+
         $this->config[static::FIELD__TRANSITIONS] = $transitionsNames;
 
         return $this;
