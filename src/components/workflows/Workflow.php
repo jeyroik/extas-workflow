@@ -207,7 +207,7 @@ class Workflow extends Item implements IWorkflow
      *
      * @return ITransitionResult
      */
-    protected function isTransitionValid($transition, $entity, $bySchema, $withContext, $result): ITransitionResult
+    public function isTransitionValid($transition, $entity, $bySchema, $withContext, $result): ITransitionResult
     {
         $conditions = $bySchema->getConditionsByTransition($transition);
 

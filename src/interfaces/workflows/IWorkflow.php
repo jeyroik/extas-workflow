@@ -5,6 +5,7 @@ use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\states\IWorkflowState;
+use extas\interfaces\workflows\transitions\IWorkflowTransition;
 use extas\interfaces\workflows\transitions\results\ITransitionResult;
 
 /**
@@ -46,4 +47,15 @@ interface IWorkflow extends IItem
         IWorkflowSchema $bySchema,
         IItem $withContext
     ): ITransitionResult;
+
+    /**
+     * @param IWorkflowTransition $transition
+     * @param IWorkflowEntity $entity
+     * @param IWorkflowSchema $bySchema
+     * @param IItem $withContext
+     * @param ITransitionResult $result
+     *
+     * @return ITransitionResult
+     */
+    public function isTransitionValid($transition, $entity, $bySchema, $withContext, $result): ITransitionResult;
 }
