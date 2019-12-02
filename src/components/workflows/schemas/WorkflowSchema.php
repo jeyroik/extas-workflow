@@ -281,7 +281,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
         }
 
 
-        $this->config[static::FIELD__TRANSITIONS] = $transitionsNames;
+        $this->config[static::FIELD__TRANSITIONS] = array_values($transitionsNames);
 
         return $this;
     }
