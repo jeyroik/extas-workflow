@@ -58,18 +58,24 @@
       "title": "Datetime condition",
       "description": "Check current datetime, allow to restrict execution before the set time.",
       "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionDateTime",
+      "type": "condition",
       "parameters": [
         {
           "name": "datetime",
           "template": "datetime",
-          "value": ""
+          "value": "",
+          "title": "Дата и время",
+          "description": "Timestamp даты и времени"
         },
         {
           "name": "compare",
           "template": "string",
           "template@string": {
             "allowed": ["equal", "notEqual", "greater", "lower"]
-          }
+          },
+          "value": "equal",
+          "title": "Условие",
+          "description": "Условие сравнения. Допускается: equal, notEqual, greater, lower"
         }
       ]
     },
@@ -78,6 +84,7 @@
       "title": "Check context params.",
       "description": "Check context has required by validator params.",
       "class": "extas\\components\\plugins\\workflows\\validators\\ValidatorContextHasAllParams",
+      "type": "validator",
       "parameters": []
     },
     {
@@ -85,6 +92,7 @@
       "title": "Check entity params",
       "description": "Check entity has required by validator params",
       "class": "extas\\components\\plugins\\workflows\\validators\\ValidatorEntityHasAllParams",
+      "type": "validator",
       "parameters": []
     },
     {
@@ -92,11 +100,14 @@
       "title": "Field value required",
       "description": "Check field value is not empty",
       "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionFieldValueRequired",
+      "type": "condition",
       "parameters": [
         {
           "name": "field_name",
           "template": "string",
-          "value": ""
+          "value": "",
+          "title": "Имя поля",
+          "description": "Имя поля, значение которого должно что-то содержать"
         }
       ]
     },
@@ -105,14 +116,19 @@
       "title": "Field value",
       "description": "Check field value is equal to specific data",
       "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionFieldValue",
+      "type": "condition",
       "parameters": [
         {
           "name": "field_name",
-          "template": "string"
+          "template": "string",
+          "title": "Имя поля",
+          "description": "Имя поля из шаблона сущности"
         },
         {
           "name": "field_value",
-          "template": "string"
+          "template": "string",
+          "title": "Значение поля",
+          "description": "Значение, которому должно ровняться содержимое соответствующего поля"
         }
       ]
     },
@@ -121,18 +137,25 @@
       "title": "Compare field value",
       "description": "Compare field value with defined value",
       "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionFieldValueCompare",
+      "type": "condition",
       "parameters": [
         {
           "name": "field_name",
           "template": "string"
+          "title": "Имя поля",
+          "description": "Имя поля из шаблона сущности"
         },
         {
           "name": "field_value",
-          "template": "string"
+          "template": "string",
+          "title": "Значение поля",
+          "description": "Значение с которым будет сравниваться содержимое соответствующего поля"
         },
         {
           "name": "field_compare",
           "template": "string",
+          "title": "Условие",
+          "description": "Условие сравнения значения и содержимого поля",
           "template@string": {
             "allow": [
               "equal", "notEqual", "greater", "lower", "greaterOrEqual", "lowerOrEqual",
@@ -143,6 +166,8 @@
         {
           "name": "field_type",
           "template": "string",
+          "title": "Тип поля",
+          "description": "Тип поля влияет на способ сравнения значения и содержимого поля",
           "template@string": {
             "allow": ["string", "number"]
           }
