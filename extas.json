@@ -55,8 +55,8 @@
   "workflow_transition_dispatcher_templates": [
     {
       "name": "condition__datetime",
-      "title": "Datetime condition",
-      "description": "Check current datetime, allow to restrict execution before the set time.",
+      "title": "Текущее время",
+      "description": "Ограничение на текущее время для перехода",
       "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionDateTime",
       "type": "condition",
       "parameters": [
@@ -71,7 +71,28 @@
           "name": "compare",
           "template": "string",
           "template@string": {
-            "allowed": ["equal", "notEqual", "greater", "lower"]
+            "allowed": [
+              {
+                "name": "equal",
+                "title": "=",
+                "description": "Равно"
+              },
+              {
+                "name": "notEqual",
+                "title": "!=",
+                "description": "Не равно"
+              },
+              {
+                "name": "greater",
+                "title": ">",
+                "description": "Больше"
+              },
+              {
+                "name": "lower",
+                "title": "<",
+                "description": "Меньше"
+              }
+            ]
           },
           "value": "equal",
           "title": "Условие",
@@ -81,24 +102,24 @@
     },
     {
       "name": "validator__context_params",
-      "title": "Check context params.",
-      "description": "Check context has required by validator params.",
+      "title": "Параметры контекста",
+      "description": "Проверка наличия в контексте необходимых параметров",
       "class": "extas\\components\\plugins\\workflows\\validators\\ValidatorContextHasAllParams",
       "type": "validator",
       "parameters": []
     },
     {
       "name": "validator__entity_params",
-      "title": "Check entity params",
-      "description": "Check entity has required by validator params",
+      "title": "Параметры сущности",
+      "description": "Проверка наличия в сущности необходимых параметров",
       "class": "extas\\components\\plugins\\workflows\\validators\\ValidatorEntityHasAllParams",
       "type": "validator",
       "parameters": []
     },
     {
       "name": "condition__field_value_required",
-      "title": "Field value required",
-      "description": "Check field value is not empty",
+      "title": "Не пустое поле",
+      "description": "Проверка на наличия в содержании поля не пустого значения",
       "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionFieldValueRequired",
       "type": "condition",
       "parameters": [
@@ -113,8 +134,8 @@
     },
     {
       "name": "condition__field_value",
-      "title": "Field value",
-      "description": "Check field value is equal to specific data",
+      "title": "Равенство значения",
+      "description": "Проверка на равенство значения поля с указанным значением",
       "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionFieldValue",
       "type": "condition",
       "parameters": [
@@ -134,8 +155,8 @@
     },
     {
       "name": "condition__field_value_compare",
-      "title": "Compare field value",
-      "description": "Compare field value with defined value",
+      "title": "Значение поля",
+      "description": "Проверка соответствия содержимого поля указаннмоу значению",
       "class": "extas\\components\\plugins\\workflows\\conditions\\ConditionFieldValueCompare",
       "type": "condition",
       "parameters": [
@@ -146,22 +167,80 @@
           "description": "Имя поля из шаблона сущности"
         },
         {
-          "name": "field_value",
-          "template": "string",
-          "title": "Значение поля",
-          "description": "Значение с которым будет сравниваться содержимое соответствующего поля"
-        },
-        {
           "name": "field_compare",
           "template": "string",
           "title": "Условие",
           "description": "Условие сравнения значения и содержимого поля",
           "template@string": {
             "allow": [
-              "equal", "notEqual", "greater", "lower", "greaterOrEqual", "lowerOrEqual",
-              "empty", "notEmpty", "like", "notLike", "in", "notIn"
+              {
+                "name": "equal",
+                "title": "=",
+                "description": "Равно"
+              },
+              {
+                "name": "notEqual",
+                "title": "!=",
+                "description": "Не равно"
+              },
+              {
+                "name": "greater",
+                "title": ">",
+                "description": "Больше"
+              },
+              {
+                "name": "lower",
+                "title": "<",
+                "description": "Меньше"
+              },
+              {
+                "name": "greaterOrEqual",
+                "title": ">=",
+                "description": "Больше или равно"
+              },
+              {
+                "name": "lowerOrEqual",
+                "title": "<=",
+                "description": "Меньше или равно"
+              },
+              {
+                "name": "empty",
+                "title": "-",
+                "description": "Пустое значение"
+              },
+              {
+                "name": "notEmpty",
+                "title": "!-",
+                "description": "Не пустое значение"
+              },
+              {
+                "name": "like",
+                "title": "~",
+                "description": "Содержит"
+              },
+              {
+                "name": "notLike",
+                "title": "!~",
+                "description": "Не содержит"
+              },
+              {
+                "name": "in",
+                "title": "*",
+                "description": "Один из"
+              },
+              {
+                "name": "notIn",
+                "title": "!*",
+                "description": "Не является одним из"
+              }
             ]
           }
+        },
+        {
+          "name": "field_value",
+          "template": "string",
+          "title": "Значение поля",
+          "description": "Значение с которым будет сравниваться содержимое соответствующего поля"
         },
         {
           "name": "field_type",
@@ -169,7 +248,18 @@
           "title": "Тип поля",
           "description": "Тип поля влияет на способ сравнения значения и содержимого поля",
           "template@string": {
-            "allow": ["string", "number"]
+            "allow": [
+              {
+                "name": "string",
+                "title": "Строка",
+                "description": "Строкове значение"
+              },
+              {
+                "name": "number",
+                "title": "Число",
+                "description": "Числовое значение"
+              }
+            ]
           }
         }
       ]
