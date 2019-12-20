@@ -141,7 +141,7 @@
       "parameters": [
         {
           "name": "field_name",
-          "template": "string"
+          "template": "string",
           "title": "Имя поля",
           "description": "Имя поля из шаблона сущности"
         },
