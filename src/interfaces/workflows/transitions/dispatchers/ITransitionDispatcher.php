@@ -32,19 +32,21 @@ interface ITransitionDispatcher extends IItem, IHasParameters, IHasTemplate, IHa
 
     /**
      * @param IWorkflowTransition $transition
-     * @param IWorkflowEntity $entity
+     * @param IWorkflowEntity $entitySource
      * @param IWorkflowSchema $schema
      * @param IItem $context
      * @param ITransitionResult $result
+     * @param IWorkflowEntity $entityEdited
      *
      * @return bool
      */
     public function dispatch(
         IWorkflowTransition $transition,
-        IWorkflowEntity $entity,
+        IWorkflowEntity $entitySource,
         IWorkflowSchema $schema,
         IItem $context,
-        ITransitionResult &$result
+        ITransitionResult &$result,
+        IWorkflowEntity &$entityEdited
     ): bool;
 
     /**

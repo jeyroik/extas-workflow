@@ -31,19 +31,21 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
 
     /**
      * @param IWorkflowTransition $transition
-     * @param IWorkflowEntity $entity
+     * @param IWorkflowEntity $entitySource
      * @param IWorkflowSchema $schema
      * @param IItem $context
      * @param ITransitionResult $result
+     * @param IWorkflowEntity &$entityEdited
      *
      * @return bool
      */
     public function dispatch(
         IWorkflowTransition $transition,
-        IWorkflowEntity $entity,
+        IWorkflowEntity $entitySource,
         IWorkflowSchema $schema,
         IItem $context,
-        ITransitionResult &$result
+        ITransitionResult &$result,
+        IWorkflowEntity &$entityEdited
     ): bool
     {
         /**
@@ -52,7 +54,7 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
         $template = $this->getTemplate();
         $executor = $template->buildClassWithParameters();
 
-        return $executor($this, $transition, $entity, $schema, $context, $result);
+        return $executor($this, $transition, $entitySource, $schema, $context, $result, $entityEdited);
     }
 
     /**

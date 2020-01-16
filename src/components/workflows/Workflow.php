@@ -120,36 +120,6 @@ class Workflow extends Item implements IWorkflow
     {
         $result = new TransitionResult();
 
-        $stage = 'workflow.transition';
-        foreach ($this->getPluginsByStage($stage) as $plugin) {
-            $plugin($entity, $toState, $transition, $bySchema, $withContext);
-        }
-
-        $stage = 'workflow.from.' . $entity->getStateName();
-        foreach ($this->getPluginsByStage($stage) as $plugin) {
-            $plugin($entity, $toState, $transition, $bySchema, $withContext);
-        }
-
-        $stage = 'workflow.to.' . $toState;
-        foreach ($this->getPluginsByStage($stage) as $plugin) {
-            $plugin($entity, $toState, $transition, $bySchema, $withContext);
-        }
-
-        $stage = 'workflow.' . $bySchema->getName();
-        foreach ($this->getPluginsByStage($stage) as $plugin) {
-            $plugin($entity, $toState, $transition, $bySchema, $withContext);
-        }
-
-        $stage = 'workflow.' . $transition->getName();
-        foreach ($this->getPluginsByStage($stage) as $plugin) {
-            $plugin($entity, $toState, $transition, $bySchema, $withContext);
-        }
-
-        $stage = 'workflow.' . $bySchema->getName() . '.' . $transition->getName();
-        foreach ($this->getPluginsByStage($stage) as $plugin) {
-            $plugin($entity, $toState, $transition, $bySchema, $withContext);
-        }
-
         if ($this->isTransitionValid($transition, $entity, $bySchema, $withContext, $result)) {
             $entity = $entity->setStateName($toState);
             $this->triggerTransitionEnd($transition, $entity, $bySchema, $withContext, $result);
@@ -190,9 +160,10 @@ class Workflow extends Item implements IWorkflow
     protected function triggerTransitionEnd($transition, $entity, $bySchema, $withContext, $result): ITransitionResult
     {
         $triggers = $bySchema->getTriggersByTransition($transition);
+        $entityEdited = clone $entity;
 
         foreach ($triggers as $trigger) {
-            $trigger->dispatch($transition, $entity, $bySchema, $withContext, $result);
+            $trigger->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited);
         }
 
         return $result;
@@ -210,9 +181,9 @@ class Workflow extends Item implements IWorkflow
     public function isTransitionValid($transition, $entity, $bySchema, $withContext, $result): ITransitionResult
     {
         $conditions = $bySchema->getConditionsByTransition($transition);
-
+        $entityEdited = clone $entity;
         foreach ($conditions as $condition) {
-            if (!$condition->dispatch($transition, $entity, $bySchema, $withContext, $result)) {
+            if (!$condition->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited)) {
                 return $result;
             }
         }
@@ -220,7 +191,7 @@ class Workflow extends Item implements IWorkflow
         $validators = $bySchema->getValidatorsByTransition($transition);
 
         foreach ($validators as $validator) {
-            if (!$validator->dispatch($transition, $entity, $bySchema, $withContext, $result)) {
+            if (!$validator->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited)) {
                 return $result;
             }
         }

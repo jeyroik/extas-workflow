@@ -322,7 +322,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
             $result = new TransitionResult();
 
             foreach ($conditions as $condition) {
-                if (!$condition->dispatch($transition, $entity, $this, $context, $result)) {
+                if (!$condition->dispatch($transition, $entity, $this, $context, $result, $entity)) {
                     return null;
                 }
             }
@@ -508,7 +508,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
                 continue;
             }
             $transition = $transitionNames[$condition->getTransitionName()];
-            if (!$condition->dispatch($transition, $entity, $this, $context, $result)) {
+            if (!$condition->dispatch($transition, $entity, $this, $context, $result, $entity)) {
                 unset($transitionNames[$condition->getTransitionName()]);
             }
         }

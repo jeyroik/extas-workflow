@@ -22,20 +22,22 @@ class ConditionFieldValueRequired extends Plugin implements ITransitionDispatche
     /**
      * @param ITransitionDispatcher $dispatcher
      * @param IWorkflowTransition $transition
-     * @param IWorkflowEntity $entity
+     * @param IWorkflowEntity $entitySource
      * @param IWorkflowSchema $schema
      * @param IItem $context
      * @param ITransitionResult $result
+     * @param IWorkflowEntity $entityEdited
      *
      * @return bool
      */
     public function __invoke(
         ITransitionDispatcher $dispatcher,
         IWorkflowTransition $transition,
-        IWorkflowEntity $entity,
+        IWorkflowEntity $entitySource,
         IWorkflowSchema $schema,
         IItem $context,
-        ITransitionResult &$result
+        ITransitionResult &$result,
+        IWorkflowEntity &$entityEdited
     )
     {
         $fieldName = $dispatcher->getParameter('field_name');
@@ -46,7 +48,7 @@ class ConditionFieldValueRequired extends Plugin implements ITransitionDispatche
             return false;
         }
 
-        $fieldValue = isset($entity[$fieldName->getValue()]) ? $entity[$fieldName->getValue()] : null;
+        $fieldValue = isset($entity[$fieldName->getValue()]) ? $entitySource[$fieldName->getValue()] : null;
         $valid = empty($fieldValue) ? false : true;
 
         if (!$valid) {

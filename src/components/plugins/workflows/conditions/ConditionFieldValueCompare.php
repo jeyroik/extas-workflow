@@ -25,20 +25,22 @@ class ConditionFieldValueCompare extends Plugin implements ITransitionDispatcher
     /**
      * @param ITransitionDispatcher $dispatcher
      * @param IWorkflowTransition $transition
-     * @param IWorkflowEntity $entity
+     * @param IWorkflowEntity $entitySource
      * @param IWorkflowSchema $schema
      * @param IItem $context
      * @param ITransitionResult $result
+     * @param IWorkflowEntity $entityEdited
      *
      * @return bool
      */
     public function __invoke(
         ITransitionDispatcher $dispatcher,
         IWorkflowTransition $transition,
-        IWorkflowEntity $entity,
+        IWorkflowEntity $entitySource,
         IWorkflowSchema $schema,
         IItem $context,
-        ITransitionResult &$result
+        ITransitionResult &$result,
+        IWorkflowEntity &$entityEdited
     )
     {
         $fieldName = $dispatcher->getParameter('field_name');
@@ -55,7 +57,7 @@ class ConditionFieldValueCompare extends Plugin implements ITransitionDispatcher
             return false;
         }
 
-        $entityValue = isset($entity[$fieldName->getValue()]) ? $entity[$fieldName->getValue()] : null;
+        $entityValue = isset($entity[$fieldName->getValue()]) ? $entitySource[$fieldName->getValue()] : null;
 
         if (method_exists($this, $fieldCompare->getValue() . 'Compare')) {
             $valid = $this->{$fieldCompare->getValue() . 'Compare'}(
