@@ -12,5 +12,5 @@ use extas\interfaces\templates\ITemplate;
  */
 interface IWorkflowEntityTemplate extends ITemplate, IHasClass
 {
-    const SUBJECT = 'extas.workflow.entity.template';
+    public const SUBJECT = 'extas.workflow.entity.template';
 }

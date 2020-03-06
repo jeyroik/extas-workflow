@@ -11,11 +11,11 @@ use extas\interfaces\IItem;
  */
 interface ITransitionError extends IItem
 {
-    const SUBJECT = 'extas.workflow.transition.error';
+    public const SUBJECT = 'extas.workflow.transition.error';
 
-    const FIELD__MESSAGE = 'message';
-    const FIELD__CODE = 'code';
-    const FIELD__DATA = 'data';
+    public const FIELD__MESSAGE = 'message';
+    public const FIELD__CODE = 'code';
+    public const FIELD__DATA = 'data';
 
     /**
      * @return string

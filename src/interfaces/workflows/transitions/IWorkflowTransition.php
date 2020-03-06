@@ -14,10 +14,10 @@ use extas\interfaces\workflows\states\IWorkflowState;
  */
 interface IWorkflowTransition extends IItem, IHasName, IHasDescription
 {
-    const SUBJECT = 'extas.workflow.transition';
+    public const SUBJECT = 'extas.workflow.transition';
 
-    const FIELD__STATE_FROM = 'state_from';
-    const FIELD__STATE_TO = 'state_to';
+    public const FIELD__STATE_FROM = 'state_from';
+    public const FIELD__STATE_TO = 'state_to';
 
     /**
      * @return IWorkflowState|null

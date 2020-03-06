@@ -13,5 +13,5 @@ use extas\interfaces\templates\ITemplate;
  */
 interface ITransitionDispatcherTemplate extends ITemplate, IHasClass, IHasType
 {
-    const SUBJECT = 'extas.workflow.transition.dispatcher.template';
+    public const SUBJECT = 'extas.workflow.transition.dispatcher.template';
 }

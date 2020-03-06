@@ -38,7 +38,7 @@ class ConditionDateTime extends Plugin implements ITransitionDispatcherExecutor
         IItem $context,
         ITransitionResult &$result,
         IWorkflowEntity &$entityEdited
-    )
+    ): bool
     {
         $datetime = $dispatcher->getParameter('datetime');
 

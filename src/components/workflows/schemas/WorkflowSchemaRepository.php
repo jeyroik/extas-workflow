@@ -12,9 +12,9 @@ use extas\interfaces\workflows\schemas\IWorkflowSchemaRepository;
  */
 class WorkflowSchemaRepository extends Repository implements IWorkflowSchemaRepository
 {
-    protected $idAs = '';
-    protected $scope = 'extas';
-    protected $pk = WorkflowSchema::FIELD__NAME;
-    protected $name = 'workflow_schemas';
-    protected $itemClass = WorkflowSchema::class;
+    protected string $idAs = '';
+    protected string $scope = 'extas';
+    protected string $pk = WorkflowSchema::FIELD__NAME;
+    protected string $name = 'workflow_schemas';
+    protected string $itemClass = WorkflowSchema::class;
 }

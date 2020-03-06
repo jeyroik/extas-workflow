@@ -12,9 +12,9 @@ use extas\interfaces\workflows\schemas\IWorkflowSchemaRepository;
  */
 class PluginInstallWorkflowSchemas extends PluginInstallDefault
 {
-    protected $selfItemClass = WorkflowSchema::class;
-    protected $selfName = 'workflow schema';
-    protected $selfSection = 'workflow_schemas';
-    protected $selfUID = WorkflowSchema::FIELD__NAME;
-    protected $selfRepositoryClass = IWorkflowSchemaRepository::class;
+    protected string $selfItemClass = WorkflowSchema::class;
+    protected string $selfName = 'workflow schema';
+    protected string $selfSection = 'workflow_schemas';
+    protected string $selfUID = WorkflowSchema::FIELD__NAME;
+    protected string $selfRepositoryClass = IWorkflowSchemaRepository::class;
 }

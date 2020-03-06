@@ -12,9 +12,9 @@ use extas\interfaces\workflows\transitions\IWorkflowTransitionRepository;
  */
 class PluginInstallWorkflowTransitions extends PluginInstallDefault
 {
-    protected $selfRepositoryClass = IWorkflowTransitionRepository::class;
-    protected $selfUID = WorkflowTransition::FIELD__NAME;
-    protected $selfSection = 'workflow_transitions';
-    protected $selfName = 'workflow transition';
-    protected $selfItemClass = WorkflowTransition::class;
+    protected string $selfRepositoryClass = IWorkflowTransitionRepository::class;
+    protected string $selfUID = WorkflowTransition::FIELD__NAME;
+    protected string $selfSection = 'workflow_transitions';
+    protected string $selfName = 'workflow transition';
+    protected string $selfItemClass = WorkflowTransition::class;
 }

@@ -19,8 +19,8 @@ use extas\interfaces\workflows\transitions\results\ITransitionResult;
  */
 class ConditionFieldValueCompare extends Plugin implements ITransitionDispatcherExecutor
 {
-    const TYPE__STRING = 'string';
-    const TYPE__NUMBER = 'number';
+    public const TYPE__STRING = 'string';
+    public const TYPE__NUMBER = 'number';
 
     /**
      * @param ITransitionDispatcher $dispatcher
@@ -41,7 +41,7 @@ class ConditionFieldValueCompare extends Plugin implements ITransitionDispatcher
         IItem $context,
         ITransitionResult &$result,
         IWorkflowEntity &$entityEdited
-    )
+    ): bool
     {
         $fieldName = $dispatcher->getParameter('field_name');
         $fieldValue = $dispatcher->getParameter('field_value');

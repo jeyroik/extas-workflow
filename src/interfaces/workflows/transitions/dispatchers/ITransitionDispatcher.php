@@ -19,16 +19,16 @@ use extas\interfaces\workflows\transitions\results\ITransitionResult;
  */
 interface ITransitionDispatcher extends IItem, IHasParameters, IHasTemplate, IHasType, IHasName
 {
-    const SUBJECT = 'extas.workflow.transition.dispatcher';
+    public const SUBJECT = 'extas.workflow.transition.dispatcher';
 
-    const FIELD__SCHEMA_NAME = 'schema_name';
-    const FIELD__TRANSITION_NAME = 'transition_name';
+    public const FIELD__SCHEMA_NAME = 'schema_name';
+    public const FIELD__TRANSITION_NAME = 'transition_name';
 
-    const TYPE__CONDITION = 'condition';
-    const TYPE__VALIDATOR = 'validator';
-    const TYPE__TRIGGER = 'trigger';
+    public const TYPE__CONDITION = 'condition';
+    public const TYPE__VALIDATOR = 'validator';
+    public const TYPE__TRIGGER = 'trigger';
 
-    const TRANSITION__ANY = '*';
+    public const TRANSITION__ANY = '*';
 
     /**
      * @param IWorkflowTransition $transition

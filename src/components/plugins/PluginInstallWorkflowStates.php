@@ -12,9 +12,9 @@ use extas\interfaces\workflows\states\IWorkflowStateRepository;
  */
 class PluginInstallWorkflowStates extends PluginInstallDefault
 {
-    protected $selfItemClass = WorkflowState::class;
-    protected $selfName = 'workflow state';
-    protected $selfSection = 'workflow_states';
-    protected $selfUID = WorkflowState::FIELD__NAME;
-    protected $selfRepositoryClass = IWorkflowStateRepository::class;
+    protected string $selfItemClass = WorkflowState::class;
+    protected string $selfName = 'workflow state';
+    protected string $selfSection = 'workflow_states';
+    protected string $selfUID = WorkflowState::FIELD__NAME;
+    protected string $selfRepositoryClass = IWorkflowStateRepository::class;
 }

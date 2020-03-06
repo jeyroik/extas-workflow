@@ -12,9 +12,9 @@ use extas\interfaces\workflows\states\IWorkflowStateRepository;
  */
 class WorkflowStateRepository extends Repository implements IWorkflowStateRepository
 {
-    protected $idAs = '';
-    protected $scope = 'extas';
-    protected $pk = WorkflowState::FIELD__NAME;
-    protected $name = 'workflow_states';
-    protected $itemClass = WorkflowState::class;
+    protected string $idAs = '';
+    protected string $scope = 'extas';
+    protected string $pk = WorkflowState::FIELD__NAME;
+    protected string $name = 'workflow_states';
+    protected string $itemClass = WorkflowState::class;
 }

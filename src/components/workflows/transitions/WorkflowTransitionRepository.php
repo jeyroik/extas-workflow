@@ -12,9 +12,9 @@ use extas\interfaces\workflows\transitions\IWorkflowTransitionRepository;
  */
 class WorkflowTransitionRepository extends Repository implements IWorkflowTransitionRepository
 {
-    protected $itemClass = WorkflowTransition::class;
-    protected $name = 'workflow_transitions';
-    protected $pk = WorkflowTransition::FIELD__NAME;
-    protected $scope = 'extas';
-    protected $idAs = '';
+    protected string $itemClass = WorkflowTransition::class;
+    protected string $name = 'workflow_transitions';
+    protected string $pk = WorkflowTransition::FIELD__NAME;
+    protected string $scope = 'extas';
+    protected string $idAs = '';
 }

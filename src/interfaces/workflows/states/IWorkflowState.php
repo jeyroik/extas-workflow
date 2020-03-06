@@ -14,5 +14,5 @@ use extas\interfaces\parameters\IHasParameters;
  */
 interface IWorkflowState extends IItem, IHasName, IHasDescription, IHasParameters
 {
-    const SUBJECT = 'extas.workflow.state';
+    public const SUBJECT = 'extas.workflow.state';
 }

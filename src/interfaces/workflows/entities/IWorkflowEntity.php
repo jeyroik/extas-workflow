@@ -11,10 +11,10 @@ use extas\interfaces\IItem;
  */
 interface IWorkflowEntity extends IItem
 {
-    const SUBJECT = 'extas.workflow.entity';
+    public const SUBJECT = 'extas.workflow.entity';
 
-    const FIELD__STATE = 'state';
-    const FIELD__TEMPLATE = 'workflow_template';
+    public const FIELD__STATE = 'state';
+    public const FIELD__TEMPLATE = 'workflow_template';
 
     /**
      * @return string

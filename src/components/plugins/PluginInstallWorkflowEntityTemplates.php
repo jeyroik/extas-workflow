@@ -12,9 +12,9 @@ use extas\interfaces\workflows\entities\IWorkflowEntityTemplateRepository;
  */
 class PluginInstallWorkflowEntityTemplates extends PluginInstallDefault
 {
-    protected $selfRepositoryClass = IWorkflowEntityTemplateRepository::class;
-    protected $selfUID = WorkflowEntityTemplate::FIELD__NAME;
-    protected $selfSection = 'workflow_entity_templates';
-    protected $selfName = 'workflow entity template';
-    protected $selfItemClass = WorkflowEntityTemplate::class;
+    protected string $selfRepositoryClass = IWorkflowEntityTemplateRepository::class;
+    protected string $selfUID = WorkflowEntityTemplate::FIELD__NAME;
+    protected string $selfSection = 'workflow_entity_templates';
+    protected string $selfName = 'workflow entity template';
+    protected string $selfItemClass = WorkflowEntityTemplate::class;
 }

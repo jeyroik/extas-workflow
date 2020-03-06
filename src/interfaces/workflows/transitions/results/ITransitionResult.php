@@ -12,9 +12,9 @@ use extas\interfaces\workflows\transitions\errors\ITransitionError;
  */
 interface ITransitionResult extends IItem
 {
-    const SUBJECT = 'extas.workflow.transition.result';
+    public const SUBJECT = 'extas.workflow.transition.result';
 
-    const FIELD__ERROR = 'error';
+    public const FIELD__ERROR = 'error';
 
     /**
      * @param int $code

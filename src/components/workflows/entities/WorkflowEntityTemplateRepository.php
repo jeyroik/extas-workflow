@@ -12,9 +12,9 @@ use extas\interfaces\workflows\entities\IWorkflowEntityTemplateRepository;
  */
 class WorkflowEntityTemplateRepository extends Repository implements IWorkflowEntityTemplateRepository
 {
-    protected $idAs = '';
-    protected $scope = 'extas';
-    protected $pk = WorkflowEntityTemplate::FIELD__NAME;
-    protected $name = 'workflow_entity_templates';
-    protected $itemClass = WorkflowEntityTemplate::class;
+    protected string $idAs = '';
+    protected string $scope = 'extas';
+    protected string $pk = WorkflowEntityTemplate::FIELD__NAME;
+    protected string $name = 'workflow_entity_templates';
+    protected string $itemClass = WorkflowEntityTemplate::class;
 }

@@ -9,10 +9,10 @@ namespace extas\interfaces\workflows\transitions\errors;
  */
 interface ITransitionErrorVocabulary
 {
-    const ERROR__NOT_APPLICABLE_ENTITY_TEMPLATE = 50101;
-    const ERROR__VALIDATION_FAILED = 50102;
-    const ERROR__UNKNOWN_TRANSITION = 50103;
-    const ERROR__CAN_NOT_TRANSIT_TO_STATE = 50104;
+    public const ERROR__NOT_APPLICABLE_ENTITY_TEMPLATE = 50101;
+    public const ERROR__VALIDATION_FAILED = 50102;
+    public const ERROR__UNKNOWN_TRANSITION = 50103;
+    public const ERROR__CAN_NOT_TRANSIT_TO_STATE = 50104;
 
     /**
      * @param int $code

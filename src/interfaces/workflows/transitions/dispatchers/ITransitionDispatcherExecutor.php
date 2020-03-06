@@ -34,5 +34,5 @@ interface ITransitionDispatcherExecutor
         IItem $context,
         ITransitionResult &$result,
         IWorkflowEntity &$entityEdited
-    );
+    ): bool;
 }

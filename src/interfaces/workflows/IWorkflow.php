@@ -16,7 +16,7 @@ use extas\interfaces\workflows\transitions\results\ITransitionResult;
  */
 interface IWorkflow extends IItem
 {
-    const SUBJECT = 'extas.workflow';
+    public const SUBJECT = 'extas.workflow';
 
     /**
      * @param IWorkflowEntity $entity

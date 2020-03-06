@@ -14,7 +14,7 @@ class TransitionErrorVocabulary implements ITransitionErrorVocabulary
     /**
      * @var array
      */
-    protected static $errors = [
+    protected static array $errors = [
         50101 => 'Not applicable entity template',
         50102 => 'Validation failed',
         50103 => 'Schema has not this transition',

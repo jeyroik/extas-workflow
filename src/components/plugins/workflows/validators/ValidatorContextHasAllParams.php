@@ -38,7 +38,7 @@ class ValidatorContextHasAllParams extends Plugin implements ITransitionDispatch
         IItem $context,
         ITransitionResult &$result,
         IWorkflowEntity &$entityEdited
-    )
+    ): bool
     {
         $requiredParams = $dispatcher->getParameters();
 

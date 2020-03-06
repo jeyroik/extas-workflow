@@ -38,7 +38,7 @@ class ConditionFieldValue extends Plugin implements ITransitionDispatcherExecuto
         IItem $context,
         ITransitionResult &$result,
         IWorkflowEntity &$entityEdited
-    )
+    ): bool
     {
         $fieldName = $dispatcher->getParameter('field_name');
         if (!$fieldName) {

@@ -19,11 +19,11 @@ use extas\interfaces\workflows\transitions\IWorkflowTransition;
  */
 interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParameters
 {
-    const SUBJECT = 'extas.workflow';
+    public const SUBJECT = 'extas.workflow';
 
-    const FIELD__STATES = 'states';
-    const FIELD__TRANSITIONS = 'transitions';
-    const FIELD__ENTITY_TEMPLATE = 'entity_template';
+    public const FIELD__STATES = 'states';
+    public const FIELD__TRANSITIONS = 'transitions';
+    public const FIELD__ENTITY_TEMPLATE = 'entity_template';
 
     /**
      * @param string $templateName
