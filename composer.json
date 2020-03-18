@@ -2,7 +2,6 @@
   "name": "jeyroik/extas-workflow",
   "description": "Extas workflow package",
   "require": {
-    "jeyroik/extas-foundation": "2.*",
     "jeyroik/extas-base": "1.*",
     "jeyroik/extas-templates": "1.*",
     "jeyroik/extas-installer": "2.*"
