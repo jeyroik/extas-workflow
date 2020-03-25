@@ -42,9 +42,9 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     }
 
     /**
-     * @return IWorkflowEntityTemplate
+     * @return IWorkflowEntityTemplate|null
      */
-    public function getEntityTemplate(): IWorkflowEntityTemplate
+    public function getEntityTemplate(): ?IWorkflowEntityTemplate
     {
         return SystemContainer::getItem(IWorkflowEntityTemplateRepository::class)->one([
             IWorkflowEntityTemplate::FIELD__NAME => $this->getEntityTemplateName()

@@ -35,7 +35,7 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
     /**
      * @return IWorkflowEntityTemplate
      */
-    public function getEntityTemplate(): IWorkflowEntityTemplate;
+    public function getEntityTemplate(): ?IWorkflowEntityTemplate;
 
     /**
      * @return string
