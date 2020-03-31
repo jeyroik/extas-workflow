@@ -57,7 +57,9 @@ class ConditionFieldValueCompare extends Plugin implements ITransitionDispatcher
             return false;
         }
 
-        $entityValue = isset($entity[$fieldName->getValue()]) ? $entitySource[$fieldName->getValue()] : null;
+        $entityValue = isset($entitySource[$fieldName->getValue()])
+            ? $entitySource[$fieldName->getValue()]
+            : null;
 
         if (method_exists($this, $fieldCompare->getValue() . 'Compare')) {
             $valid = $this->{$fieldCompare->getValue() . 'Compare'}(

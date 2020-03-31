@@ -57,7 +57,9 @@ class ConditionFieldValue extends Plugin implements ITransitionDispatcherExecuto
             return false;
         }
 
-        $entityValue = isset($entity[$fieldName->getValue()]) ? $entitySource[$fieldName->getValue()] : null;
+        $entityValue = isset($entitySource[$fieldName->getValue()])
+            ? $entitySource[$fieldName->getValue()]
+            : null;
         $equal = ($entityValue == $fieldValue->getValue());
 
         if (!$equal) {

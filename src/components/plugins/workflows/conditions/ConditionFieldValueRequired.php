@@ -48,7 +48,9 @@ class ConditionFieldValueRequired extends Plugin implements ITransitionDispatche
             return false;
         }
 
-        $fieldValue = isset($entity[$fieldName->getValue()]) ? $entitySource[$fieldName->getValue()] : null;
+        $fieldValue = isset($entitySource[$fieldName->getValue()])
+            ? $entitySource[$fieldName->getValue()]
+            : null;
         $valid = empty($fieldValue) ? false : true;
 
         if (!$valid) {

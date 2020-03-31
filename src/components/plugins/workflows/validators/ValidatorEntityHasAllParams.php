@@ -43,7 +43,7 @@ class ValidatorEntityHasAllParams extends Plugin implements ITransitionDispatche
         $requiredParams = $dispatcher->getParameters();
 
         foreach ($requiredParams as $param) {
-            if (!isset($entity[$param->getName()])) {
+            if (!isset($entitySource[$param->getName()])) {
                 $result->fail(ITransitionErrorVocabulary::ERROR__VALIDATION_FAILED, [
                     'entity_has_all_params' => 'Missed `' . $param->getName() . '` in the current entity',
                     'entity' => $context->__toArray()
