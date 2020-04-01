@@ -6,6 +6,10 @@
 
 `# composer require jeyroik/extas-workflow:*`
 
+# Тесты
+
+`# composer run-script test`
+
 # Термины
 
 В рамках пакета используется следующее:
