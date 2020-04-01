@@ -183,7 +183,8 @@ protected ?IRepository $transitionRepo = null;
         $this->transitionDispatcherRepo->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test',
             TransitionDispatcher::FIELD__SCHEMA_NAME => 'test',
-            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__VALIDATOR
+            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__VALIDATOR,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test'
         ]));
 
         $schema = new WorkflowSchema([
@@ -236,7 +237,8 @@ protected ?IRepository $transitionRepo = null;
         $this->transitionDispatcherRepo->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test',
             TransitionDispatcher::FIELD__SCHEMA_NAME => 'test',
-            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__TRIGGER
+            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__TRIGGER,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test'
         ]));
 
         $schema = new WorkflowSchema([
