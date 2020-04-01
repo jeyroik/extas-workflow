@@ -24,11 +24,11 @@ use extas\components\workflows\Workflow;
 use extas\components\workflows\transitions\results\TransitionResult;
 
 /**
- * Class WorkflowSchemaTest
+ * Class WorkflowTest
  *
  * @author jeyroik@gmail.com
  */
-class WorkflowSchemaTest extends TestCase
+class WorkflowTest extends TestCase
 {
     /**
      * @var IRepository|null
