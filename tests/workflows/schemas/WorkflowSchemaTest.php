@@ -454,5 +454,155 @@ class WorkflowSchemaTest extends TestCase
         );
 
         $this->assertEquals('test', $transition->getName());
+        $this->assertTrue($schema->canTransit(
+            new WorkflowEntity([
+                WorkflowEntity::FIELD__STATE => 'from'
+            ]),
+            new WorkflowEntityContext([
+                'test' => true
+            ]),
+            'to'
+        ));
+    }
+
+    /**
+     * @throws
+     */
+    public function testGetAvailableTransitionsByFromState()
+    {
+        $this->transitionRepo->create(new WorkflowTransition([
+            WorkflowTransition::FIELD__NAME => 'test',
+            WorkflowTransition::FIELD__STATE_FROM => 'from',
+            WorkflowTransition::FIELD__STATE_TO => 'to'
+        ]));
+
+        $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
+            WorkflowSchema::FIELD__TRANSITIONS => ['test']
+        ]);
+
+        $this->transitionDispatcherRepo->create(new TransitionDispatcher([
+            TransitionDispatcher::FIELD__NAME => 'test',
+            TransitionDispatcher::FIELD__SCHEMA_NAME => 'test',
+            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__CONDITION,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test',
+            TransitionDispatcher::FIELD__TEMPLATE => 'test',
+            TransitionDispatcher::FIELD__PARAMETERS => [
+                [IParameter::FIELD__NAME => 'test']
+            ]
+        ]));
+
+        $this->transitionDispatcherTemplateRepo->create(new TDT([
+            TDT::FIELD__NAME => 'test',
+            TDT::FIELD__TITLE => 'Параметры контекста',
+            TDT::FIELD__DESCRIPTION => 'Проверка наличия в контексте необходимых параметров',
+            TDT::FIELD__CLASS => 'extas\\components\\plugins\\workflows\\validators\\ValidatorContextHasAllParams',
+            TDT::FIELD__TYPE => 'validator',
+            TDT::FIELD__PARAMETERS => []
+        ]));
+
+        $transitions = $schema->getAvailableTransitionsByFromState(
+            new WorkflowEntity([
+                WorkflowEntity::FIELD__STATE => 'from'
+            ]),
+            new WorkflowEntityContext([
+                'test' => true
+            ])
+        );
+
+        $this->assertCount(1, $transitions);
+        $first = array_shift($transitions);
+        $this->assertEquals('test', $first->getName());
+    }
+
+    /**
+     * @throws
+     */
+    public function testGetAvailableTransitionsByToState()
+    {
+        $this->transitionRepo->create(new WorkflowTransition([
+            WorkflowTransition::FIELD__NAME => 'test',
+            WorkflowTransition::FIELD__STATE_FROM => 'from',
+            WorkflowTransition::FIELD__STATE_TO => 'to'
+        ]));
+
+        $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
+            WorkflowSchema::FIELD__TRANSITIONS => ['test']
+        ]);
+
+        $this->transitionDispatcherRepo->create(new TransitionDispatcher([
+            TransitionDispatcher::FIELD__NAME => 'test',
+            TransitionDispatcher::FIELD__SCHEMA_NAME => 'test',
+            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__CONDITION,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test',
+            TransitionDispatcher::FIELD__TEMPLATE => 'test',
+            TransitionDispatcher::FIELD__PARAMETERS => [
+                [IParameter::FIELD__NAME => 'test']
+            ]
+        ]));
+
+        $this->transitionDispatcherTemplateRepo->create(new TDT([
+            TDT::FIELD__NAME => 'test',
+            TDT::FIELD__TITLE => 'Параметры контекста',
+            TDT::FIELD__DESCRIPTION => 'Проверка наличия в контексте необходимых параметров',
+            TDT::FIELD__CLASS => 'extas\\components\\plugins\\workflows\\validators\\ValidatorContextHasAllParams',
+            TDT::FIELD__TYPE => 'validator',
+            TDT::FIELD__PARAMETERS => []
+        ]));
+
+        $transitions = $schema->getAvailableTransitionsByToState(
+            new WorkflowEntity([
+                WorkflowEntity::FIELD__STATE => 'to'
+            ]),
+            new WorkflowEntityContext([
+                'test' => true
+            ])
+        );
+
+        $this->assertCount(1, $transitions);
+        $first = array_shift($transitions);
+        $this->assertEquals('test', $first->getName());
+    }
+
+    public function testAddTransition()
+    {
+        $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test'
+        ]);
+
+        $schema->addTransition(new WorkflowTransition([
+            WorkflowTransition::FIELD__NAME => 'test'
+        ]));
+
+        $this->assertEquals(['test'], $schema->getTransitionsNames());
+    }
+
+    public function testRemoveTransition()
+    {
+        $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
+            WorkflowSchema::FIELD__TRANSITIONS => ['test']
+        ]);
+
+        $this->transitionDispatcherRepo->create(new TransitionDispatcher([
+            TransitionDispatcher::FIELD__NAME => 'test',
+            TransitionDispatcher::FIELD__SCHEMA_NAME => 'test',
+            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__CONDITION,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test',
+            TransitionDispatcher::FIELD__TEMPLATE => 'test',
+            TransitionDispatcher::FIELD__PARAMETERS => [
+                [IParameter::FIELD__NAME => 'test']
+            ]
+        ]));
+
+        $schema->removeTransition(new WorkflowTransition([
+            WorkflowTransition::FIELD__NAME => 'test'
+        ]));
+
+        $this->assertEmpty($schema->getTransitionsNames());
+        $this->assertEmpty($this->transitionDispatcherRepo->all([
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test'
+        ]));
     }
 }
