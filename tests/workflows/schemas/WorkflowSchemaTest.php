@@ -282,5 +282,110 @@ protected ?IRepository $transitionRepo = null;
         $this->assertEquals('test', $first->getName());
     }
 
+    /**
+     * @throws
+     */
+    public function testSetConditionByTransition()
+    {
+        $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
+            WorkflowSchema::FIELD__ENTITY_TEMPLATE => 'test'
+        ]);
 
+        $transition = new WorkflowTransition([
+            WorkflowTransition::FIELD__NAME => 'test'
+        ]);
+
+        $schema->setConditionByTransition(
+            $transition,
+            'test',
+            'test',
+            []
+        );
+
+        $dispatchers = $schema->getConditionsByTransition($transition);
+        $this->assertCount(1, $dispatchers);
+        $first = array_shift($dispatchers);
+        $this->assertEquals('test', $first->getName());
+    }
+
+    /**
+     * @throws
+     */
+    public function testSetValidatorByTransition()
+    {
+        $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
+            WorkflowSchema::FIELD__ENTITY_TEMPLATE => 'test'
+        ]);
+
+        $transition = new WorkflowTransition([
+            WorkflowTransition::FIELD__NAME => 'test'
+        ]);
+
+        $schema->setValidatorByTransition(
+            $transition,
+            'test',
+            'test',
+            []
+        );
+
+        $dispatchers = $schema->getValidatorsByTransition($transition);
+        $this->assertCount(1, $dispatchers);
+        $first = array_shift($dispatchers);
+        $this->assertEquals('test', $first->getName());
+    }
+
+    /**
+     * @throws
+     */
+    public function testSetTriggerByTransition()
+    {
+        $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
+            WorkflowSchema::FIELD__ENTITY_TEMPLATE => 'test'
+        ]);
+
+        $transition = new WorkflowTransition([
+            WorkflowTransition::FIELD__NAME => 'test'
+        ]);
+
+        $schema->setTriggerByTransition(
+            $transition,
+            'test',
+            'test',
+            []
+        );
+
+        $dispatchers = $schema->getTriggersByTransition($transition);
+        $this->assertCount(1, $dispatchers);
+        $first = array_shift($dispatchers);
+        $this->assertEquals('test', $first->getName());
+    }
+
+    /**
+     * @throws
+     */
+    public function testSetTransitions()
+    {
+        $this->transitionRepo->create(new WorkflowTransition([
+            WorkflowTransition::FIELD__NAME => 'test'
+        ]));
+
+        $transition = new WorkflowTransition([
+            WorkflowTransition::FIELD__NAME => 'test2'
+        ]);
+
+        $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
+            WorkflowSchema::FIELD__ENTITY_TEMPLATE => 'test'
+        ]);
+
+        $schema->setTransitions([
+            $transition,
+            'test3'
+        ]);
+
+        $this->assertEquals(['test'], $schema->getTransitionsNames());
+    }
 }
