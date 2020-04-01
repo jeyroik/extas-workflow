@@ -2,11 +2,14 @@
 
 use PHPUnit\Framework\TestCase;
 use extas\components\workflows\entities\WorkflowEntityTemplateRepository;
+use extas\interfaces\workflows\entities\IWorkflowEntityTemplateRepository;
 use extas\interfaces\repositories\IRepository;
 use extas\components\workflows\schemas\WorkflowSchema;
 use extas\components\workflows\entities\WorkflowEntityTemplate;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcherRepository;
+use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherRepository;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
+use extas\components\SystemContainer;
 
 /**
  * Class WorkflowSchemaTest
@@ -32,6 +35,14 @@ class WorkflowSchemaTest extends TestCase
         $env->load();
         $this->entityTemplateRepo = new WorkflowEntityTemplateRepository();
         $this->transitionDispatcherRepo = new TransitionDispatcherRepository();
+        SystemContainer::addItem(
+            ITransitionDispatcherRepository::class,
+            TransitionDispatcherRepository::class
+        );
+        SystemContainer::addItem(
+            IWorkflowEntityTemplateRepository::class,
+            WorkflowEntityTemplateRepository::class
+        );
     }
 
     public function tearDown(): void
