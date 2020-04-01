@@ -8,6 +8,7 @@ use extas\components\THasDescription;
 use extas\components\THasName;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
 use extas\components\workflows\transitions\results\TransitionResult;
+use extas\components\workflows\transitions\WorkflowTransition;
 use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\entities\IWorkflowEntityTemplate;
@@ -77,7 +78,10 @@ class WorkflowSchema extends Item implements IWorkflowSchema
      */
     public function getConditionsByTransition($transition): array
     {
-        return $this->getDispatchersByTransition($transition, ITransitionDispatcher::TYPE__CONDITION);
+        return $this->getDispatchersByTransition(
+            $this->sureIsWorkflowTransition($transition),
+            ITransitionDispatcher::TYPE__CONDITION
+        );
     }
 
     /**
@@ -99,7 +103,10 @@ class WorkflowSchema extends Item implements IWorkflowSchema
      */
     public function getValidatorsByTransition($transition): array
     {
-        return $this->getDispatchersByTransition($transition, ITransitionDispatcher::TYPE__VALIDATOR);
+        return $this->getDispatchersByTransition(
+            $this->sureIsWorkflowTransition($transition),
+            ITransitionDispatcher::TYPE__VALIDATOR
+        );
     }
 
     /**
@@ -120,7 +127,10 @@ class WorkflowSchema extends Item implements IWorkflowSchema
      */
     public function getTriggersByTransition($transition): array
     {
-        return $this->getDispatchersByTransition($transition, ITransitionDispatcher::TYPE__TRIGGER);
+        return $this->getDispatchersByTransition(
+            $this->sureIsWorkflowTransition($transition),
+            ITransitionDispatcher::TYPE__TRIGGER
+        );
     }
 
     /**
@@ -514,6 +524,18 @@ class WorkflowSchema extends Item implements IWorkflowSchema
         }
 
         return array_values($transitionNames);
+    }
+
+    /**
+     * @param string|IWorkflowTransition $transition
+     *
+     * @return IWorkflowTransition
+     */
+    protected function sureIsWorkflowTransition($transition)
+    {
+        return is_string($transition)
+            ? new WorkflowTransition([WorkflowTransition::FIELD__NAME => $transition])
+            : $transition;
     }
 
     /**
