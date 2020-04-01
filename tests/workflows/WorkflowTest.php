@@ -103,6 +103,11 @@ class WorkflowTest extends TestCase
             'test' => true
         ]);
 
+        $this->entityTemplateRepo->create(new WorkflowEntityTemplate([
+            WorkflowEntityTemplate::FIELD__NAME => 'test',
+            WorkflowEntityTemplate::FIELD__CLASS => WorkflowEntityContext::class
+        ]));
+
         $this->transitionRepo->create(new WorkflowTransition([
             WorkflowTransition::FIELD__NAME => 'test',
             WorkflowTransition::FIELD__STATE_FROM => 'from',
@@ -155,6 +160,11 @@ class WorkflowTest extends TestCase
         $context = new WorkflowEntityContext([
             'test' => true
         ]);
+
+        $this->entityTemplateRepo->create(new WorkflowEntityTemplate([
+            WorkflowEntityTemplate::FIELD__NAME => 'test',
+            WorkflowEntityTemplate::FIELD__CLASS => WorkflowEntityContext::class
+        ]));
 
         $this->transitionRepo->create(new WorkflowTransition([
             WorkflowTransition::FIELD__NAME => 'test',
@@ -216,6 +226,11 @@ class WorkflowTest extends TestCase
         ]);
         $this->transitionRepo->create($transition);
 
+        $this->entityTemplateRepo->create(new WorkflowEntityTemplate([
+            WorkflowEntityTemplate::FIELD__NAME => 'test',
+            WorkflowEntityTemplate::FIELD__CLASS => WorkflowEntityContext::class
+        ]));
+
         $this->transitionDispatcherRepo->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test',
             TransitionDispatcher::FIELD__SCHEMA_NAME => 'test',
@@ -245,6 +260,6 @@ class WorkflowTest extends TestCase
             $schema,
             $context,
             $result
-        ));
+        )->isSuccess());
     }
 }
