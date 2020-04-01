@@ -430,7 +430,7 @@ class WorkflowSchemaTest extends TestCase
             TransitionDispatcher::FIELD__TRANSITION_NAME => 'test',
             TransitionDispatcher::FIELD__TEMPLATE => 'test',
             TransitionDispatcher::FIELD__PARAMETERS => [
-                IParameter::FIELD__NAME => 'test'
+                [IParameter::FIELD__NAME => 'test']
             ]
         ]));
 
