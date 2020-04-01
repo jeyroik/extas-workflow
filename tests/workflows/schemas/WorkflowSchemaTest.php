@@ -1,6 +1,6 @@
 <?php
 
-use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\TestCase;
 use extas\interfaces\workflows\schemas\IWorkflowSchemaRepository;
 use extas\interfaces\workflows\entities\IWorkflowEntityTemplateRepository;
 use extas\interfaces\repositories\IRepository;
@@ -15,7 +15,7 @@ use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
  *
  * @author jeyroik@gmail.com
  */
-class WorkflowSchemaTest extends TestSuite
+class WorkflowSchemaTest extends TestCase
 {
     /**
      * @var IRepository|null

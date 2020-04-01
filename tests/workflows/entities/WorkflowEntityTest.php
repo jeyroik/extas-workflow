@@ -1,6 +1,6 @@
 <?php
 
-use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\TestCase;
 use extas\components\workflows\entities\WorkflowEntity;
 
 /**
@@ -8,7 +8,7 @@ use extas\components\workflows\entities\WorkflowEntity;
  *
  * @author jeyroik@gmail.com
  */
-class WorkflowEntityTest extends TestSuite
+class WorkflowEntityTest extends TestCase
 {
     public function testBaseMethods()
     {
