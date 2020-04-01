@@ -90,7 +90,8 @@ class WorkflowTest extends TestCase
     public function testTransitByTransition()
     {
         $entity = new WorkflowEntity([
-            WorkflowEntity::FIELD__STATE => 'from'
+            WorkflowEntity::FIELD__STATE => 'from',
+            WorkflowEntity::FIELD__TEMPLATE => 'test'
         ]);
 
         $schema = new WorkflowSchema([
@@ -148,7 +149,8 @@ class WorkflowTest extends TestCase
     public function testTransitByState()
     {
         $entity = new WorkflowEntity([
-            WorkflowEntity::FIELD__STATE => 'from'
+            WorkflowEntity::FIELD__STATE => 'from',
+            WorkflowEntity::FIELD__TEMPLATE => 'test'
         ]);
 
         $schema = new WorkflowSchema([
@@ -206,7 +208,8 @@ class WorkflowTest extends TestCase
     public function testIsTransitionValid()
     {
         $entity = new WorkflowEntity([
-            WorkflowEntity::FIELD__STATE => 'from'
+            WorkflowEntity::FIELD__STATE => 'from',
+            WorkflowEntity::FIELD__TEMPLATE => 'test'
         ]);
 
         $schema = new WorkflowSchema([
