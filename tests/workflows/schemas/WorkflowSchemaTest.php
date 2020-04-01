@@ -382,6 +382,7 @@ protected ?IRepository $transitionRepo = null;
         ]);
 
         $schema->setTransitions([
+            'test',
             $transition,
             'test3'
         ]);
