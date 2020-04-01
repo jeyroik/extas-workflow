@@ -18,6 +18,8 @@ interface IWorkflow extends IItem
 {
     public const SUBJECT = 'extas.workflow';
 
+    public const CONTEXT__CONDITIONS = 1;
+
     /**
      * @param IWorkflowEntity $entity
      * @param string $transitionName

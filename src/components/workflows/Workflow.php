@@ -188,11 +188,13 @@ class Workflow extends Item implements IWorkflow
             }
         }
 
-        $validators = $bySchema->getValidatorsByTransition($transition);
+        if (!isset($withContext[static::CONTEXT__CONDITIONS])) {
+            $validators = $bySchema->getValidatorsByTransition($transition);
 
-        foreach ($validators as $validator) {
-            if (!$validator->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited)) {
-                return $result;
+            foreach ($validators as $validator) {
+                if (!$validator->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited)) {
+                    return $result;
+                }
             }
         }
 
