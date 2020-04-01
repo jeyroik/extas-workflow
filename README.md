@@ -1,4 +1,6 @@
-# extas-workflow
+![PHP Composer](https://github.com/jeyroik/extas-workflow/workflows/PHP%20Composer/badge.svg?branch=master&event=push)
+
+# Описание
 
 Пакет предоставляет механизм для организации перевода сущности из одного состояния в другое.
 
