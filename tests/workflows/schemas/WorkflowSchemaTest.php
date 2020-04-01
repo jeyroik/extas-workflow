@@ -13,6 +13,12 @@ use extas\components\SystemContainer;
 use extas\components\workflows\transitions\WorkflowTransition;
 use extas\components\workflows\transitions\WorkflowTransitionRepository;
 use extas\interfaces\workflows\transitions\IWorkflowTransitionRepository;
+use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherTemplateRepository;
+use extas\components\workflows\transitions\dispatchers\TransitionDispatcherTemplateRepository;
+use extas\components\workflows\transitions\dispatchers\TransitionDispatcherTemplate as TDT;
+use extas\interfaces\parameters\IParameter;
+use extas\components\workflows\entities\WorkflowEntity;
+use extas\components\workflows\entities\WorkflowEntityContext;
 
 /**
  * Class WorkflowSchemaTest
@@ -34,7 +40,12 @@ class WorkflowSchemaTest extends TestCase
     /**
      * @var IRepository|null
      */
-protected ?IRepository $transitionRepo = null;
+    protected ?IRepository $transitionTemplateDispatcherRepo = null;
+
+    /**
+     * @var IRepository|null
+     */
+    protected ?IRepository $transitionRepo = null;
 
     protected function setUp(): void
     {
@@ -44,11 +55,16 @@ protected ?IRepository $transitionRepo = null;
 
         $this->entityTemplateRepo = new WorkflowEntityTemplateRepository();
         $this->transitionDispatcherRepo = new TransitionDispatcherRepository();
+        $this->transitionTemplateDispatcherRepo = new TransitionDispatcherTemplateRepository();
         $this->transitionRepo = new WorkflowTransitionRepository();
 
         SystemContainer::addItem(
             ITransitionDispatcherRepository::class,
             TransitionDispatcherRepository::class
+        );
+        SystemContainer::addItem(
+            ITransitionDispatcherTemplateRepository::class,
+            TransitionDispatcherTemplateRepository::class
         );
         SystemContainer::addItem(
             IWorkflowEntityTemplateRepository::class,
@@ -64,6 +80,7 @@ protected ?IRepository $transitionRepo = null;
     {
         $this->entityTemplateRepo->delete([WorkflowEntityTemplate::FIELD__NAME => 'test']);
         $this->transitionDispatcherRepo->delete([TransitionDispatcher::FIELD__NAME => 'test']);
+        $this->transitionTemplateDispatcherRepo->delete([TransitionDispatcherTemplate::FIELD__NAME => 'test']);
         $this->transitionRepo->delete([WorkflowTransition::FIELD__NAME => 'test']);
     }
 
@@ -388,5 +405,54 @@ protected ?IRepository $transitionRepo = null;
         ]);
 
         $this->assertEquals(['test'], $schema->getTransitionsNames());
+    }
+
+    /**
+     * @throws
+     */
+    public function testGetTransition()
+    {
+        $this->transitionRepo->create(new WorkflowTransition([
+            WorkflowTransition::FIELD__NAME => 'test',
+            WorkflowTransition::FIELD__STATE_FROM => 'from',
+            WorkflowTransition::FIELD__STATE_TO => 'to'
+        ]));
+
+        $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
+            WorkflowSchema::FIELD__TRANSITIONS => ['test']
+        ]);
+
+        $this->transitionDispatcherRepo->create(new TransitionDispatcher([
+            TransitionDispatcher::FIELD__NAME => 'test',
+            TransitionDispatcher::FIELD__SCHEMA_NAME => 'test',
+            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__CONDITION,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test',
+            TransitionDispatcher::FIELD__TEMPLATE => 'test',
+            TransitionDispatcher::FIELD__PARAMETERS => [
+                IParameter::FIELD__NAME => 'test'
+            ]
+        ]));
+
+        $this->transitionDispatcherTemplateRepo->create(new TDT([
+            TDT::FIELD__NAME => 'test',
+            TDT::FIELD__TITLE => 'Параметры контекста',
+            TDT::FIELD__DESCRIPTION => 'Проверка наличия в контексте необходимых параметров',
+            TDT::FIELD__CLASS => 'extas\\components\\plugins\\workflows\\validators\\ValidatorContextHasAllParams',
+            TDT::FIELD__TYPE => 'validator',
+            TDT::FIELD__PARAMETERS => []
+        ]));
+
+        $transition = $schema->getTransition(
+            new WorkflowEntity([
+                WorkflowEntity::FIELD__STATE => 'from'
+            ]),
+            new WorkflowEntityContext([
+                'test' => true
+            ]),
+            'to'
+        );
+
+        $this->assertEquals('test', $transition->getName());
     }
 }

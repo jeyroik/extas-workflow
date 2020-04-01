@@ -299,7 +299,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     /**
      * @param IWorkflowEntity $entity
      * @param IItem $context
-     * @param IWorkflowTransition|string $stateTo
+     * @param IWorkflowState|string $stateTo
      *
      * @return IWorkflowTransition|null
      */

@@ -114,7 +114,7 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
     /**
      * @param IWorkflowEntity $entity
      * @param IItem $context
-     * @param string|IWorkflowTransition $stateTo
+     * @param string|IWorkflowState $stateTo
      *
      * @return IWorkflowTransition|null
      */
