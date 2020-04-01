@@ -102,6 +102,38 @@ class Workflow extends Item implements IWorkflow
     }
 
     /**
+     * @param IWorkflowTransition $transition
+     * @param IWorkflowEntity $entity
+     * @param IWorkflowSchema $bySchema
+     * @param IItem $withContext
+     * @param ITransitionResult $result
+     *
+     * @return ITransitionResult
+     */
+    public function isTransitionValid($transition, $entity, $bySchema, $withContext, $result): ITransitionResult
+    {
+        $conditions = $bySchema->getConditionsByTransition($transition);
+        $entityEdited = clone $entity;
+        foreach ($conditions as $condition) {
+            if (!$condition->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited)) {
+                return $result;
+            }
+        }
+
+        if (!isset($withContext[static::CONTEXT__CONDITIONS])) {
+            $validators = $bySchema->getValidatorsByTransition($transition);
+
+            foreach ($validators as $validator) {
+                if (!$validator->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited)) {
+                    return $result;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @param IWorkflowEntity $entity
      * @param string $toState
      * @param IWorkflowSchema $bySchema
@@ -164,38 +196,6 @@ class Workflow extends Item implements IWorkflow
 
         foreach ($triggers as $trigger) {
             $trigger->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param IWorkflowTransition $transition
-     * @param IWorkflowEntity $entity
-     * @param IWorkflowSchema $bySchema
-     * @param IItem $withContext
-     * @param ITransitionResult $result
-     *
-     * @return ITransitionResult
-     */
-    public function isTransitionValid($transition, $entity, $bySchema, $withContext, $result): ITransitionResult
-    {
-        $conditions = $bySchema->getConditionsByTransition($transition);
-        $entityEdited = clone $entity;
-        foreach ($conditions as $condition) {
-            if (!$condition->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited)) {
-                return $result;
-            }
-        }
-
-        if (!isset($withContext[static::CONTEXT__CONDITIONS])) {
-            $validators = $bySchema->getValidatorsByTransition($transition);
-
-            foreach ($validators as $validator) {
-                if (!$validator->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited)) {
-                    return $result;
-                }
-            }
         }
 
         return $result;

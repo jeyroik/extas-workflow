@@ -9,7 +9,7 @@ use extas\components\SystemContainer;
 use extas\interfaces\repositories\IRepository;
 
 /**
- * Class WorkflowEntityTest
+ * Class WorkflowTransitionTest
  *
  * @author jeyroik@gmail.com
  */
