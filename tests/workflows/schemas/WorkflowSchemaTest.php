@@ -86,6 +86,7 @@ class WorkflowSchemaTest extends TestCase
         ]);
 
         $conditions = $schema->getConditions();
+        $this->assertCount(1, $conditions);
         $firstCondition = array_shift($conditions);
         $this->assertEquals('test', $firstCondition->getName());
     }
