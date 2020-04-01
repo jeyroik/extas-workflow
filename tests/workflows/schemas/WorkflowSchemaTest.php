@@ -82,6 +82,7 @@ class WorkflowSchemaTest extends TestCase
         ]));
 
         $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
             WorkflowSchema::FIELD__ENTITY_TEMPLATE => 'test'
         ]);
 
@@ -100,6 +101,7 @@ class WorkflowSchemaTest extends TestCase
         ]));
 
         $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
             WorkflowSchema::FIELD__ENTITY_TEMPLATE => 'test'
         ]);
 
@@ -117,6 +119,7 @@ class WorkflowSchemaTest extends TestCase
         ]));
 
         $schema = new WorkflowSchema([
+            WorkflowSchema::FIELD__NAME => 'test',
             WorkflowSchema::FIELD__ENTITY_TEMPLATE => 'test'
         ]);
 
