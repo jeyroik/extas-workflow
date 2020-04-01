@@ -6,6 +6,7 @@ use extas\components\workflows\states\WorkflowState;
 use extas\interfaces\workflows\states\IWorkflowStateRepository;
 use extas\components\workflows\states\WorkflowStateRepository;
 use extas\components\SystemContainer;
+use extas\interfaces\repositories\IRepository;
 
 /**
  * Class WorkflowEntityTest
