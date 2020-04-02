@@ -19,6 +19,6 @@
     }
   },
   "scripts": {
-    "test": "vendor/bin/phpunit --testdox --coverage-clover=coverage.xml tests"
+    "test": "vendor/bin/phpunit --testdox --coverage-clover=coverage.xml --whitelist=src tests"
   }
 }
