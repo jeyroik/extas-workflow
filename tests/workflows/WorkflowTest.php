@@ -131,7 +131,7 @@ class WorkflowTest extends TestCase
             TDT::FIELD__TITLE => 'Параметры контекста',
             TDT::FIELD__DESCRIPTION => 'Проверка наличия в контексте необходимых параметров',
             TDT::FIELD__CLASS => 'extas\\components\\plugins\\workflows\\validators\\ValidatorContextHasAllParams',
-            TDT::FIELD__TYPE => 'validator',
+            TDT::FIELD__TYPE => TransitionDispatcher::TYPE__CONDITION,
             TDT::FIELD__PARAMETERS => []
         ]));
 
