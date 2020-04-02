@@ -1,4 +1,6 @@
 ![PHP Composer](https://github.com/jeyroik/extas-workflow/workflows/PHP%20Composer/badge.svg?branch=master&event=push)
+[![codecov.io](https://codecov.io/gh/jeyroik/extas-workflow/coverage.svg?branch=master)]
+                                                                                                                       (https://codecov.io/github/<Your Organization/Acc.>/<YourRepo>?branch=master)
 
 # Описание
 
