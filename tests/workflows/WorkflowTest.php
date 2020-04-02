@@ -128,9 +128,9 @@ class WorkflowTest extends TestCase
 
         $this->transitionDispatcherTemplateRepo->create(new TDT([
             TDT::FIELD__NAME => 'test',
-            TDT::FIELD__TITLE => 'Параметры контекста',
-            TDT::FIELD__DESCRIPTION => 'Проверка наличия в контексте необходимых параметров',
-            TDT::FIELD__CLASS => 'extas\\components\\plugins\\workflows\\validators\\ValidatorContextHasAllParams',
+            TDT::FIELD__TITLE => '',
+            TDT::FIELD__DESCRIPTION => '',
+            TDT::FIELD__CLASS => 'extas\\components\\workflows\\transitions\\dispatchers\\ContextHasAllParams',
             TDT::FIELD__PARAMETERS => []
         ]));
 
@@ -186,9 +186,9 @@ class WorkflowTest extends TestCase
 
         $this->transitionDispatcherTemplateRepo->create(new TDT([
             TDT::FIELD__NAME => 'test',
-            TDT::FIELD__TITLE => 'Параметры контекста',
-            TDT::FIELD__DESCRIPTION => 'Проверка наличия в контексте необходимых параметров',
-            TDT::FIELD__CLASS => 'extas\\components\\plugins\\workflows\\validators\\ValidatorContextHasAllParams',
+            TDT::FIELD__TITLE => '',
+            TDT::FIELD__DESCRIPTION => '',
+            TDT::FIELD__CLASS => 'extas\\components\\workflows\\transitions\\dispatchers\\ContextHasAllParams',
             TDT::FIELD__PARAMETERS => []
         ]));
 
@@ -245,15 +245,39 @@ class WorkflowTest extends TestCase
 
         $this->transitionDispatcherTemplateRepo->create(new TDT([
             TDT::FIELD__NAME => 'test',
-            TDT::FIELD__TITLE => 'Параметры контекста',
-            TDT::FIELD__DESCRIPTION => 'Проверка наличия в контексте необходимых параметров',
-            TDT::FIELD__CLASS => 'extas\\components\\plugins\\workflows\\validators\\ValidatorContextHasAllParams',
+            TDT::FIELD__TITLE => '',
+            TDT::FIELD__DESCRIPTION => '',
+            TDT::FIELD__CLASS => 'extas\\components\\workflows\\transitions\\dispatchers\\ContextHasAllParams',
             TDT::FIELD__PARAMETERS => []
         ]));
 
         $workflow = new Workflow();
         $result = new TransitionResult();
 
+        $this->assertTrue($workflow->isTransitionValid(
+            $transition,
+            $entity,
+            $schema,
+            $context,
+            $result
+        )->isSuccess());
+
+        /**
+         * Проверка контекста для условий
+         */
+
+        $this->transitionDispatcherRepo->create(new TransitionDispatcher([
+            TransitionDispatcher::FIELD__NAME => 'test',
+            TransitionDispatcher::FIELD__SCHEMA_NAME => 'test',
+            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__VALIDATOR,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test',
+            TransitionDispatcher::FIELD__TEMPLATE => 'test',
+            TransitionDispatcher::FIELD__PARAMETERS => [
+                [IParameter::FIELD__NAME => 'test2']
+            ]
+        ]));
+
+        $context[Workflow::CONTEXT__CONDITIONS] = true;
         $this->assertTrue($workflow->isTransitionValid(
             $transition,
             $entity,
