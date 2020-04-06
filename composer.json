@@ -11,7 +11,8 @@
     "phpunit/phpunit": "^9",
     "vlucas/phpdotenv": "^3.4",
     "jeyroik/extas-repositories-mongo": "1.*",
-    "jeyroik/extas-workflow-dispatchers": "0.*"
+    "jeyroik/extas-workflow-dispatchers": "0.*",
+    "phpstan/phpstan": "0.*"
   },
   "autoload": {
     "psr-4": {
@@ -19,6 +20,7 @@
     }
   },
   "scripts": {
-    "test": "vendor/bin/phpunit --testdox --coverage-clover=coverage.xml --whitelist=src tests"
+    "test": "vendor/bin/phpunit --testdox --coverage-clover=coverage.xml --whitelist=src tests",
+    "stan": "vendor/bin/phpstan analyse -l 5 src"
   }
 }
