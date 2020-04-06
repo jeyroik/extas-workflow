@@ -99,7 +99,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
      * @param IWorkflowTransition|string $transition
      *
      * @return ITransitionDispatcher[]
-     * @throws
+     * @throws \Exception
      */
     public function getValidatorsByTransition($transition): array
     {
@@ -460,7 +460,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     )
     {
         /**
-         * @var $repo ITransitionDispatcherRepository
+         * @var ITransitionDispatcherRepository $repo
          */
         $repo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
         $dispatcher = new TransitionDispatcher();
