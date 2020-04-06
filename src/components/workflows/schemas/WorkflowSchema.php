@@ -139,7 +139,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     public function getTransitions(): array
     {
         /**
-         * @var $transitionRepo IWorkflowTransitionRepository
+         * @var IWorkflowTransitionRepository $transitionRepo
          */
         $transitionRepo = SystemContainer::getItem(IWorkflowTransitionRepository::class);
 
@@ -276,8 +276,8 @@ class WorkflowSchema extends Item implements IWorkflowSchema
                 : (string) $transition;
         }
         /**
-         * @var $transitRepo IWorkflowTransitionRepository
-         * @var $transitionsExisting IWorkflowTransition[]
+         * @var IWorkflowTransitionRepository $transitRepo
+         * @var IWorkflowTransition[] $transitionsExisting
          */
         $transitRepo = SystemContainer::getItem(IWorkflowTransitionRepository::class);
         $transitionsExisting = $transitRepo->all([IWorkflowTransition::FIELD__NAME => $transitionsNames]);
@@ -309,10 +309,10 @@ class WorkflowSchema extends Item implements IWorkflowSchema
         $stateTo = $stateTo instanceof IWorkflowState ? $stateTo->getName() : (string) $stateTo;
 
         /**
-         * @var $transitionRepo IWorkflowTransitionRepository
-         * @var $dispatcherRepo ITransitionDispatcherRepository
-         * @var $transition IWorkflowTransition
-         * @var $conditions ITransitionDispatcher[]
+         * @var IWorkflowTransitionRepository $transitionRepo
+         * @var ITransitionDispatcherRepository $dispatcherRepo
+         * @var IWorkflowTransition $transition IWorkflowTransition
+         * @var ITransitionDispatcher[] $conditions
          */
         $transitionRepo = SystemContainer::getItem(IWorkflowTransitionRepository::class);
         $dispatcherRepo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
@@ -405,8 +405,8 @@ class WorkflowSchema extends Item implements IWorkflowSchema
             $this->config[static::FIELD__TRANSITIONS] = array_keys($transitionsByName);
 
             /**
-             * @var $dispatchersRepo ITransitionDispatcherRepository
-             * @var $dispatchers ITransitionDispatcher
+             * @var ITransitionDispatcherRepository $dispatchersRepo
+             * @var ITransitionDispatcher $dispatchers
              */
             $dispatchersRepo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
             $dispatchersRepo->delete([
@@ -427,8 +427,8 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     protected function getDispatchersByTransition(IWorkflowTransition $transition, string $type): array
     {
         /**
-         * @var $repo ITransitionDispatcherRepository
-         * @var $transitionValidators ITransitionDispatcher[]
+         * @var ITransitionDispatcherRepository $repo
+         * @var ITransitionDispatcher[] $transitionValidators
          */
         $repo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
 
@@ -489,10 +489,10 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     )
     {
         /**
-         * @var $transitionRepo IWorkflowTransitionRepository
-         * @var $dispatcherRepo ITransitionDispatcherRepository
-         * @var $transitions IWorkflowTransition[]
-         * @var $conditions ITransitionDispatcher[]
+         * @var IWorkflowTransitionRepository $transitionRepo
+         * @var ITransitionDispatcherRepository $dispatcherRepo
+         * @var IWorkflowTransition[] $transitions
+         * @var ITransitionDispatcher[] $conditions
          */
         $dispatcherRepo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
         $stateField = $from ? IWorkflowTransition::FIELD__STATE_FROM : IWorkflowTransition::FIELD__STATE_TO;

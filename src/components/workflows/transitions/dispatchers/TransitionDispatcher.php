@@ -35,7 +35,7 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
      * @param IWorkflowSchema $schema
      * @param IItem $context
      * @param ITransitionResult $result
-     * @param IWorkflowEntity &$entityEdited
+     * @param IWorkflowEntity $entityEdited
      *
      * @return bool
      */
@@ -49,7 +49,7 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
     ): bool
     {
         /**
-         * @var $template ITransitionDispatcherTemplate
+         * @var ITransitionDispatcherTemplate $template
          */
         $template = $this->getTemplate();
         $executor = $template->buildClassWithParameters();

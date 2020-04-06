@@ -88,7 +88,7 @@ class WorkflowTransition extends Item implements IWorkflowTransition
     protected function getState(bool $from): ?IWorkflowState
     {
         /**
-         * @var $stateRepo IWorkflowStateRepository
+         * @var IWorkflowStateRepository $stateRepo
          */
         $stateRepo = SystemContainer::getItem(IWorkflowStateRepository::class);
 
