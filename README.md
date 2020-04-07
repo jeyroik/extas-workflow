@@ -6,6 +6,11 @@
 
 Пакет предоставляет механизм для организации перевода сущности из одного состояния в другое.
 
+
+Рекомендуемые пакеты, расширяющие функциональность текущей библиотеки:
+- [Дашборд с JSON RPC API для управления workflow](https://github.com/jeyroik/extas-workflow-dashboard "Workflow dashboard")
+- [Обработчики переходов](https://github.com/jeyroik/extas-workflow-dispatchers "Workflow dispatchers")
+
 # Установка пакета
 
 `# composer require jeyroik/extas-workflow:*`
