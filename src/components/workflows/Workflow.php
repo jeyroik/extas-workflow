@@ -82,7 +82,10 @@ class Workflow extends Item implements IWorkflow
         IItem $withContext
     ): ITransitionResult
     {
-        $static = new static();
+        $static = new static([
+            static::FIELD__SCHEMA => $bySchema,
+            static::FIELD__CONTEXT => $withContext
+        ]);
 
         if (!$bySchema->isApplicableEntityTemplate($entity->getTemplateName())) {
             return (new TransitionResult())->fail(
