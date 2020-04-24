@@ -84,7 +84,7 @@ class WorkflowTest extends TestCase
     public function tearDown(): void
     {
         $this->entityTemplateRepo->delete([WorkflowEntityTemplate::FIELD__NAME => 'test']);
-        $this->transitionDispatcherRepo->delete([TransitionDispatcher::FIELD__NAME => 'test']);
+        $this->transitionDispatcherRepo->delete([TransitionDispatcher::FIELD__SCHEMA_NAME => 'test']);
         $this->transitionDispatcherTemplateRepo->delete([TDT::FIELD__TITLE => 'test']);
         $this->transitionRepo->delete([WorkflowTransition::FIELD__NAME => 'test']);
     }
