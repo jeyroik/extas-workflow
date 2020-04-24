@@ -2,7 +2,6 @@
 namespace extas\interfaces\workflows\transitions\dispatchers;
 
 use extas\interfaces\IHasContext;
-use extas\interfaces\IItem;
 use extas\interfaces\plugins\IPlugin;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
@@ -16,8 +15,6 @@ use extas\interfaces\workflows\transitions\results\ITransitionResult;
  */
 interface ITransitionDispatcherExecutor extends IPlugin, IHasContext
 {
-    public const SUBJECT = 'extas.transition.dispatcher.executor';
-
     public const FIELD__DISPATCHER = 'dispatcher';
     public const FIELD__TRANSITION = 'transition';
     public const FIELD__ENTITY_SOURCE = 'entity_source';

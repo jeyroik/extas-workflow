@@ -55,6 +55,6 @@ abstract class TransitionDispatcherExecutor extends Plugin implements ITransitio
      */
     protected function getSubjectForExtension(): string
     {
-        return static::SUBJECT;
+        return 'extas.transition.dispatcher.executor';
     }
 }
