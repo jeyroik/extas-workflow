@@ -81,7 +81,7 @@ class WorkflowSchemaTest extends TestCase
         $this->entityTemplateRepo->delete([WorkflowEntityTemplate::FIELD__NAME => 'test']);
         $this->transitionDispatcherRepo->delete([TransitionDispatcher::FIELD__NAME => 'test']);
         $this->transitionDispatcherTemplateRepo->delete([TDT::FIELD__NAME => 'test']);
-        $this->transitionRepo->delete([WorkflowTransition::FIELD__NAME => 'test']);
+        $this->transitionRepo->delete([WorkflowTransition::FIELD__NAME => ['test', 'test2']]);
     }
 
     /**
