@@ -16,7 +16,8 @@
   },
   "autoload": {
     "psr-4": {
-      "extas\\": "src/"
+      "extas\\": "src/",
+      "tests\\": "tests/"
     }
   },
   "scripts": {
