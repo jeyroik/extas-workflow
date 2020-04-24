@@ -253,7 +253,10 @@ class WorkflowTest extends TestCase
             TDT::FIELD__PARAMETERS => []
         ]));
 
-        $workflow = new Workflow();
+        $workflow = new Workflow([
+            Workflow::FIELD__SCHEMA => $schema,
+            Workflow::FIELD__CONTEXT => $context
+        ]);
         $result = new TransitionResult();
 
         $this->assertTrue($workflow->isTransitionValid(
