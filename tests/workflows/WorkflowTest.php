@@ -1,4 +1,5 @@
 <?php
+namespace tests\workflows;
 
 use PHPUnit\Framework\TestCase;
 use extas\components\workflows\entities\WorkflowEntityTemplateRepository;
@@ -22,6 +23,7 @@ use extas\components\workflows\entities\WorkflowEntityContext;
 
 use extas\components\workflows\Workflow;
 use extas\components\workflows\transitions\results\TransitionResult;
+use tests\TriggerChangeEntity;
 
 /**
  * Class WorkflowTest
@@ -43,7 +45,7 @@ class WorkflowTest extends TestCase
     /**
      * @var IRepository|null
      */
-    protected ?IRepository $transitionTemplateDispatcherRepo = null;
+    protected ?IRepository $transitionDispatcherTemplateRepo = null;
 
     /**
      * @var IRepository|null
@@ -327,19 +329,25 @@ class WorkflowTest extends TestCase
         ]));
 
         $this->transitionDispatcherRepo->create(new TransitionDispatcher([
-            TransitionDispatcher::FIELD__NAME => 'test',
+            TransitionDispatcher::FIELD__NAME => 'test_trigger',
             TransitionDispatcher::FIELD__SCHEMA_NAME => 'test',
             TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__TRIGGER,
             TransitionDispatcher::FIELD__TRANSITION_NAME => 'test',
-            TransitionDispatcher::FIELD__TEMPLATE => 'test',
-            TransitionDispatcher::FIELD__PARAMETERS => [
-                [IParameter::FIELD__NAME => 'test']
-            ]
+            TransitionDispatcher::FIELD__TEMPLATE => 'test_trigger',
+            TransitionDispatcher::FIELD__PARAMETERS => []
+        ]));
+
+        $this->transitionDispatcherTemplateRepo->create(new TDT([
+            TDT::FIELD__NAME => 'test_trigger',
+            TDT::FIELD__TITLE => 'test',
+            TDT::FIELD__DESCRIPTION => '',
+            TDT::FIELD__CLASS => 'tests\\TriggerChangeEntity',
+            TDT::FIELD__PARAMETERS => []
         ]));
 
         $this->transitionDispatcherTemplateRepo->create(new TDT([
             TDT::FIELD__NAME => 'test',
-            TDT::FIELD__TITLE => '',
+            TDT::FIELD__TITLE => 'test',
             TDT::FIELD__DESCRIPTION => '',
             TDT::FIELD__CLASS => 'extas\\components\\workflows\\transitions\\dispatchers\\ContextHasAllParams',
             TDT::FIELD__PARAMETERS => []
@@ -354,5 +362,7 @@ class WorkflowTest extends TestCase
 
         $this->assertTrue($result->isSuccess());
         $this->assertEquals('to', $entity->getStateName());
+        $this->assertNotEmpty($entity[TriggerChangeEntity::FIELD__TEST]);
+        $this->assertEquals('is ok', $entity[TriggerChangeEntity::FIELD__TEST]);
     }
 }
