@@ -5,16 +5,17 @@ use extas\components\Item;
 use extas\components\parameters\THasParameters;
 use extas\components\SystemContainer;
 use extas\components\templates\THasTemplate;
+use extas\components\THasContext;
 use extas\components\THasName;
 use extas\components\THasType;
-use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
-use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
+use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherExecutor;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherTemplate;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherTemplateRepository;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
 use extas\interfaces\workflows\transitions\results\ITransitionResult;
+use extas\interfaces\repositories\IRepository;
 
 /**
  * Class TransitionDispatcher
@@ -28,12 +29,11 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
     use THasTemplate;
     use THasType;
     use THasName;
+    use THasContext;
 
     /**
      * @param IWorkflowTransition $transition
      * @param IWorkflowEntity $entitySource
-     * @param IWorkflowSchema $schema
-     * @param IItem $context
      * @param ITransitionResult $result
      * @param IWorkflowEntity $entityEdited
      *
@@ -42,19 +42,24 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
     public function dispatch(
         IWorkflowTransition $transition,
         IWorkflowEntity $entitySource,
-        IWorkflowSchema $schema,
-        IItem $context,
         ITransitionResult &$result,
         IWorkflowEntity &$entityEdited
     ): bool
     {
         /**
          * @var ITransitionDispatcherTemplate $template
+         * @var ITransitionDispatcherExecutor $executor
          */
         $template = $this->getTemplate();
-        $executor = $template->buildClassWithParameters();
+        $executor = $template->buildClassWithParameters([
+            ITransitionDispatcherExecutor::FIELD__SCHEMA_NAME => $this->getSchemaName(),
+            ITransitionDispatcherExecutor::FIELD__CONTEXT => $this->getContext(),
+            ITransitionDispatcherExecutor::FIELD__TRANSITION => $transition,
+            ITransitionDispatcherExecutor::FIELD__ENTITY_SOURCE => $entitySource,
+            ITransitionDispatcherExecutor::FIELD__DISPATCHER => $this
+        ]);
 
-        return $executor($this, $transition, $entitySource, $schema, $context, $result, $entityEdited);
+        return $executor($result, $entityEdited);
     }
 
     /**
@@ -98,7 +103,7 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
     }
 
     /**
-     * @return \extas\interfaces\repositories\IRepository|mixed
+     * @return IRepository|mixed
      */
     public function getTemplateRepository()
     {

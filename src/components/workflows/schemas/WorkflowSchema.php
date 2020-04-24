@@ -73,14 +73,16 @@ class WorkflowSchema extends Item implements IWorkflowSchema
 
     /**
      * @param IWorkflowTransition|string $transition
+     * @param IItem $withContext
      *
      * @return ITransitionDispatcher[]
      */
-    public function getConditionsByTransition($transition): array
+    public function getConditionsByTransition($transition, IItem $withContext): array
     {
         return $this->getDispatchersByTransition(
             $this->sureIsWorkflowTransition($transition),
-            ITransitionDispatcher::TYPE__CONDITION
+            ITransitionDispatcher::TYPE__CONDITION,
+            $withContext
         );
     }
 
@@ -97,15 +99,17 @@ class WorkflowSchema extends Item implements IWorkflowSchema
 
     /**
      * @param IWorkflowTransition|string $transition
+     * @param IItem $withContext
      *
      * @return ITransitionDispatcher[]
      * @throws \Exception
      */
-    public function getValidatorsByTransition($transition): array
+    public function getValidatorsByTransition($transition, IItem $withContext): array
     {
         return $this->getDispatchersByTransition(
             $this->sureIsWorkflowTransition($transition),
-            ITransitionDispatcher::TYPE__VALIDATOR
+            ITransitionDispatcher::TYPE__VALIDATOR,
+            $withContext
         );
     }
 
@@ -122,14 +126,16 @@ class WorkflowSchema extends Item implements IWorkflowSchema
 
     /**
      * @param IWorkflowTransition|string $transition
+     * @param IItem $withContext
      *
      * @return ITransitionDispatcher[]
      */
-    public function getTriggersByTransition($transition): array
+    public function getTriggersByTransition($transition, IItem $withContext): array
     {
         return $this->getDispatchersByTransition(
             $this->sureIsWorkflowTransition($transition),
-            ITransitionDispatcher::TYPE__TRIGGER
+            ITransitionDispatcher::TYPE__TRIGGER,
+            $withContext
         );
     }
 
@@ -332,7 +338,7 @@ class WorkflowSchema extends Item implements IWorkflowSchema
             $result = new TransitionResult();
 
             foreach ($conditions as $condition) {
-                if (!$condition->dispatch($transition, $entity, $this, $context, $result, $entity)) {
+                if (!$condition->dispatch($transition, $entity, $result, $entity)) {
                     return null;
                 }
             }
@@ -421,25 +427,37 @@ class WorkflowSchema extends Item implements IWorkflowSchema
     /**
      * @param IWorkflowTransition $transition
      * @param string $type
+     * @param IItem $context
      *
      * @return ITransitionDispatcher[]
      */
-    protected function getDispatchersByTransition(IWorkflowTransition $transition, string $type): array
+    protected function getDispatchersByTransition(IWorkflowTransition $transition, string $type, IItem $context): array
     {
         /**
          * @var ITransitionDispatcherRepository $repo
-         * @var ITransitionDispatcher[] $transitionValidators
+         * @var ITransitionDispatcher[] $dispatchers
          */
         $repo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
 
-        return $repo->all([
-            ITransitionDispatcher::FIELD__SCHEMA_NAME => $this->getName(),
-            ITransitionDispatcher::FIELD__TRANSITION_NAME => [
-                $transition->getName(),
-                ITransitionDispatcher::TRANSITION__ANY
+        $dispatchers = $repo->all(
+            [
+                ITransitionDispatcher::FIELD__SCHEMA_NAME => $this->getName(),
+                ITransitionDispatcher::FIELD__TRANSITION_NAME => [
+                    $transition->getName(),
+                    ITransitionDispatcher::TRANSITION__ANY
+                ],
+                ITransitionDispatcher::FIELD__TYPE => $type
             ],
-            ITransitionDispatcher::FIELD__TYPE => $type
-        ]);
+            0,
+            0,
+            [ITransitionDispatcher::FIELD__PRIORITY, -1]
+        );
+
+        foreach ($dispatchers as $index => &$dispatcher) {
+            $dispatcher->setContext($context);
+        }
+
+        return $dispatchers;
     }
 
     /**
@@ -517,8 +535,9 @@ class WorkflowSchema extends Item implements IWorkflowSchema
             if (!isset($transitionNames[$condition->getTransitionName()])) {
                 continue;
             }
+            $condition->setContext($context);
             $transition = $transitionNames[$condition->getTransitionName()];
-            if (!$condition->dispatch($transition, $entity, $this, $context, $result, $entity)) {
+            if (!$condition->dispatch($transition, $entity, $result, $entity)) {
                 unset($transitionNames[$condition->getTransitionName()]);
             }
         }

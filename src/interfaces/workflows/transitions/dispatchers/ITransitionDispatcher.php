@@ -1,13 +1,14 @@
 <?php
 namespace extas\interfaces\workflows\transitions\dispatchers;
 
+use extas\interfaces\IHasContext;
 use extas\interfaces\IHasName;
+use extas\interfaces\IHasPriority;
 use extas\interfaces\IHasType;
 use extas\interfaces\IItem;
 use extas\interfaces\parameters\IHasParameters;
 use extas\interfaces\templates\IHasTemplate;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
-use extas\interfaces\workflows\schemas\IWorkflowSchema;
 use extas\interfaces\workflows\transitions\IWorkflowTransition;
 use extas\interfaces\workflows\transitions\results\ITransitionResult;
 
@@ -17,7 +18,14 @@ use extas\interfaces\workflows\transitions\results\ITransitionResult;
  * @package extas\interfaces\workflows\transitions\dispatchers
  * @author jeyroik@gmail.com
  */
-interface ITransitionDispatcher extends IItem, IHasParameters, IHasTemplate, IHasType, IHasName
+interface ITransitionDispatcher extends
+    IItem,
+    IHasParameters,
+    IHasTemplate,
+    IHasType,
+    IHasName,
+    IHasContext,
+    IHasPriority
 {
     public const SUBJECT = 'extas.workflow.transition.dispatcher';
 
@@ -33,8 +41,6 @@ interface ITransitionDispatcher extends IItem, IHasParameters, IHasTemplate, IHa
     /**
      * @param IWorkflowTransition $transition
      * @param IWorkflowEntity $entitySource
-     * @param IWorkflowSchema $schema
-     * @param IItem $context
      * @param ITransitionResult $result
      * @param IWorkflowEntity $entityEdited
      *
@@ -43,8 +49,6 @@ interface ITransitionDispatcher extends IItem, IHasParameters, IHasTemplate, IHa
     public function dispatch(
         IWorkflowTransition $transition,
         IWorkflowEntity $entitySource,
-        IWorkflowSchema $schema,
-        IItem $context,
         ITransitionResult &$result,
         IWorkflowEntity &$entityEdited
     ): bool;

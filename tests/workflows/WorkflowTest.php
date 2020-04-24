@@ -1,6 +1,7 @@
 <?php
 namespace tests\workflows;
 
+use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
 use extas\components\workflows\entities\WorkflowEntityTemplateRepository;
 use extas\interfaces\workflows\entities\IWorkflowEntityTemplateRepository;
@@ -54,8 +55,7 @@ class WorkflowTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $env = \Dotenv\Dotenv::create(getcwd() . '/tests/');
+        $env = Dotenv::create(getcwd() . '/tests/');
         $env->load();
 
         $this->entityTemplateRepo = new WorkflowEntityTemplateRepository();
@@ -132,7 +132,7 @@ class WorkflowTest extends TestCase
             TDT::FIELD__NAME => 'test',
             TDT::FIELD__TITLE => 'test',
             TDT::FIELD__DESCRIPTION => '',
-            TDT::FIELD__CLASS => 'extas\\components\\workflows\\transitions\\dispatchers\\ContextHasAllParams',
+            TDT::FIELD__CLASS => 'tests\\ConditionTrue',
             TDT::FIELD__PARAMETERS => []
         ]));
 
@@ -190,7 +190,7 @@ class WorkflowTest extends TestCase
             TDT::FIELD__NAME => 'test',
             TDT::FIELD__TITLE => 'test',
             TDT::FIELD__DESCRIPTION => '',
-            TDT::FIELD__CLASS => 'extas\\components\\workflows\\transitions\\dispatchers\\ContextHasAllParams',
+            TDT::FIELD__CLASS => 'tests\\ConditionTrue',
             TDT::FIELD__PARAMETERS => []
         ]));
 
@@ -249,7 +249,7 @@ class WorkflowTest extends TestCase
             TDT::FIELD__NAME => 'test',
             TDT::FIELD__TITLE => '',
             TDT::FIELD__DESCRIPTION => '',
-            TDT::FIELD__CLASS => 'extas\\components\\workflows\\transitions\\dispatchers\\ContextHasAllParams',
+            TDT::FIELD__CLASS => 'tests\\ConditionTrue',
             TDT::FIELD__PARAMETERS => []
         ]));
 
@@ -259,8 +259,6 @@ class WorkflowTest extends TestCase
         $this->assertTrue($workflow->isTransitionValid(
             $transition,
             $entity,
-            $schema,
-            $context,
             $result
         )->isSuccess());
 
@@ -283,8 +281,6 @@ class WorkflowTest extends TestCase
         $this->assertTrue($workflow->isTransitionValid(
             $transition,
             $entity,
-            $schema,
-            $context,
             $result
         )->isSuccess());
     }
@@ -349,7 +345,7 @@ class WorkflowTest extends TestCase
             TDT::FIELD__NAME => 'test',
             TDT::FIELD__TITLE => 'test',
             TDT::FIELD__DESCRIPTION => '',
-            TDT::FIELD__CLASS => 'extas\\components\\workflows\\transitions\\dispatchers\\ContextHasAllParams',
+            TDT::FIELD__CLASS => 'tests\\ConditionTrue',
             TDT::FIELD__PARAMETERS => []
         ]));
 

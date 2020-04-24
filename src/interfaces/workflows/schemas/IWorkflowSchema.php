@@ -49,10 +49,11 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
 
     /**
      * @param IWorkflowTransition|string $transition
+     * @param IItem $withContext
      *
      * @return ITransitionDispatcher[]
      */
-    public function getConditionsByTransition($transition): array;
+    public function getConditionsByTransition($transition, IItem $withContext): array;
 
     /**
      * @return ITransitionDispatcher[]
@@ -61,10 +62,11 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
 
     /**
      * @param string|IWorkflowTransition $transition
+     * @param IItem $context
      *
      * @return ITransitionDispatcher[]
      */
-    public function getValidatorsByTransition($transition): array;
+    public function getValidatorsByTransition($transition, IItem $context): array;
 
     /**
      * @return ITransitionDispatcher[]
@@ -73,10 +75,11 @@ interface IWorkflowSchema extends IItem, IHasName, IHasDescription, IHasParamete
 
     /**
      * @param string|IWorkflowTransition $transition
+     * @param IItem $context
      *
      * @return ITransitionDispatcher[]
      */
-    public function getTriggersByTransition($transition): array;
+    public function getTriggersByTransition($transition, IItem $context): array;
 
     /**
      * @return IWorkflowTransition[]

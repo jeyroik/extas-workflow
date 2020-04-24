@@ -1,6 +1,7 @@
 <?php
 namespace extas\interfaces\workflows;
 
+use extas\interfaces\IHasContext;
 use extas\interfaces\IItem;
 use extas\interfaces\workflows\entities\IWorkflowEntity;
 use extas\interfaces\workflows\schemas\IWorkflowSchema;
@@ -14,11 +15,13 @@ use extas\interfaces\workflows\transitions\results\ITransitionResult;
  * @package extas\interfaces\workflows
  * @author jeyroik@gmail.com
  */
-interface IWorkflow extends IItem
+interface IWorkflow extends IItem, IHasContext
 {
     public const SUBJECT = 'extas.workflow';
 
     public const CONTEXT__CONDITIONS = 1;
+
+    public const FIELD__SCHEMA = 'schema';
 
     /**
      * @param IWorkflowEntity $entity
@@ -53,11 +56,14 @@ interface IWorkflow extends IItem
     /**
      * @param IWorkflowTransition $transition
      * @param IWorkflowEntity $entity
-     * @param IWorkflowSchema $bySchema
-     * @param IItem $withContext
      * @param ITransitionResult $result
      *
      * @return ITransitionResult
      */
-    public function isTransitionValid($transition, $entity, $bySchema, $withContext, $result): ITransitionResult;
+    public function isTransitionValid($transition, $entity, $result): ITransitionResult;
+
+    /**
+     * @return IWorkflowSchema|null
+     */
+    public function getSchema(): ?IWorkflowSchema;
 }
