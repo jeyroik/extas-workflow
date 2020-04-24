@@ -189,7 +189,7 @@ class Workflow extends Item implements IWorkflow
      *
      * @return ITransitionResult
      */
-    protected function triggerTransitionEnd($transition, $entity, $bySchema, $withContext, $result): ITransitionResult
+    protected function triggerTransitionEnd($transition, &$entity, $bySchema, $withContext, $result): ITransitionResult
     {
         $triggers = $bySchema->getTriggersByTransition($transition);
         $entityEdited = clone $entity;
@@ -197,6 +197,8 @@ class Workflow extends Item implements IWorkflow
         foreach ($triggers as $trigger) {
             $trigger->dispatch($transition, $entity, $bySchema, $withContext, $result, $entityEdited);
         }
+
+        $entity = $entityEdited;
 
         return $result;
     }
