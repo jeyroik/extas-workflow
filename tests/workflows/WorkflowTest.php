@@ -85,7 +85,7 @@ class WorkflowTest extends TestCase
     {
         $this->entityTemplateRepo->delete([WorkflowEntityTemplate::FIELD__NAME => 'test']);
         $this->transitionDispatcherRepo->delete([TransitionDispatcher::FIELD__NAME => 'test']);
-        $this->transitionDispatcherTemplateRepo->delete([TDT::FIELD__NAME => 'test']);
+        $this->transitionDispatcherTemplateRepo->delete([TDT::FIELD__TITLE => 'test']);
         $this->transitionRepo->delete([WorkflowTransition::FIELD__NAME => 'test']);
     }
 
@@ -130,7 +130,7 @@ class WorkflowTest extends TestCase
 
         $this->transitionDispatcherTemplateRepo->create(new TDT([
             TDT::FIELD__NAME => 'test',
-            TDT::FIELD__TITLE => '',
+            TDT::FIELD__TITLE => 'test',
             TDT::FIELD__DESCRIPTION => '',
             TDT::FIELD__CLASS => 'extas\\components\\workflows\\transitions\\dispatchers\\ContextHasAllParams',
             TDT::FIELD__PARAMETERS => []
@@ -188,7 +188,7 @@ class WorkflowTest extends TestCase
 
         $this->transitionDispatcherTemplateRepo->create(new TDT([
             TDT::FIELD__NAME => 'test',
-            TDT::FIELD__TITLE => '',
+            TDT::FIELD__TITLE => 'test',
             TDT::FIELD__DESCRIPTION => '',
             TDT::FIELD__CLASS => 'extas\\components\\workflows\\transitions\\dispatchers\\ContextHasAllParams',
             TDT::FIELD__PARAMETERS => []
