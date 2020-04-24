@@ -40,7 +40,7 @@ class WorkflowSchemaTest extends TestCase
     /**
      * @var IRepository|null
      */
-    protected ?IRepository $transitionTemplateDispatcherRepo = null;
+    protected ?IRepository $transitionDispatcherTemplateRepo = null;
 
     /**
      * @var IRepository|null
@@ -181,12 +181,12 @@ class WorkflowSchemaTest extends TestCase
             WorkflowTransition::FIELD__NAME => 'test'
         ]);
 
-        $conditions = $schema->getConditionsByTransition($transition);
+        $conditions = $schema->getConditionsByTransition($transition, new WorkflowEntityContext([]));
         $this->assertCount(1, $conditions);
         $firstCondition = array_shift($conditions);
         $this->assertEquals('test', $firstCondition->getName());
 
-        $conditions = $schema->getConditionsByTransition($transition->getName());
+        $conditions = $schema->getConditionsByTransition($transition->getName(), new WorkflowEntityContext([]));
         $this->assertCount(1, $conditions);
         $firstCondition = array_shift($conditions);
         $this->assertEquals('test', $firstCondition->getName());
@@ -213,12 +213,12 @@ class WorkflowSchemaTest extends TestCase
             WorkflowTransition::FIELD__NAME => 'test'
         ]);
 
-        $dispatchers = $schema->getValidatorsByTransition($transition);
+        $dispatchers = $schema->getValidatorsByTransition($transition, new WorkflowEntityContext([]));
         $this->assertCount(1, $dispatchers);
         $first = array_shift($dispatchers);
         $this->assertEquals('test', $first->getName());
 
-        $dispatchers = $schema->getValidatorsByTransition($transition->getName());
+        $dispatchers = $schema->getValidatorsByTransition($transition->getName(), new WorkflowEntityContext([]));
         $this->assertCount(1, $dispatchers);
         $first = array_shift($dispatchers);
         $this->assertEquals('test', $first->getName());
@@ -267,12 +267,12 @@ class WorkflowSchemaTest extends TestCase
             WorkflowTransition::FIELD__NAME => 'test'
         ]);
 
-        $dispatchers = $schema->getTriggersByTransition($transition);
+        $dispatchers = $schema->getTriggersByTransition($transition, new WorkflowEntityContext([]));
         $this->assertCount(1, $dispatchers);
         $first = array_shift($dispatchers);
         $this->assertEquals('test', $first->getName());
 
-        $dispatchers = $schema->getTriggersByTransition($transition->getName());
+        $dispatchers = $schema->getTriggersByTransition($transition->getName(), new WorkflowEntityContext([]));
         $this->assertCount(1, $dispatchers);
         $first = array_shift($dispatchers);
         $this->assertEquals('test', $first->getName());
@@ -320,7 +320,7 @@ class WorkflowSchemaTest extends TestCase
             []
         );
 
-        $dispatchers = $schema->getConditionsByTransition($transition);
+        $dispatchers = $schema->getConditionsByTransition($transition, new WorkflowEntityContext([]));
         $this->assertCount(1, $dispatchers);
         $first = array_shift($dispatchers);
         $this->assertEquals('test', $first->getName());
@@ -347,7 +347,7 @@ class WorkflowSchemaTest extends TestCase
             []
         );
 
-        $dispatchers = $schema->getValidatorsByTransition($transition);
+        $dispatchers = $schema->getValidatorsByTransition($transition, new WorkflowEntityContext([]));
         $this->assertCount(1, $dispatchers);
         $first = array_shift($dispatchers);
         $this->assertEquals('test', $first->getName());
@@ -374,7 +374,7 @@ class WorkflowSchemaTest extends TestCase
             []
         );
 
-        $dispatchers = $schema->getTriggersByTransition($transition);
+        $dispatchers = $schema->getTriggersByTransition($transition, new WorkflowEntityContext([]));
         $this->assertCount(1, $dispatchers);
         $first = array_shift($dispatchers);
         $this->assertEquals('test', $first->getName());
