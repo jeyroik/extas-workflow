@@ -21,28 +21,8 @@ use extas\interfaces\workflows\transits\ITransitResult;
  * @package extas\components\workflows\transitions\dispatchers
  * @author jeyroik@gmail.com
  */
-abstract class TransitionDispatcherExecutor extends Plugin implements ITransitionDispatcherExecutor
+abstract class TransitionDispatcherExecutor extends TransitionDispatcher implements ITransitionDispatcherExecutor
 {
-    use THasType;
-    use THasSampleParameters;
-    use THasName;
-    use THasDescription;
-    use THasSample;
-    use THasCreatedAt;
-    use THasUpdatedAt;
-    use THasTransition;
-
-     /**
-      * @param IItem $context
-      * @param ITransitResult $result
-      * @param IEntity $entityEdited
-      * @return bool
-      */
-    final public function dispatch(IItem $context, ITransitResult &$result, IEntity &$entityEdited): bool
-    {
-        return true;
-    }
-
      /**
      * @return string
      */
