@@ -71,8 +71,6 @@ class TransitionTest extends TestCase
 
         $this->stateRepo->create($state);
 
-        $transition->setStateFromName($state)->setStateToName($state);
-
         $state = $transition->getStateFrom();
         $this->assertEquals('test', $state->getName());
 
@@ -133,8 +131,8 @@ class TransitionTest extends TestCase
     public function testMissedCondition()
     {
         $transition = new Transition();
-        $this->expectExceptionMessage('');
         $this->expectExceptionMessage('Transition dispatcher "test" missed');
+        $transition->removeConditionName('test');
     }
 
     public function testMissedValidator()
