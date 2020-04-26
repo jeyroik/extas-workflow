@@ -31,7 +31,7 @@ trait THasTransitions
      */
     public function getTransitions(): array
     {
-        return $this->getRepository()->all([ITransition::FIELD__NAME => $this->getTransitionsNames()]);
+        return $this->getTransitionRepository()->all([ITransition::FIELD__NAME => $this->getTransitionsNames()]);
     }
 
     /**
@@ -41,7 +41,7 @@ trait THasTransitions
     public function getTransition(string $transitionName): ?ITransition
     {
         if ($this->hasTransitionName($transitionName)) {
-            return $this->getRepository()->one([ITransition::FIELD__NAME => $transitionName]);
+            return $this->getTransitionRepository()->one([ITransition::FIELD__NAME => $transitionName]);
         }
 
         return null;
@@ -103,7 +103,7 @@ trait THasTransitions
     /**
      * @return ITransitionRepository
      */
-    protected function getRepository()
+    protected function getTransitionRepository()
     {
         return SystemContainer::getItem(ITransitionRepository::class);
     }

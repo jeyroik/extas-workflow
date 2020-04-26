@@ -31,7 +31,7 @@ trait THasStates
      */
     public function getStates(): array
     {
-        return $this->getRepository()->all([IState::FIELD__NAME => $this->getStatesNames()]);
+        return $this->getStatesRepository()->all([IState::FIELD__NAME => $this->getStatesNames()]);
     }
 
     /**
@@ -41,7 +41,7 @@ trait THasStates
     public function getState(string $name): ?IState
     {
         if ($this->hasStateName($name)) {
-            return $this->getRepository()->one([IState::FIELD__NAME => $name]);
+            return $this->getStatesRepository()->one([IState::FIELD__NAME => $name]);
         }
 
         return null;
@@ -103,7 +103,7 @@ trait THasStates
     /**
      * @return IStateRepository
      */
-    protected function getRepository()
+    protected function getStatesRepository()
     {
         return SystemContainer::getItem(IStateRepository::class);
     }
