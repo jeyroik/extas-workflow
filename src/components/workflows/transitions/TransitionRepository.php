@@ -12,4 +12,8 @@ use extas\interfaces\workflows\transitions\ITransitionRepository;
  */
 class TransitionRepository extends Repository implements ITransitionRepository
 {
+    protected string $name = 'workflow_transitions';
+    protected string $scope = 'extas';
+    protected string $pk = Transition::FIELD__NAME;
+    protected string $itemClass = Transition::class;
 }
