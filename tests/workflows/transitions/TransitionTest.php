@@ -53,6 +53,7 @@ class TransitionTest extends TestCase
     public function tearDown(): void
     {
         $this->stateRepo->delete([State::FIELD__NAME => 'test']);
+        $this->dispatcherRepo->delete([ITransitionDispatcher::FIELD__TITLE => 'test']);
     }
 
     public function testBaseMethods()
@@ -86,14 +87,17 @@ class TransitionTest extends TestCase
 
         $this->dispatcherRepo->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_condition',
+            TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__CONDITION
         ]));
         $this->dispatcherRepo->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_validator',
+            TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__VALIDATOR
         ]));
         $this->dispatcherRepo->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_trigger',
+            TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__TRIGGER
         ]));
 
