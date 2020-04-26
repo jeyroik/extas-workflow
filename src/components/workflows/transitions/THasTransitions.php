@@ -3,7 +3,6 @@ namespace extas\components\workflows\transitions;
 
 use extas\components\SystemContainer;
 use extas\components\workflows\exceptions\transitions\ExceptionTransitionMissed;
-use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\exceptions\transitions\IExceptionTransitionMissed;
 use extas\interfaces\workflows\transitions\IHasTransitions;
 use extas\interfaces\workflows\transitions\ITransition;
@@ -32,12 +31,7 @@ trait THasTransitions
      */
     public function getTransitions(): array
     {
-        /**
-         * @var IRepository $repo
-         */
-        $repo = SystemContainer::getItem(ITransitionRepository::class);
-
-        return $repo->all([ITransition::FIELD__NAME => $this->getTransitionsNames()]);
+        return $this->getRepository()->all([ITransition::FIELD__NAME => $this->getTransitionsNames()]);
     }
 
     /**
@@ -47,12 +41,7 @@ trait THasTransitions
     public function getTransition(string $transitionName): ?ITransition
     {
         if ($this->hasTransitionName($transitionName)) {
-            /**
-             * @var IRepository $repo
-             */
-            $repo = SystemContainer::getItem(ITransitionRepository::class);
-
-            return $repo->one([ITransition::FIELD__NAME => $transitionName]);
+            return $this->getRepository()->one([ITransition::FIELD__NAME => $transitionName]);
         }
 
         return null;
@@ -109,5 +98,13 @@ trait THasTransitions
         }
 
         throw new ExceptionTransitionMissed($transitionName);
+    }
+
+    /**
+     * @return ITransitionRepository
+     */
+    protected function getRepository()
+    {
+        return SystemContainer::getItem(ITransitionRepository::class);
     }
 }

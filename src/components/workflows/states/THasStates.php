@@ -1,9 +1,8 @@
 <?php
 namespace extas\components\workflows\states;
 
-use extas\components\SystemContainer;
 use extas\components\workflows\exceptions\states\ExceptionStateMissed;
-use extas\interfaces\repositories\IRepository;
+use extas\components\SystemContainer;
 use extas\interfaces\workflows\exceptions\states\IExceptionStateMissed;
 use extas\interfaces\workflows\states\IHasStates;
 use extas\interfaces\workflows\states\IState;
@@ -32,12 +31,7 @@ trait THasStates
      */
     public function getStates(): array
     {
-        /**
-         * @var IRepository $repo
-         */
-        $repo = SystemContainer::getItem(IStateRepository::class);
-
-        return $repo->all([IState::FIELD__NAME => $this->getStatesNames()]);
+        return $this->getRepository()->all([IState::FIELD__NAME => $this->getStatesNames()]);
     }
 
     /**
@@ -47,11 +41,7 @@ trait THasStates
     public function getState(string $name): ?IState
     {
         if ($this->hasStateName($name)) {
-            /**
-             * @var IRepository $repo
-             */
-            $repo = SystemContainer::getItem(IStateRepository::class);
-            return $repo->one([IState::FIELD__NAME => $name]);
+            return $this->getRepository()->one([IState::FIELD__NAME => $name]);
         }
 
         return null;
@@ -108,5 +98,13 @@ trait THasStates
         }
 
         throw new ExceptionStateMissed($name);
+    }
+
+    /**
+     * @return IStateRepository
+     */
+    protected function getRepository()
+    {
+        return SystemContainer::getItem(IStateRepository::class);
     }
 }

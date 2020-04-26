@@ -30,24 +30,24 @@ class Workflow extends Item implements IWorkflow
 
         $conditions = $transition->getConditions();
         foreach ($conditions as $condition) {
-            if (!$condition->dispatch($this->getContext(), $result, $entity)) {
-                return $result;
-            }
+            $condition->dispatch($this->getContext(), $result, $entity);
         }
 
         $validators = $transition->getValidators();
         foreach ($validators as $validator) {
-            if (!$validator->dispatch($this->getContext(), $result, $entity)) {
-                return $result;
+            $validator->dispatch($this->getContext(), $result, $entity);
+        }
+
+        if (!$result->hasErrors()) {
+            $triggers = $transition->getTriggers();
+            foreach ($triggers as $trigger) {
+                $trigger->dispatch($this->getContext(), $result, $entity);
             }
+
+            $result->success($entity);
         }
 
-        $triggers = $transition->getTriggers();
-        foreach ($triggers as $trigger) {
-            $trigger->dispatch($this->getContext(), $result, $entity);
-        }
-
-        return $result->success($entity);
+        return $result;
     }
 
     /**

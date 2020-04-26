@@ -2,7 +2,6 @@
 namespace extas\components\workflows\entities;
 
 use extas\components\SystemContainer;
-use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\entities\IEntity;
 use extas\interfaces\workflows\entities\IEntityRepository;
 use extas\interfaces\workflows\entities\IHasEntity;
@@ -31,7 +30,7 @@ trait THasEntity
     public function getEntity(): ?IEntity
     {
         /**
-         * @var IRepository $repo
+         * @var IEntityRepository $repo
          */
         $repo = SystemContainer::getItem(IEntityRepository::class);
 

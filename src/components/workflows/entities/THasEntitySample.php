@@ -1,11 +1,10 @@
 <?php
 namespace extas\components\workflows\entities;
 
-use extas\components\SystemContainer;
-use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\entities\IEntitySample;
 use extas\interfaces\workflows\entities\IEntitySampleRepository;
 use extas\interfaces\workflows\entities\IHasEntitySample;
+use extas\components\SystemContainer;
 
 /**
  * Trait THasEntitySample
@@ -31,7 +30,7 @@ trait THasEntitySample
     public function getEntitySample(): ?IEntitySample
     {
         /**
-         * @var IRepository $repo
+         * @var IEntitySampleRepository $repo
          */
         $repo = SystemContainer::getItem(IEntitySampleRepository::class);
 

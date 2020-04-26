@@ -1,9 +1,8 @@
 <?php
 namespace extas\components\workflows\schemas;
 
-use extas\components\SystemContainer;
-use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\schemas\IHasSchema;
+use extas\components\SystemContainer;
 use extas\interfaces\workflows\schemas\ISchema;
 use extas\interfaces\workflows\schemas\ISchemaRepository;
 
@@ -31,7 +30,7 @@ trait THasSchema
     public function getSchema(): ?ISchema
     {
         /**
-         * @var IRepository $repo
+         * @var ISchemaRepository $repo
          */
         $repo = SystemContainer::getItem(ISchemaRepository::class);
 

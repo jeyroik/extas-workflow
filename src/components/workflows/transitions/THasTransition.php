@@ -1,9 +1,8 @@
 <?php
 namespace extas\components\workflows\transitions;
 
-use extas\components\SystemContainer;
-use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\transitions\IHasTransition;
+use extas\components\SystemContainer;
 use extas\interfaces\workflows\transitions\ITransition;
 use extas\interfaces\workflows\transitions\ITransitionRepository;
 
@@ -31,7 +30,7 @@ trait THasTransition
     public function getTransition(): ?ITransition
     {
         /**
-         * @var IRepository $repo
+         * @var ITransitionRepository $repo
          */
         $repo = SystemContainer::getItem(ITransitionRepository::class);
 
