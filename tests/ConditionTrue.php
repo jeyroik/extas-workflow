@@ -2,8 +2,8 @@
 namespace tests;
 
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcherExecutor;
-use extas\interfaces\workflows\entities\IWorkflowEntity;
-use extas\interfaces\workflows\transitions\results\ITransitionResult;
+use extas\interfaces\workflows\entities\IEntity;
+use extas\interfaces\workflows\transits\ITransitResult;
 
 /**
  * Class ConditionTrue
@@ -14,11 +14,11 @@ use extas\interfaces\workflows\transitions\results\ITransitionResult;
 class ConditionTrue extends TransitionDispatcherExecutor
 {
     /**
-     * @param ITransitionResult $result
-     * @param IWorkflowEntity $entityEdited
+     * @param ITransitResult $result
+     * @param IEntity $entityEdited
      * @return bool
      */
-    public function __invoke(ITransitionResult &$result, IWorkflowEntity &$entityEdited): bool
+    public function __invoke(ITransitResult &$result, IEntity &$entityEdited): bool
     {
         return true;
     }

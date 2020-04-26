@@ -2,11 +2,18 @@
 namespace extas\components\workflows\transitions\dispatchers;
 
 use extas\components\plugins\Plugin;
-use extas\components\THasContext;
-use extas\interfaces\workflows\entities\IWorkflowEntity;
-use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
+use extas\components\samples\parameters\THasSampleParameters;
+use extas\components\samples\THasSample;
+use extas\components\THasCreatedAt;
+use extas\components\THasDescription;
+use extas\components\THasName;
+use extas\components\THasType;
+use extas\components\THasUpdatedAt;
+use extas\components\workflows\transitions\THasTransition;
+use extas\interfaces\IItem;
+use extas\interfaces\workflows\entities\IEntity;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherExecutor;
-use extas\interfaces\workflows\transitions\IWorkflowTransition;
+use extas\interfaces\workflows\transits\ITransitResult;
 
 /**
  * Class TransitionDispatcherExecutor
@@ -16,41 +23,27 @@ use extas\interfaces\workflows\transitions\IWorkflowTransition;
  */
 abstract class TransitionDispatcherExecutor extends Plugin implements ITransitionDispatcherExecutor
 {
-    use THasContext;
+    use THasType;
+    use THasSampleParameters;
+    use THasName;
+    use THasDescription;
+    use THasSample;
+    use THasCreatedAt;
+    use THasUpdatedAt;
+    use THasTransition;
 
-    /**
-     * @return ITransitionDispatcher|null
-     */
-    public function getDispatcher(): ?ITransitionDispatcher
+     /**
+      * @param IItem $context
+      * @param ITransitResult $result
+      * @param IEntity $entityEdited
+      * @return bool
+      */
+    final public function dispatch(IItem $context, ITransitResult &$result, IEntity &$entityEdited): bool
     {
-        return $this->config[static::FIELD__DISPATCHER] ?? null;
+        return true;
     }
 
-    /**
-     * @return IWorkflowEntity|null
-     */
-    public function getEntitySource(): ?IWorkflowEntity
-    {
-        return $this->config[static::FIELD__ENTITY_SOURCE] ?? null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSchemaName(): string
-    {
-        return $this->config[static::FIELD__SCHEMA_NAME] ?? '';
-    }
-
-    /**
-     * @return IWorkflowTransition|null
-     */
-    public function getTransition(): ?IWorkflowTransition
-    {
-        return $this->config[static::FIELD__TRANSITION] ?? null;
-    }
-
-    /**
+     /**
      * @return string
      */
     protected function getSubjectForExtension(): string

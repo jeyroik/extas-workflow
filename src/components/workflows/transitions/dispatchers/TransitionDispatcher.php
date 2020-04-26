@@ -1,22 +1,15 @@
 <?php
 namespace extas\components\workflows\transitions\dispatchers;
 
-use extas\components\Item;
-use extas\components\parameters\THasParameters;
-use extas\components\SystemContainer;
-use extas\components\templates\THasTemplate;
-use extas\components\THasContext;
-use extas\components\THasName;
+use extas\components\samples\THasSample;
 use extas\components\THasPriority;
 use extas\components\THasType;
-use extas\interfaces\workflows\entities\IWorkflowEntity;
+use extas\components\workflows\transitions\THasTransition;
+use extas\interfaces\IItem;
+use extas\interfaces\workflows\entities\IEntity;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherExecutor;
-use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherTemplate;
-use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherTemplateRepository;
-use extas\interfaces\workflows\transitions\IWorkflowTransition;
-use extas\interfaces\workflows\transitions\results\ITransitionResult;
-use extas\interfaces\repositories\IRepository;
+use extas\interfaces\workflows\transits\ITransitResult;
 
 /**
  * Class TransitionDispatcher
@@ -24,42 +17,19 @@ use extas\interfaces\repositories\IRepository;
  * @package extas\components\workflows\transitions\dispatchers
  * @author jeyroik@gmail.com
  */
-class TransitionDispatcher extends Item implements ITransitionDispatcher
+class TransitionDispatcher extends TransitionDispatcherSample implements ITransitionDispatcher
 {
-    use THasParameters;
-    use THasTemplate;
-    use THasType;
-    use THasName;
-    use THasContext;
+    use THasSample;
+    use THasTransition;
     use THasPriority;
+    use THasType;
 
-    /**
-     * @param IWorkflowTransition $transition
-     * @param IWorkflowEntity $entitySource
-     * @param ITransitionResult $result
-     * @param IWorkflowEntity $entityEdited
-     *
-     * @return bool
-     */
-    public function dispatch(
-        IWorkflowTransition $transition,
-        IWorkflowEntity $entitySource,
-        ITransitionResult &$result,
-        IWorkflowEntity &$entityEdited
-    ): bool
+    public function dispatch(IItem $context, ITransitResult &$result, IEntity &$entityEdited): bool
     {
         /**
-         * @var ITransitionDispatcherTemplate $template
          * @var ITransitionDispatcherExecutor $executor
          */
-        $template = $this->getTemplate();
-        $executor = $template->buildClassWithParameters([
-            ITransitionDispatcherExecutor::FIELD__SCHEMA_NAME => $this->getSchemaName(),
-            ITransitionDispatcherExecutor::FIELD__CONTEXT => $this->getContext(),
-            ITransitionDispatcherExecutor::FIELD__TRANSITION => $transition,
-            ITransitionDispatcherExecutor::FIELD__ENTITY_SOURCE => $entitySource,
-            ITransitionDispatcherExecutor::FIELD__DISPATCHER => $this
-        ]);
+        $executor = $this->buildClassWithParameters($this->__toArray());
 
         return $executor($result, $entityEdited);
     }
@@ -67,56 +37,8 @@ class TransitionDispatcher extends Item implements ITransitionDispatcher
     /**
      * @return string
      */
-    public function getSchemaName(): string
-    {
-        return $this->config[static::FIELD__SCHEMA_NAME] ?? '';
-    }
-
-    /**
-     * @return string
-     */
-    public function getTransitionName(): string
-    {
-        return $this->config[static::FIELD__TRANSITION_NAME] ?? '';
-    }
-
-    /**
-     * @param string $schemaName
-     *
-     * @return ITransitionDispatcher
-     */
-    public function setSchemaName(string $schemaName): ITransitionDispatcher
-    {
-        $this->config[static::FIELD__SCHEMA_NAME] = $schemaName;
-
-        return $this;
-    }
-
-    /**
-     * @param string $transitionName
-     *
-     * @return ITransitionDispatcher
-     */
-    public function setTransitionName(string $transitionName): ITransitionDispatcher
-    {
-        $this->config[static::FIELD__TRANSITION_NAME] = $transitionName;
-
-        return $this;
-    }
-
-    /**
-     * @return IRepository|mixed
-     */
-    public function getTemplateRepository()
-    {
-        return SystemContainer::getItem(ITransitionDispatcherTemplateRepository::class);
-    }
-
-    /**
-     * @return string
-     */
     protected function getSubjectForExtension(): string
     {
-        return static::SUBJECT;
+        return 'extas.workflow.transition.dispatcher';
     }
 }

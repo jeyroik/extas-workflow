@@ -2,54 +2,71 @@
   "name": "extas/workflow",
   "package_classes": [
     {
-      "interface": "extas\\interfaces\\workflows\\schemas\\IWorkflowSchemaRepository",
-      "class": "extas\\components\\workflows\\schemas\\WorkflowSchemaRepository"
+      "interface": "extas\\interfaces\\workflows\\schemas\\ISchemaRepository",
+      "class": "extas\\components\\workflows\\schemas\\SchemaRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\transitions\\IWorkflowTransitionRepository",
-      "class": "extas\\components\\workflows\\transitions\\WorkflowTransitionRepository"
+      "interface": "extas\\interfaces\\workflows\\schemas\\ISchemaSampleRepository",
+      "class": "extas\\components\\workflows\\schemas\\SchemaSampleRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\states\\IWorkflowStateRepository",
-      "class": "extas\\components\\workflows\\states\\WorkflowStateRepository"
+      "interface": "extas\\interfaces\\workflows\\transitions\\TransitionRepository",
+      "class": "extas\\components\\workflows\\transitions\\TransitionRepository"
+    },
+    {
+      "interface": "extas\\interfaces\\workflows\\transitions\\TransitionSampleRepository",
+      "class": "extas\\components\\workflows\\transitions\\TransitionSampleRepository"
+    },
+    {
+      "interface": "extas\\interfaces\\workflows\\states\\StateRepository",
+      "class": "extas\\components\\workflows\\states\\StateRepository"
+    },
+    {
+      "interface": "extas\\interfaces\\workflows\\states\\StateSampleRepository",
+      "class": "extas\\components\\workflows\\states\\StateSampleRepository"
     },
     {
       "interface": "extas\\interfaces\\workflows\\transitions\\dispatchers\\ITransitionDispatcherRepository",
       "class": "extas\\components\\workflows\\transitions\\dispatchers\\TransitionDispatcherRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\transitions\\dispatchers\\ITransitionDispatcherTemplateRepository",
-      "class": "extas\\components\\workflows\\transitions\\dispatchers\\TransitionDispatcherTemplateRepository"
+      "interface": "extas\\interfaces\\workflows\\transitions\\dispatchers\\ITransitionDispatcherSampleRepository",
+      "class": "extas\\components\\workflows\\transitions\\dispatchers\\TransitionDispatcherSampleRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\entities\\IWorkflowEntityTemplateRepository",
-      "class": "extas\\components\\workflows\\entities\\WorkflowEntityTemplateRepository"
+      "interface": "extas\\interfaces\\workflows\\entities\\EntityRepository",
+      "class": "extas\\components\\workflows\\entities\\EntityRepository"
+    },
+    {
+      "interface": "extas\\interfaces\\workflows\\entities\\EntitySampleRepository",
+      "class": "extas\\components\\workflows\\entities\\EntitySampleRepository"
     }
   ],
   "plugins": [
     {
-      "class": "extas\\components\\plugins\\PluginInstallWorkflowSchemas",
+      "class": [
+        "extas\\components\\plugins\\workflows\\PluginInstallSchemas",
+        "extas\\components\\plugins\\workflows\\PluginInstallSchemasSamples",
+        "extas\\components\\plugins\\workflows\\PluginInstallTransitions",
+        "extas\\components\\plugins\\workflows\\PluginInstallTransitionsSamples",
+        "extas\\components\\plugins\\workflows\\PluginInstallStates",
+        "extas\\components\\plugins\\workflows\\PluginInstallStatesSamples",
+        "extas\\components\\plugins\\workflows\\PluginInstallTransitionDispatchers",
+        "extas\\components\\plugins\\workflows\\PluginInstallTransitionDispatcherTemplates",
+        "extas\\components\\plugins\\workflows\\PluginInstallEntities",
+        "extas\\components\\plugins\\workflows\\PluginInstallEntitiesSamples"
+      ],
       "stage": "extas.install"
     },
     {
-      "class": "extas\\components\\plugins\\PluginInstallWorkflowTransitions",
-      "stage": "extas.install"
-    },
-    {
-      "class": "extas\\components\\plugins\\PluginInstallWorkflowStates",
-      "stage": "extas.install"
-    },
-    {
-      "class": "extas\\components\\plugins\\PluginInstallTransitionDispatchers",
-      "stage": "extas.install"
-    },
-    {
-      "class": "extas\\components\\plugins\\PluginInstallTransitionDispatcherTemplates",
-      "stage": "extas.install"
-    },
-    {
-      "class": "extas\\components\\plugins\\PluginInstallWorkflowEntityTemplates",
-      "stage": "extas.install"
+      "class": "extas\\components\\plugins\\repositories\\PluginFieldSampleName",
+      "stage": [
+        "extas.workflow_entities.create.before",
+        "extas.workflow_schemas.create.before",
+        "extas.workflow_states.create.before",
+        "extas.workflow_transitions.create.before",
+        "extas.workflow_transition_dispatchers.create.before"
+      ]
     }
   ]
 }

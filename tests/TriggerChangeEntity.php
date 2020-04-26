@@ -2,9 +2,8 @@
 namespace tests;
 
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcherExecutor;
-use extas\interfaces\workflows\entities\IWorkflowEntity;
-use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherExecutor;
-use extas\interfaces\workflows\transitions\results\ITransitionResult;
+use extas\interfaces\workflows\entities\IEntity;
+use extas\interfaces\workflows\transits\ITransitResult;
 
 /**
  * Class TriggerChangeEntity
@@ -12,19 +11,16 @@ use extas\interfaces\workflows\transitions\results\ITransitionResult;
  * @package tests
  * @author jeyroik@gmail.com
  */
-class TriggerChangeEntity extends TransitionDispatcherExecutor implements ITransitionDispatcherExecutor
+class TriggerChangeEntity extends TransitionDispatcherExecutor
 {
     public const FIELD__TEST = 'test_trigger';
 
     /**
-     * @param ITransitionResult $result
-     * @param IWorkflowEntity $entityEdited
+     * @param ITransitResult $result
+     * @param IEntity $entityEdited
      * @return bool
      */
-    public function __invoke(
-        ITransitionResult &$result,
-        IWorkflowEntity &$entityEdited
-    ): bool
+    public function __invoke(ITransitResult &$result, IEntity &$entityEdited): bool
     {
         $entityEdited[static::FIELD__TEST] = 'is ok';
 

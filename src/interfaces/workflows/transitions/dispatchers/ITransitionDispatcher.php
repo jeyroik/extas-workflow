@@ -1,16 +1,13 @@
 <?php
 namespace extas\interfaces\workflows\transitions\dispatchers;
 
-use extas\interfaces\IHasContext;
-use extas\interfaces\IHasName;
 use extas\interfaces\IHasPriority;
 use extas\interfaces\IHasType;
 use extas\interfaces\IItem;
-use extas\interfaces\parameters\IHasParameters;
-use extas\interfaces\templates\IHasTemplate;
-use extas\interfaces\workflows\entities\IWorkflowEntity;
-use extas\interfaces\workflows\transitions\IWorkflowTransition;
-use extas\interfaces\workflows\transitions\results\ITransitionResult;
+use extas\interfaces\samples\IHasSample;
+use extas\interfaces\workflows\entities\IEntity;
+use extas\interfaces\workflows\transitions\IHasTransition;
+use extas\interfaces\workflows\transits\ITransitResult;
 
 /**
  * Interface ITransitionDispatcher
@@ -19,19 +16,12 @@ use extas\interfaces\workflows\transitions\results\ITransitionResult;
  * @author jeyroik@gmail.com
  */
 interface ITransitionDispatcher extends
-    IItem,
-    IHasParameters,
-    IHasTemplate,
+    ITransitionDispatcherSample,
+    IHasTransition,
+    IHasPriority,
     IHasType,
-    IHasName,
-    IHasContext,
-    IHasPriority
+    IHasSample
 {
-    public const SUBJECT = 'extas.workflow.transition.dispatcher';
-
-    public const FIELD__SCHEMA_NAME = 'schema_name';
-    public const FIELD__TRANSITION_NAME = 'transition_name';
-
     public const TYPE__CONDITION = 'condition';
     public const TYPE__VALIDATOR = 'validator';
     public const TYPE__TRIGGER = 'trigger';
@@ -39,41 +29,11 @@ interface ITransitionDispatcher extends
     public const TRANSITION__ANY = '*';
 
     /**
-     * @param IWorkflowTransition $transition
-     * @param IWorkflowEntity $entitySource
-     * @param ITransitionResult $result
-     * @param IWorkflowEntity $entityEdited
+     * @param IItem $context
+     * @param ITransitResult $result
+     * @param IEntity $entityEdited
      *
      * @return bool
      */
-    public function dispatch(
-        IWorkflowTransition $transition,
-        IWorkflowEntity $entitySource,
-        ITransitionResult &$result,
-        IWorkflowEntity &$entityEdited
-    ): bool;
-
-    /**
-     * @return string
-     */
-    public function getSchemaName(): string;
-
-    /**
-     * @return string
-     */
-    public function getTransitionName(): string;
-
-    /**
-     * @param string $schemaName
-     *
-     * @return ITransitionDispatcher
-     */
-    public function setSchemaName(string $schemaName): ITransitionDispatcher;
-
-    /**
-     * @param string $transitionName
-     *
-     * @return ITransitionDispatcher
-     */
-    public function setTransitionName(string $transitionName): ITransitionDispatcher;
+    public function dispatch(IItem $context, ITransitResult &$result, IEntity &$entityEdited): bool;
 }
