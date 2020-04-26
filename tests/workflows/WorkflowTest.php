@@ -120,12 +120,12 @@ class WorkflowTest extends TestCase
         $this->assertTrue($entityEdited->has(TriggerChangeEntity::FIELD__TEST));
     }
 
-    protected function installDispatcher(string $name, string $class, string $type)
+    protected function installDispatcher(string $name, string $className, string $type)
     {
         $this->transitionDispatcherRepo->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => $name,
             TransitionDispatcher::FIELD__TITLE => 'test',
-            TransitionDispatcher::FIELD__CLASS => $class,
+            TransitionDispatcher::FIELD__CLASS => $className,
             TransitionDispatcher::FIELD__TYPE => $type
         ]));
     }

@@ -57,19 +57,17 @@ class TransitionTest extends TestCase
 
     public function testBaseMethods()
     {
-        $state = new State([
+        $this->stateRepo->create(new State([
             State::FIELD__NAME => 'test'
-        ]);
+        ]));
 
         $transition = new Transition();
 
-        $transition->setStateFromName('test2');
-        $this->assertEquals('test2', $transition->getStateFromName());
+        $transition->setStateFromName('test');
+        $this->assertEquals('test', $transition->getStateFromName());
 
-        $transition->setStateToName('test2');
-        $this->assertEquals('test2', $transition->getStateToName());
-
-        $this->stateRepo->create($state);
+        $transition->setStateToName('test');
+        $this->assertEquals('test', $transition->getStateToName());
 
         $state = $transition->getStateFrom();
         $this->assertEquals('test', $state->getName());
