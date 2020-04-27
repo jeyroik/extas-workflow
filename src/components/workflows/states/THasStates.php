@@ -3,6 +3,7 @@ namespace extas\components\workflows\states;
 
 use extas\components\workflows\exceptions\states\ExceptionStateMissed;
 use extas\components\SystemContainer;
+use extas\components\workflows\THasItems;
 use extas\interfaces\workflows\exceptions\states\IExceptionStateMissed;
 use extas\interfaces\workflows\states\IHasStates;
 use extas\interfaces\workflows\states\IState;
@@ -18,12 +19,14 @@ use extas\interfaces\workflows\states\IStateRepository;
  */
 trait THasStates
 {
+    use THasItems;
+
     /**
      * @return string[]
      */
     public function getStatesNames(): array
     {
-        return $this->config[IHasStates::FIELD__STATES_NAMES] ?? [];
+        return $this->getItemsNames(IHasStates::FIELD__STATES_NAMES);
     }
 
     /**
@@ -31,7 +34,7 @@ trait THasStates
      */
     public function getStates(): array
     {
-        return $this->getStatesRepository()->all([IState::FIELD__NAME => $this->getStatesNames()]);
+        return $this->getItems('getStatesRepository', IHasStates::FIELD__STATES_NAMES);
     }
 
     /**
@@ -40,11 +43,7 @@ trait THasStates
      */
     public function getState(string $name): ?IState
     {
-        if ($this->hasStateName($name)) {
-            return $this->getStatesRepository()->one([IState::FIELD__NAME => $name]);
-        }
-
-        return null;
+        return $this->getItem('getStatesRepository', IHasStates::FIELD__STATES_NAMES, $name);
     }
 
     /**
@@ -53,7 +52,7 @@ trait THasStates
      */
     public function hasStateName(string $stateName): bool
     {
-        return in_array($stateName, $this->getStatesNames());
+        return $this->hasItemName(IHasStates::FIELD__STATES_NAMES, $stateName);
     }
 
     /**
@@ -62,9 +61,7 @@ trait THasStates
      */
     public function setStatesNames(array $names)
     {
-        $this->config[IHasStates::FIELD__STATES_NAMES] = $names;
-
-        return $this;
+        return $this->setItemsNames(IHasStates::FIELD__STATES_NAMES, $names);
     }
 
     /**
@@ -73,13 +70,7 @@ trait THasStates
      */
     public function addStateName(string $name)
     {
-        if (!$this->hasStateName($name)) {
-            $states = $this->getStatesNames();
-            $states[] = $name;
-            $this->setStatesNames($states);
-        }
-
-        return $this;
+        return $this->addItemName(IHasStates::FIELD__STATES_NAMES, $name);
     }
 
     /**
@@ -89,15 +80,11 @@ trait THasStates
      */
     public function removeStateName(string $name)
     {
-        if ($this->hasStateName($name)) {
-            $states = array_flip($this->getStatesNames());
-            unset($states[$name]);
-            $this->setStatesNames(array_keys($states));
-
-            return $this;
-        }
-
-        throw new ExceptionStateMissed($name);
+        return $this->removeItemName(
+            IHasStates::FIELD__STATES_NAMES,
+            ExceptionStateMissed::class,
+            $name
+        );
     }
 
     /**

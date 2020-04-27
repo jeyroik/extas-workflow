@@ -3,6 +3,7 @@ namespace extas\components\workflows\transitions;
 
 use extas\components\SystemContainer;
 use extas\components\workflows\exceptions\transitions\ExceptionTransitionMissed;
+use extas\components\workflows\THasItems;
 use extas\interfaces\workflows\exceptions\transitions\IExceptionTransitionMissed;
 use extas\interfaces\workflows\transitions\IHasTransitions;
 use extas\interfaces\workflows\transitions\ITransition;
@@ -18,12 +19,14 @@ use extas\interfaces\workflows\transitions\ITransitionRepository;
  */
 trait THasTransitions
 {
+    use THasItems;
+
     /**
      * @return string[]
      */
     public function getTransitionsNames(): array
     {
-        return $this->config[IHasTransitions::FIELD__TRANSITIONS_NAMES] ?? [];
+        return $this->getItemsNames(IHasTransitions::FIELD__TRANSITIONS_NAMES);
     }
 
     /**
@@ -31,7 +34,10 @@ trait THasTransitions
      */
     public function getTransitions(): array
     {
-        return $this->getTransitionRepository()->all([ITransition::FIELD__NAME => $this->getTransitionsNames()]);
+        return $this->getItems(
+            'getTransitionRepository',
+            IHasTransitions::FIELD__TRANSITIONS_NAMES
+        );
     }
 
     /**
@@ -40,11 +46,11 @@ trait THasTransitions
      */
     public function getTransition(string $transitionName): ?ITransition
     {
-        if ($this->hasTransitionName($transitionName)) {
-            return $this->getTransitionRepository()->one([ITransition::FIELD__NAME => $transitionName]);
-        }
-
-        return null;
+        return $this->getItem(
+            'getTransitionRepository',
+            IHasTransitions::FIELD__TRANSITIONS_NAMES,
+            $transitionName
+        );
     }
 
     /**
@@ -53,7 +59,7 @@ trait THasTransitions
      */
     public function hasTransitionName(string $transitionName): bool
     {
-        return in_array($transitionName, $this->getTransitionsNames());
+        return $this->hasItemName(IHasTransitions::FIELD__TRANSITIONS_NAMES, $transitionName);
     }
 
     /**
@@ -62,9 +68,7 @@ trait THasTransitions
      */
     public function setTransitionsNames(array $transitionsNames)
     {
-        $this->config[IHasTransitions::FIELD__TRANSITIONS_NAMES] = $transitionsNames;
-
-        return $this;
+        return $this->setItemsNames(IHasTransitions::FIELD__TRANSITIONS_NAMES, $transitionsNames);
     }
 
     /**
@@ -73,13 +77,7 @@ trait THasTransitions
      */
     public function addTransitionName(string $transitionName)
     {
-        if (!$this->hasTransitionName($transitionName)) {
-            $names = $this->getTransitionsNames();
-            $names[] = $transitionName;
-            $this->setTransitionsNames($names);
-        }
-
-        return $this;
+        return $this->addItemName(IHasTransitions::FIELD__TRANSITIONS_NAMES, $transitionName);
     }
 
     /**
@@ -89,15 +87,11 @@ trait THasTransitions
      */
     public function removeTransitionName(string $transitionName)
     {
-        if ($this->hasTransitionName($transitionName)) {
-            $names = array_flip($this->getTransitionsNames());
-            unset($names[$transitionName]);
-            $this->setTransitionsNames(array_keys($names));
-
-            return $this;
-        }
-
-        throw new ExceptionTransitionMissed($transitionName);
+        return $this->removeItemName(
+            IHasTransitions::FIELD__TRANSITIONS_NAMES,
+            ExceptionTransitionMissed::class,
+            $transitionName
+        );
     }
 
     /**
