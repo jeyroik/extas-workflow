@@ -211,9 +211,14 @@ trait THasDispatchers
          */
         $repo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
 
-        return $repo->all([
-            ITransitionDispatcher::FIELD__NAME => $names,
-            ITransitionDispatcher::FIELD__TYPE => $type
-        ]);
+        return $repo->all(
+            [
+                ITransitionDispatcher::FIELD__NAME => $names,
+                ITransitionDispatcher::FIELD__TYPE => $type
+            ],
+            0,
+            0,
+            [ITransitionDispatcher::FIELD__PRIORITY, -1]
+        );
     }
 }
