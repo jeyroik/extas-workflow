@@ -1,6 +1,7 @@
 <?php
 namespace extas\interfaces\workflows\transitions\dispatchers;
 
+use extas\interfaces\IHasContext;
 use extas\interfaces\workflows\entities\IEntity;
 use extas\interfaces\workflows\transits\ITransitResult;
 
@@ -10,7 +11,7 @@ use extas\interfaces\workflows\transits\ITransitResult;
  * @package extas\interfaces\workflows\transitions\dispatchers
  * @author jeyroik@gmail.com
  */
-interface ITransitionDispatcherExecutor extends ITransitionDispatcher
+interface ITransitionDispatcherExecutor extends ITransitionDispatcher, IHasContext
 {
     /**
      * @param ITransitResult $result

@@ -29,7 +29,10 @@ class TransitionDispatcher extends TransitionDispatcherSample implements ITransi
         /**
          * @var ITransitionDispatcherExecutor $executor
          */
-        $executor = $this->buildClassWithParameters($this->__toArray());
+        $buildParams = $this->__toArray();
+        $buildParams[ITransitionDispatcherExecutor::FIELD__CONTEXT] = $context;
+
+        $executor = $this->buildClassWithParameters($buildParams);
 
         return $executor($result, $entityEdited);
     }
