@@ -93,7 +93,7 @@ trait THasTransitions
         $new = new Transition();
         $new->buildFromSample($sample, '@sample(uuid6)');
         $new->setSchemaName($this->getName());
-        
+
         return $this->getTransitionCollection()->addItem($new);
     }
 
@@ -105,7 +105,7 @@ trait THasTransitions
     public function removeTransition(string $transitionName)
     {
         try {
-            $this->getStatesCollection()->removeItem($transitionName);
+            $this->getTransitionCollection()->removeItem($transitionName);
         } catch (\Exception $e) {
             throw new ExceptionTransitionMissed($transitionName);
         }

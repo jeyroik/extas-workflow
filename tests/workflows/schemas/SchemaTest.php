@@ -146,7 +146,7 @@ class SchemaTest extends TestCase
         $this->assertTrue($schema->hasTransition($transition->getName()));
         $this->assertEquals([$transition->getName()], $schema->getTransitionsNames());
 
-        $transitions = $schema->addTransitions(['test2']);
+        $transitions = $schema->addTransitions(['test']);
         $test2 = array_shift($transitions);
         $schema->removeTransition($test2->getName());
         $this->assertFalse($schema->hasTransition($test2->getName()));

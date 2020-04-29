@@ -134,6 +134,10 @@ class ItemsCollection extends Item implements IItemsCollection
      */
     public function removeItem(string $name): IItemsCollection
     {
+        if (!$this->hasItem($name)) {
+            throw new \Exception('Missed item "' . $name . '"');
+        }
+
         $this->getRepository()->delete([IHasName::FIELD__NAME => $name]);
 
         return $this;
