@@ -6,13 +6,13 @@ use extas\interfaces\workflows\exceptions\states\IExceptionStateMissed;
 /**
  * Interface IHasStates
  *
+ * Applicable only for schemas.
+ *
  * @package extas\interfaces\workflows\states
  * @author jeyroik@gmail.com
  */
 interface IHasStates
 {
-    public const FIELD__STATES_NAMES = 'states_names';
-
     /**
      * @return string[]
      */
@@ -30,27 +30,27 @@ interface IHasStates
     public function getState(string $name): ?IState;
 
     /**
-     * @param string $stateName
+     * @param string $name
      * @return bool
      */
-    public function hasStateName(string $stateName): bool;
+    public function hasState(string $name): bool;
 
     /**
-     * @param array $names
-     * @return $this
+     * @param array $sampleNames
+     * @return IState[]
      */
-    public function setStatesNames(array $names);
+    public function addStates(array $sampleNames): array;
 
     /**
-     * @param string $name
-     * @return $this
+     * @param string $sampleName
+     * @return IState
      */
-    public function addStateName(string $name);
+    public function addState(string $sampleName): IState;
 
     /**
      * @param string $name
      * @return $this
      * @throws IExceptionStateMissed
      */
-    public function removeStateName(string $name);
+    public function removeState(string $name);
 }

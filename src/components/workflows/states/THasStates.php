@@ -3,30 +3,34 @@ namespace extas\components\workflows\states;
 
 use extas\components\workflows\exceptions\states\ExceptionStateMissed;
 use extas\components\SystemContainer;
-use extas\components\workflows\THasItems;
+use extas\components\workflows\ItemsCollection;
+use extas\interfaces\IItem;
 use extas\interfaces\workflows\exceptions\states\IExceptionStateMissed;
-use extas\interfaces\workflows\states\IHasStates;
+use extas\interfaces\workflows\IItemsCollection;
 use extas\interfaces\workflows\states\IState;
 use extas\interfaces\workflows\states\IStateRepository;
+use extas\interfaces\workflows\states\IStateSample;
+use extas\interfaces\workflows\states\IStateSampleRepository;
 
 /**
  * Trait THasStates
  *
  * @property $config
+ * @method getName(): string
  *
  * @package extas\components\workflows\states
  * @author jeyroik@gmail.com
  */
 trait THasStates
 {
-    use THasItems;
+    protected ?IItemsCollection $statesCollection = null;
 
     /**
      * @return string[]
      */
     public function getStatesNames(): array
     {
-        return $this->getItemsNames(IHasStates::FIELD__STATES_NAMES);
+        return $this->getStatesCollection()->getItemsNames();
     }
 
     /**
@@ -34,7 +38,7 @@ trait THasStates
      */
     public function getStates(): array
     {
-        return $this->getItems('getStatesRepository', IHasStates::FIELD__STATES_NAMES);
+        return $this->getStatesCollection()->getItems();
     }
 
     /**
@@ -43,34 +47,51 @@ trait THasStates
      */
     public function getState(string $name): ?IState
     {
-        return $this->getItem('getStatesRepository', IHasStates::FIELD__STATES_NAMES, $name);
-    }
-
-    /**
-     * @param string $stateName
-     * @return bool
-     */
-    public function hasStateName(string $stateName): bool
-    {
-        return $this->hasItemName(IHasStates::FIELD__STATES_NAMES, $stateName);
-    }
-
-    /**
-     * @param array $names
-     * @return $this
-     */
-    public function setStatesNames(array $names)
-    {
-        return $this->setItemsNames(IHasStates::FIELD__STATES_NAMES, $names);
+        return $this->getStatesCollection()->getItem($name);
     }
 
     /**
      * @param string $name
-     * @return $this
+     * @return bool
      */
-    public function addStateName(string $name)
+    public function hasState(string $name): bool
     {
-        return $this->addItemName(IHasStates::FIELD__STATES_NAMES, $name);
+        return $this->getStatesCollection()->hasItem($name);
+    }
+
+    /**
+     * @param array $sampleNames
+     * @return IItem[]|IState[]
+     */
+    public function addStates(array $sampleNames)
+    {
+        /**
+         * @var IStateSampleRepository $repo
+         */
+        $repo = SystemContainer::getItem(IStateSampleRepository::class);
+        $samples = $repo->all([IStateSample::FIELD__NAME => $sampleNames]);
+        $items = [];
+        foreach ($samples as $sample) {
+            $newState = new State();
+            $items[] = $newState->buildFromSample($sample, '@sample(uuid6)');
+        }
+        return $this->getStatesCollection()->addItems($items);
+    }
+
+    /**
+     * @param string $sampleName
+     * @return IItem|IState
+     */
+    public function addState(string $sampleName)
+    {
+        /**
+         * @var IStateSampleRepository $repo
+         */
+        $repo = SystemContainer::getItem(IStateSampleRepository::class);
+        $sample = $repo->one([IStateSample::FIELD__NAME => $sampleName]);
+        $state = new State();
+
+        return $this->getStatesCollection()->addItem($state->buildFromSample($sample, '@sample(uuid6)'));
     }
 
     /**
@@ -78,13 +99,26 @@ trait THasStates
      * @return $this
      * @throws IExceptionStateMissed
      */
-    public function removeStateName(string $name)
+    public function removeState(string $name)
     {
-        return $this->removeItemName(
-            IHasStates::FIELD__STATES_NAMES,
-            ExceptionStateMissed::class,
-            $name
-        );
+        try {
+            $this->getStatesCollection()->removeItem($name);
+        } catch (\Exception $e) {
+            throw new ExceptionStateMissed($name);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return IItemsCollection
+     */
+    protected function getStatesCollection(): IItemsCollection
+    {
+        return $this->statesCollection ?: $this->statesCollection = new ItemsCollection([
+            IItemsCollection::FIELD__REPOSITORY => $this->getStatesRepository(),
+            IItemsCollection::FIELD__REPOSITORY_QUERY => [IState::FIELD__SCHEMA_NAME => $this->getName()]
+        ]);
     }
 
     /**
