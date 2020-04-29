@@ -63,7 +63,7 @@ trait THasStates
      * @param array $sampleNames
      * @return IItem[]|IState[]
      */
-    public function addStates(array $sampleNames)
+    public function addStates(array $sampleNames): array
     {
         /**
          * @var IStateSampleRepository $repo
@@ -82,7 +82,7 @@ trait THasStates
      * @param string $sampleName
      * @return IItem|IState
      */
-    public function addState(string $sampleName)
+    public function addState(string $sampleName): IState
     {
         /**
          * @var IStateSampleRepository $repo
