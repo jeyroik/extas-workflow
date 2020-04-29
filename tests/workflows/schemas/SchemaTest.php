@@ -102,7 +102,7 @@ class SchemaTest extends TestCase
 
     public function testStates()
     {
-        $schema = new Schema();
+        $schema = new Schema([Schema::FIELD__NAME => 'test']);
         $this->assertFalse($schema->hasState('test'));
 
         $this->stateSampleRepo->create(new StateSample([
@@ -115,7 +115,7 @@ class SchemaTest extends TestCase
         ]));
 
         $state = $schema->addState('test');
-        $this->assertTrue($schema->hasState('test'));
+        $this->assertTrue($schema->hasState($state->getName()));
         $this->assertEquals([$state->getName()], $schema->getStatesNames());
         $this->assertEquals('Test', $schema->getState($state->getName())->getTitle());
 
@@ -130,7 +130,7 @@ class SchemaTest extends TestCase
 
     public function testTransitions()
     {
-        $schema = new Schema();
+        $schema = new Schema([Schema::FIELD__NAME => 'test']);
         $this->assertFalse($schema->hasTransition('test'));
 
         $this->transitionSampleRepo->create(new TransitionSample([

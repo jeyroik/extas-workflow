@@ -72,7 +72,8 @@ trait THasTransitions
         $items = [];
         foreach ($samples as $sample) {
             $new = new Transition();
-            $items[] = $new->buildFromSample($sample, '@sample(uuid6)');
+            $new->buildFromSample($sample, '@sample(uuid6)');
+            $items[] = $new->setSchemaName($this->getName());
         }
 
         return $this->getTransitionCollection()->addItems($items);
@@ -90,7 +91,10 @@ trait THasTransitions
         $repo = SystemContainer::getItem(ITransitionSampleRepository::class);
         $sample = $repo->one([ITransitionSample::FIELD__NAME => $transitionSampleName]);
         $new = new Transition();
-        return $this->getTransitionCollection()->addItem($new->buildFromSample($sample, '@sample(uuid6)'));
+        $new->buildFromSample($sample, '@sample(uuid6)');
+        $new->setSchemaName($this->getName());
+        
+        return $this->getTransitionCollection()->addItem($new);
     }
 
     /**

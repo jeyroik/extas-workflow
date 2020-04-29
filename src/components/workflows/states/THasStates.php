@@ -73,7 +73,8 @@ trait THasStates
         $items = [];
         foreach ($samples as $sample) {
             $newState = new State();
-            $items[] = $newState->buildFromSample($sample, '@sample(uuid6)');
+            $newState->buildFromSample($sample, '@sample(uuid6)');
+            $items[] = $newState->setSchemaName($this->getName());
         }
         return $this->getStatesCollection()->addItems($items);
     }
@@ -90,8 +91,10 @@ trait THasStates
         $repo = SystemContainer::getItem(IStateSampleRepository::class);
         $sample = $repo->one([IStateSample::FIELD__NAME => $sampleName]);
         $state = new State();
+        $state->buildFromSample($sample, '@sample(uuid6)');
+        $state->setSchemaName($this->getName());
 
-        return $this->getStatesCollection()->addItem($state->buildFromSample($sample, '@sample(uuid6)'));
+        return $this->getStatesCollection()->addItem($state);
     }
 
     /**
