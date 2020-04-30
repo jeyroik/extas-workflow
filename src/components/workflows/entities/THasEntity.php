@@ -45,7 +45,7 @@ trait THasEntity
      * @return IEntity
      * @throws ExceptionEntitySampleMissed
      */
-    public function setEntity(string $entitySampleName)
+    public function setEntity(string $entitySampleName): IEntity
     {
         /**
          * @var $sampleRepo IEntitySampleRepository
