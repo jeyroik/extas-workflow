@@ -2,26 +2,34 @@
 namespace extas\components\workflows\entities;
 
 use extas\components\SystemContainer;
+use extas\components\workflows\exceptions\entities\ExceptionEntitySampleMissed;
+use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\entities\IEntity;
 use extas\interfaces\workflows\entities\IEntityRepository;
-use extas\interfaces\workflows\entities\IHasEntity;
+use extas\interfaces\workflows\entities\IEntitySample;
+use extas\interfaces\workflows\entities\IEntitySampleRepository;
 
 /**
  * Trait THasEntity
  *
  * @property array $config
+ * @method getName(): string
  *
  * @package extas\components\workflows\entities
  * @author jeyroik@gmail.com
  */
 trait THasEntity
 {
+    protected ?IRepository $entityRepo = null;
+
     /**
      * @return string
      */
     public function getEntityName(): string
     {
-        return $this->config[IHasEntity::FIELD__ENTITY_NAME] ?? '';
+        $entity = $this->getEntity();
+
+        return $entity ? $entity->getName() : '';
     }
 
     /**
@@ -29,22 +37,39 @@ trait THasEntity
      */
     public function getEntity(): ?IEntity
     {
-        /**
-         * @var IEntityRepository $repo
-         */
-        $repo = SystemContainer::getItem(IEntityRepository::class);
-
-        return $repo->one([IEntity::FIELD__NAME => $this->getEntityName()]);
+        return $this->getEntityRepository()->one([IEntity::FIELD__SCHEMA_NAME => $this->getName()]);
     }
 
     /**
-     * @param string $entityName
-     * @return $this
+     * @param string $entitySampleName
+     * @return IEntity
+     * @throws ExceptionEntitySampleMissed
      */
-    public function setEntityName(string $entityName)
+    public function setEntity(string $entitySampleName)
     {
-        $this->config[IHasEntity::FIELD__ENTITY_NAME] = $entityName;
+        /**
+         * @var $sampleRepo IEntitySampleRepository
+         */
+        $sampleRepo = SystemContainer::getItem(IEntitySampleRepository::class);
+        $sample = $sampleRepo->one([IEntitySample::FIELD__NAME => $entitySampleName]);
 
-        return $this;
+        if (!$sample) {
+            throw new ExceptionEntitySampleMissed($entitySampleName);
+        }
+
+        $this->entityRepo->delete([IEntity::FIELD__SCHEMA_NAME => $this->getName()]);
+        $entity = new Entity();
+        $entity->buildFromSample($sample, '@sample(uuid6)');
+        $entity->setSchemaName($this->getName());
+
+        return $this->getEntityRepository()->create($entity);
+    }
+
+    /**
+     * @return IRepository
+     */
+    protected function getEntityRepository()
+    {
+        return $this->entityRepo ?: $this->entityRepo = SystemContainer::getItem(IEntityRepository::class);
     }
 }

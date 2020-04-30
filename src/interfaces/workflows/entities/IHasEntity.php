@@ -9,7 +9,7 @@ namespace extas\interfaces\workflows\entities;
  */
 interface IHasEntity
 {
-    public const FIELD__ENTITY_NAME = 'entity_sample';
+    public const FIELD__ENTITY_NAME = 'entity';
 
     /**
      * @return string
@@ -22,8 +22,8 @@ interface IHasEntity
     public function getEntity(): ?IEntity;
 
     /**
-     * @param string $entityName
-     * @return $this
+     * @param string $entitySampleName
+     * @return IEntity
      */
-    public function setEntityName(string $entityName);
+    public function setEntity(string $entitySampleName): IEntity;
 }

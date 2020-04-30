@@ -2,15 +2,22 @@
 namespace tests\schemas;
 
 use Dotenv\Dotenv;
+use extas\components\packages\entities\EntityRepository;
 use extas\components\plugins\Plugin;
 use extas\components\plugins\PluginRepository;
 use extas\components\plugins\repositories\PluginFieldSampleName;
+use extas\components\workflows\entities\EntitySample;
+use extas\components\workflows\entities\EntitySampleRepository;
 use extas\components\workflows\states\StateRepository;
 use extas\components\workflows\states\StateSample;
 use extas\components\workflows\states\StateSampleRepository;
 use extas\components\workflows\transitions\TransitionSample;
 use extas\components\workflows\transitions\TransitionSampleRepository;
+use extas\interfaces\packages\entities\IEntityRepository;
 use extas\interfaces\plugins\IPlugin;
+use extas\interfaces\workflows\entities\IEntity;
+use extas\interfaces\workflows\entities\IEntitySample;
+use extas\interfaces\workflows\entities\IEntitySampleRepository;
 use extas\interfaces\workflows\states\IState;
 use extas\interfaces\workflows\states\IStateRepository;
 use extas\interfaces\workflows\states\IStateSampleRepository;
@@ -43,6 +50,16 @@ class SchemaTest extends TestCase
     /**
      * @var IRepository|null
      */
+    protected ?IRepository $entityRepo = null;
+
+    /**
+     * @var IRepository|null
+     */
+    protected ?IRepository $entitySampleRepo = null;
+
+    /**
+     * @var IRepository|null
+     */
     protected ?IRepository $transitionRepo = null;
 
     /**
@@ -63,9 +80,21 @@ class SchemaTest extends TestCase
 
         $this->stateRepo = new StateRepository();
         $this->stateSampleRepo = new StateSampleRepository();
+        $this->entityRepo = new EntityRepository();
+        $this->entitySampleRepo = new EntitySampleRepository();
         $this->transitionRepo = new TransitionRepository();
         $this->transitionSampleRepo = new TransitionSampleRepository();
         $this->pluginRepo = new PluginRepository();
+
+        SystemContainer::addItem(
+            IEntityRepository::class,
+            EntityRepository::class
+        );
+
+        SystemContainer::addItem(
+            IEntitySampleRepository::class,
+            EntitySampleRepository::class
+        );
 
         SystemContainer::addItem(
             IStateRepository::class,
@@ -90,6 +119,8 @@ class SchemaTest extends TestCase
 
     public function tearDown(): void
     {
+        $this->entityRepo->delete([IEntity::FIELD__SAMPLE_NAME => 'test']);
+        $this->entitySampleRepo->delete([IEntitySample::FIELD__TITLE => 'Test']);
         $this->stateRepo->delete([IState::FIELD__SAMPLE_NAME => 'test']);
         $this->stateSampleRepo->delete([IState::FIELD__NAME => 'test']);
         $this->transitionRepo->delete([ITransition::FIELD__SAMPLE_NAME => 'test']);
@@ -153,5 +184,27 @@ class SchemaTest extends TestCase
 
         $this->expectExceptionMessage('Transition "' . $test2->getName() . '" missed');
         $schema->removeTransition($test2->getName());
+    }
+
+    public function testEntity()
+    {
+        $schema = new Schema([Schema::FIELD__NAME => 'test']);
+        $this->assertEmpty($schema->getEntityName());
+        $this->entitySampleRepo->create(new EntitySample([
+            EntitySample::FIELD__NAME => 'test',
+            EntitySample::FIELD__TITLE => 'Test'
+        ]));
+        $this->entitySampleRepo->create(new EntitySample([
+            EntitySample::FIELD__NAME => 'test2',
+            EntitySample::FIELD__TITLE => 'Test'
+        ]));
+        $entity = $schema->setEntity('test');
+        $this->assertEquals('test', $entity->getSampleName());
+
+        $schema->setEntity('test2');
+        $this->assertCount(1, $this->entityRepo->all([]));
+
+        $this->expectExceptionMessage('Entity sample "unknown" missed');
+        $schema->setEntity('unknown');
     }
 }

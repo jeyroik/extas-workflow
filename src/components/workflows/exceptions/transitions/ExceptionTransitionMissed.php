@@ -1,8 +1,8 @@
 <?php
 namespace extas\components\workflows\exceptions\transitions;
 
+use extas\components\workflows\exceptions\ExceptionMissed;
 use extas\interfaces\workflows\exceptions\transitions\IExceptionTransitionMissed;
-use Throwable;
 
 /**
  * Class ExceptionTransitionMissed
@@ -10,16 +10,7 @@ use Throwable;
  * @package extas\components\workflows\exceptions\transitions
  * @author jeyroik@gmail.com
  */
-class ExceptionTransitionMissed extends \Exception implements IExceptionTransitionMissed
+class ExceptionTransitionMissed extends ExceptionMissed implements IExceptionTransitionMissed
 {
-    /**
-     * ExceptionStateMissed constructor.
-     * @param string $message
-     * @param int $code
-     * @param Throwable|null $previous
-     */
-    public function __construct($message = "", $code = 0, Throwable $previous = null)
-    {
-        parent::__construct('Transition "' . $message . '" missed', $code, $previous);
-    }
+    protected string $missedName = 'Transition';
 }
