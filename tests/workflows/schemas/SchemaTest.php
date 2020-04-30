@@ -2,10 +2,10 @@
 namespace tests\schemas;
 
 use Dotenv\Dotenv;
-use extas\components\packages\entities\EntityRepository;
 use extas\components\plugins\Plugin;
 use extas\components\plugins\PluginRepository;
 use extas\components\plugins\repositories\PluginFieldSampleName;
+use extas\components\workflows\entities\EntityRepository;
 use extas\components\workflows\entities\EntitySample;
 use extas\components\workflows\entities\EntitySampleRepository;
 use extas\components\workflows\states\StateRepository;
@@ -13,9 +13,9 @@ use extas\components\workflows\states\StateSample;
 use extas\components\workflows\states\StateSampleRepository;
 use extas\components\workflows\transitions\TransitionSample;
 use extas\components\workflows\transitions\TransitionSampleRepository;
-use extas\interfaces\packages\entities\IEntityRepository;
 use extas\interfaces\plugins\IPlugin;
 use extas\interfaces\workflows\entities\IEntity;
+use extas\interfaces\workflows\entities\IEntityRepository;
 use extas\interfaces\workflows\entities\IEntitySample;
 use extas\interfaces\workflows\entities\IEntitySampleRepository;
 use extas\interfaces\workflows\states\IState;
