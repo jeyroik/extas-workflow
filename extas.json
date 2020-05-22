@@ -68,5 +68,142 @@
         "extas.workflow_transition_dispatchers.create.before"
       ]
     }
+  ],
+  "fields": [
+    {
+      "name": "state_to",
+      "value": "",
+      "before_create": [
+        {
+          "condition": "!=",
+          "value": "@parent.state_from"
+        },
+        {
+          "condition": "in",
+          "value": {
+            "repository": "workflowStateRepository",
+            "method": "all",
+            "query": {
+              "name": "@field_value"
+            },
+            "field": "name"
+          }
+        }
+      ],
+      "before_update": [
+        {
+          "condition": "!=",
+          "value": "@parent.state_from"
+        },
+        {
+          "condition": "in",
+          "value": {
+            "repository": "workflowStateRepository",
+            "method": "all",
+            "query": {
+              "name": "@field_value"
+            },
+            "field": "name"
+          }
+        }
+      ],
+      "parameters": {
+        "subject": {
+          "name": "subject",
+          "value": "extas.workflow.transition"
+        }
+      }
+    },
+    {
+      "name": "state_from",
+      "value": "",
+      "before_create": [
+        {
+          "condition": "in",
+          "value": {
+            "repository": "workflowStateRepository",
+            "method": "all",
+            "query": {
+              "name": "@field_value"
+            },
+            "field": "name"
+          }
+        }
+      ],
+      "before_update": [
+        {
+          "condition": "in",
+          "value": {
+            "repository": "workflowStateRepository",
+            "method": "all",
+            "query": {
+              "name": "@field_value"
+            },
+            "field": "name"
+          }
+        }
+      ],
+      "parameters": {
+        "subject": {
+          "name": "subject",
+          "value": "extas.workflow.transition"
+        }
+      }
+    },
+    {
+      "name": "name",
+      "before_delete": [
+        {
+          "condition": "not_in",
+          "value": {
+            "repository": "workflowTransitionRepository",
+            "method": "all",
+            "query": {
+              "state_to": "@field_value"
+            },
+            "field": "state_to"
+          }
+        },
+        {
+          "condition": "not_in",
+          "value": {
+            "repository": "workflowTransitionRepository",
+            "method": "all",
+            "query": {
+              "state_from": "@field_value"
+            },
+            "field": "state_from"
+          }
+        }
+      ],
+      "parameters": {
+        "subject": {
+          "name": "subject",
+          "value": "extas.workflow.state"
+        }
+      }
+    },
+    {
+      "name": "transition_name",
+      "before_create": [
+        {
+          "condition": "in",
+          "value": {
+            "repository": "workflowTransitionRepository",
+            "method": "all",
+            "query": {
+              "name": "@field_value"
+            },
+            "field": "name"
+          }
+        }
+      ],
+      "parameters": {
+        "subject": {
+          "name": "subject",
+          "value": "extas.workflow.transition.dispatcher"
+        }
+      }
+    }
   ]
 }
