@@ -2,14 +2,13 @@
 namespace extas\components\workflows\schemas;
 
 use extas\interfaces\workflows\schemas\IHasSchema;
-use extas\components\SystemContainer;
 use extas\interfaces\workflows\schemas\ISchema;
-use extas\interfaces\workflows\schemas\ISchemaRepository;
 
 /**
  * Trait THasSchema
  *
  * @property array $config
+ * @method workflowSchemaRepository()
  *
  * @package extas\components\workflows\schemas
  * @author jeyroik@gmail.com
@@ -29,12 +28,7 @@ trait THasSchema
      */
     public function getSchema(): ?ISchema
     {
-        /**
-         * @var ISchemaRepository $repo
-         */
-        $repo = SystemContainer::getItem(ISchemaRepository::class);
-
-        return $repo->one([ISchema::FIELD__NAME => $this->getSchemaName()]);
+        return $this->workflowSchemaRepository()->one([ISchema::FIELD__NAME => $this->getSchemaName()]);
     }
 
     /**

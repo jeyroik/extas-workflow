@@ -1,16 +1,14 @@
 <?php
 namespace extas\components\workflows\states;
 
-use extas\components\SystemContainer;
-use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\states\IHasState;
 use extas\interfaces\workflows\states\IState;
-use extas\interfaces\workflows\states\IStateRepository;
 
 /**
  * Trait THasState
  *
  * @property array $config
+ * @method workflowStateRepository()
  *
  * @package extas\components\workflows\states
  * @author jeyroik@gmail.com
@@ -30,12 +28,7 @@ trait THasState
      */
     public function getState(): ?IState
     {
-        /**
-         * @var IRepository $repo
-         */
-        $repo = SystemContainer::getItem(IStateRepository::class);
-
-        return $repo->one([IState::FIELD__NAME => $this->getStateName()]);
+        return $this->workflowStateRepository()->one([IState::FIELD__NAME => $this->getStateName()]);
     }
 
     /**

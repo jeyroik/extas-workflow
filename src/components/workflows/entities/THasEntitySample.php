@@ -2,14 +2,13 @@
 namespace extas\components\workflows\entities;
 
 use extas\interfaces\workflows\entities\IEntitySample;
-use extas\interfaces\workflows\entities\IEntitySampleRepository;
 use extas\interfaces\workflows\entities\IHasEntitySample;
-use extas\components\SystemContainer;
 
 /**
  * Trait THasEntitySample
  *
  * @property array $config
+ * @method workflowEntitySampleRepository()
  *
  * @package extas\components\workflows\entities
  * @author jeyroik@gmail.com
@@ -29,12 +28,9 @@ trait THasEntitySample
      */
     public function getEntitySample(): ?IEntitySample
     {
-        /**
-         * @var IEntitySampleRepository $repo
-         */
-        $repo = SystemContainer::getItem(IEntitySampleRepository::class);
-
-        return $repo->one([IEntitySample::FIELD__NAME => $this->getEntitySampleName()]);
+        return $this->workflowEntitySampleRepository()->one([
+            IEntitySample::FIELD__NAME => $this->getEntitySampleName()
+        ]);
     }
 
     /**

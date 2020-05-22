@@ -2,43 +2,43 @@
   "name": "extas/workflow",
   "package_classes": [
     {
-      "interface": "extas\\interfaces\\workflows\\schemas\\ISchemaRepository",
+      "interface": "workflowSchemaRepository",
       "class": "extas\\components\\workflows\\schemas\\SchemaRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\schemas\\ISchemaSampleRepository",
+      "interface": "workflowSchemaSampleRepository",
       "class": "extas\\components\\workflows\\schemas\\SchemaSampleRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\transitions\\TransitionRepository",
+      "interface": "workflowTransitionRepository",
       "class": "extas\\components\\workflows\\transitions\\TransitionRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\transitions\\TransitionSampleRepository",
+      "interface": "workflowTransitionSampleRepository",
       "class": "extas\\components\\workflows\\transitions\\TransitionSampleRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\states\\StateRepository",
+      "interface": "workflowStateRepository",
       "class": "extas\\components\\workflows\\states\\StateRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\states\\StateSampleRepository",
+      "interface": "workflowStateSampleRepository",
       "class": "extas\\components\\workflows\\states\\StateSampleRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\transitions\\dispatchers\\ITransitionDispatcherRepository",
+      "interface": "workflowTransitionDispatcherRepository",
       "class": "extas\\components\\workflows\\transitions\\dispatchers\\TransitionDispatcherRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\transitions\\dispatchers\\ITransitionDispatcherSampleRepository",
+      "interface": "workflowTransitionDispatcherSampleRepository",
       "class": "extas\\components\\workflows\\transitions\\dispatchers\\TransitionDispatcherSampleRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\entities\\EntityRepository",
+      "interface": "workflowEntityRepository",
       "class": "extas\\components\\workflows\\entities\\EntityRepository"
     },
     {
-      "interface": "extas\\interfaces\\workflows\\entities\\EntitySampleRepository",
+      "interface": "workflowEntitySampleRepository",
       "class": "extas\\components\\workflows\\entities\\EntitySampleRepository"
     }
   ],
@@ -66,6 +66,25 @@
         "extas.workflow_states.create.before",
         "extas.workflow_transitions.create.before",
         "extas.workflow_transition_dispatchers.create.before"
+      ]
+    }
+  ],
+  "extensions": [
+    {
+      "class": "extas\\components\\extensions\\ExtensionRepositoryGet",
+      "interface": "extas\\interfaces\\extensions\\IExtensionRepositoryGet",
+      "subject": "*",
+      "methods": [
+        "workflowSchemaRepository",
+        "workflowSchemaSampleRepository",
+        "workflowStateRepository",
+        "workflowStateSampleRepository",
+        "workflowEntityRepository",
+        "workflowEntitySampleRepository",
+        "workflowTransitionRepository",
+        "workflowTransitionSampleRepository",
+        "workflowTransitionDispatcherRepository",
+        "workflowTransitionDispatcherSampleRepository",
       ]
     }
   ],

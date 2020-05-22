@@ -14,6 +14,7 @@
     "phpunit/phpunit": "^9",
     "vlucas/phpdotenv": "^3.4",
     "jeyroik/extas-repositories-mongo": "1.*",
+    "jeyroik/extas-snuffbox": "0.*",
     "phpstan/phpstan": "0.*"
   },
   "autoload": {

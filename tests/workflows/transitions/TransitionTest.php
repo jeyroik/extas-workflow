@@ -1,16 +1,15 @@
 <?php
 namespace tests\transitions;
 
+use Dotenv\Dotenv;
+use PHPUnit\Framework\TestCase;
+use extas\components\extensions\TSnuffExtensions;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcherRepository;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
-use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherRepository;
-use PHPUnit\Framework\TestCase;
 use extas\components\workflows\transitions\Transition;
 use extas\components\workflows\states\State;
-use extas\interfaces\workflows\states\IStateRepository;
 use extas\components\workflows\states\StateRepository;
-use extas\components\SystemContainer;
 use extas\interfaces\repositories\IRepository;
 
 /**
@@ -20,34 +19,24 @@ use extas\interfaces\repositories\IRepository;
  */
 class TransitionTest extends TestCase
 {
-    /**
-     * @var IRepository|null
-     */
-    protected ?IRepository $stateRepo = null;
+    use TSnuffExtensions;
 
-    /**
-     * @var IRepository|null
-     */
-    protected ?IRepository $dispatcherRepo = null;
+    protected IRepository $stateRepo;
+    protected IRepository $dispatcherRepo;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $env = \Dotenv\Dotenv::create(getcwd() . '/tests/');
+        $env = Dotenv::create(getcwd() . '/tests/');
         $env->load();
 
         $this->stateRepo = new StateRepository();
         $this->dispatcherRepo = new TransitionDispatcherRepository();
-
-        SystemContainer::addItem(
-            IStateRepository::class,
-            StateRepository::class
-        );
-
-        SystemContainer::addItem(
-            ITransitionDispatcherRepository::class,
-            TransitionDispatcherRepository::class
-        );
+        $this->addReposForExt([
+            'workflowStateRepository' => StateRepository::class,
+            'workflowTransitionDispatcherRepository' => TransitionDispatcherRepository::class
+        ]);
+        $this->createRepoExt(['workflowStateRepository', 'workflowTransitionDispatcherRepository']);
     }
 
     public function tearDown(): void
