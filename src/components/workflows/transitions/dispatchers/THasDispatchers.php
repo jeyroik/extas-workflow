@@ -1,18 +1,16 @@
 <?php
 namespace extas\components\workflows\transitions\dispatchers;
 
-use extas\components\SystemContainer;
 use extas\components\workflows\exceptions\transitions\dispatchers\ExceptionDispatcherMissed;
-use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\exceptions\transitions\dispatchers\IExceptionDispatcherMissed;
 use extas\interfaces\workflows\transitions\dispatchers\IHasDispatchers;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
-use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherRepository;
 
 /**
  * Trait THasDispatchers
  *
  * @property array $config
+ * @method workflowTransitionDispatcherRepository()
  *
  * @package extas\components\workflows\transitions\dispatchers
  * @author jeyroik@gmail.com
@@ -206,12 +204,7 @@ trait THasDispatchers
      */
     protected function getDispatchers(array $names, string $type)
     {
-        /**
-         * @var IRepository $repo
-         */
-        $repo = SystemContainer::getItem(ITransitionDispatcherRepository::class);
-
-        return $repo->all(
+        return $this->workflowTransitionDispatcherRepository()->all(
             [
                 ITransitionDispatcher::FIELD__NAME => $names,
                 ITransitionDispatcher::FIELD__TYPE => $type

@@ -1,21 +1,20 @@
 <?php
 namespace extas\components\workflows\transitions;
 
-use extas\components\SystemContainer;
 use extas\components\workflows\exceptions\transitions\ExceptionTransitionMissed;
 use extas\components\workflows\ItemsCollection;
 use extas\interfaces\IItem;
 use extas\interfaces\workflows\exceptions\transitions\IExceptionTransitionMissed;
 use extas\interfaces\workflows\IItemsCollection;
 use extas\interfaces\workflows\transitions\ITransition;
-use extas\interfaces\workflows\transitions\ITransitionRepository;
 use extas\interfaces\workflows\transitions\ITransitionSample;
-use extas\interfaces\workflows\transitions\ITransitionSampleRepository;
 
 /**
  * Trait THasTransitions
  *
  * @property array $config
+ * @method workflowTransitionRepository()
+ * @method workflowTransitionSampleRepository()
  *
  * @package extas\components\workflows\transitions
  * @author jeyroik@gmail.com
@@ -64,11 +63,9 @@ trait THasTransitions
      */
     public function addTransitions(array $transitionsSamplesNames): array
     {
-        /**
-         * @var ITransitionSampleRepository $repo
-         */
-        $repo = SystemContainer::getItem(ITransitionSampleRepository::class);
-        $samples = $repo->all([ITransitionSample::FIELD__NAME => $transitionsSamplesNames]);
+        $samples = $this->workflowTransitionSampleRepository()->all([
+            ITransitionSample::FIELD__NAME => $transitionsSamplesNames
+        ]);
         $items = [];
         foreach ($samples as $sample) {
             $new = new Transition();
@@ -85,11 +82,9 @@ trait THasTransitions
      */
     public function addTransition(string $transitionSampleName): ITransition
     {
-        /**
-         * @var ITransitionSampleRepository $repo
-         */
-        $repo = SystemContainer::getItem(ITransitionSampleRepository::class);
-        $sample = $repo->one([ITransitionSample::FIELD__NAME => $transitionSampleName]);
+        $sample = $this->workflowTransitionSampleRepository()->one([
+            ITransitionSample::FIELD__NAME => $transitionSampleName
+        ]);
         $new = new Transition();
         $new->buildFromSample($sample, '@sample(uuid6)');
         $new->setSchemaName($this->getName());
@@ -119,16 +114,8 @@ trait THasTransitions
     protected function getTransitionCollection(): IItemsCollection
     {
         return $this->transitCollection ?: $this->transitCollection = new ItemsCollection([
-            IItemsCollection::FIELD__REPOSITORY => $this->getTransitionRepository(),
+            IItemsCollection::FIELD__REPOSITORY => $this->workflowTransitionRepository(),
             IItemsCollection::FIELD__REPOSITORY_QUERY => [ITransition::FIELD__SCHEMA_NAME => $this->getName()]
         ]);
-    }
-
-    /**
-     * @return ITransitionRepository
-     */
-    protected function getTransitionRepository()
-    {
-        return SystemContainer::getItem(ITransitionRepository::class);
     }
 }

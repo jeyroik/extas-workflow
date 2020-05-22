@@ -2,14 +2,13 @@
 namespace extas\components\workflows\transitions;
 
 use extas\interfaces\workflows\transitions\IHasTransition;
-use extas\components\SystemContainer;
 use extas\interfaces\workflows\transitions\ITransition;
-use extas\interfaces\workflows\transitions\ITransitionRepository;
 
 /**
  * Trait THasTransition
  *
  * @property array $config
+ * @method workflowTransitionRepository()
  *
  * @package extas\components\workflows\transitions
  * @author jeyroik@gmail.com
@@ -29,12 +28,7 @@ trait THasTransition
      */
     public function getTransition(): ?ITransition
     {
-        /**
-         * @var ITransitionRepository $repo
-         */
-        $repo = SystemContainer::getItem(ITransitionRepository::class);
-
-        return $repo->one([ITransition::FIELD__NAME => $this->getTransitionName()]);
+        return $this->workflowTransitionRepository()->one([ITransition::FIELD__NAME => $this->getTransitionName()]);
     }
 
     /**

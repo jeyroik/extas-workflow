@@ -2,6 +2,8 @@
 namespace tests\schemas;
 
 use Dotenv\Dotenv;
+use PHPUnit\Framework\TestCase;
+use extas\components\extensions\TSnuffExtensions;
 use extas\components\plugins\Plugin;
 use extas\components\plugins\PluginRepository;
 use extas\components\plugins\repositories\PluginFieldSampleName;
@@ -15,19 +17,11 @@ use extas\components\workflows\transitions\TransitionSample;
 use extas\components\workflows\transitions\TransitionSampleRepository;
 use extas\interfaces\plugins\IPlugin;
 use extas\interfaces\workflows\entities\IEntity;
-use extas\interfaces\workflows\entities\IEntityRepository;
 use extas\interfaces\workflows\entities\IEntitySample;
-use extas\interfaces\workflows\entities\IEntitySampleRepository;
 use extas\interfaces\workflows\states\IState;
-use extas\interfaces\workflows\states\IStateRepository;
-use extas\interfaces\workflows\states\IStateSampleRepository;
 use extas\interfaces\workflows\transitions\ITransition;
-use extas\interfaces\workflows\transitions\ITransitionRepository;
-use extas\interfaces\workflows\transitions\ITransitionSampleRepository;
-use PHPUnit\Framework\TestCase;
 use extas\interfaces\repositories\IRepository;
 use extas\components\workflows\schemas\Schema;
-use extas\components\SystemContainer;
 use extas\components\workflows\transitions\TransitionRepository;
 
 /**
@@ -37,40 +31,15 @@ use extas\components\workflows\transitions\TransitionRepository;
  */
 class SchemaTest extends TestCase
 {
-    /**
-     * @var IRepository|null
-     */
-    protected ?IRepository $stateRepo = null;
+    use TSnuffExtensions;
 
-    /**
-     * @var IRepository|null
-     */
-    protected ?IRepository $stateSampleRepo = null;
-
-    /**
-     * @var IRepository|null
-     */
-    protected ?IRepository $entityRepo = null;
-
-    /**
-     * @var IRepository|null
-     */
-    protected ?IRepository $entitySampleRepo = null;
-
-    /**
-     * @var IRepository|null
-     */
-    protected ?IRepository $transitionRepo = null;
-
-    /**
-     * @var IRepository|null
-     */
-    protected ?IRepository $transitionSampleRepo = null;
-
-    /**
-     * @var IRepository|null
-     */
-    protected ?IRepository $pluginRepo = null;
+    protected IRepository $stateRepo;
+    protected IRepository $stateSampleRepo;
+    protected IRepository $entityRepo;
+    protected IRepository $entitySampleRepo;
+    protected IRepository $transitionRepo;
+    protected IRepository $transitionSampleRepo;
+    protected IRepository $pluginRepo;
 
     protected function setUp(): void
     {
@@ -85,41 +54,27 @@ class SchemaTest extends TestCase
         $this->transitionRepo = new TransitionRepository();
         $this->transitionSampleRepo = new TransitionSampleRepository();
         $this->pluginRepo = new PluginRepository();
-
-        SystemContainer::addItem(
-            IEntityRepository::class,
-            EntityRepository::class
-        );
-
-        SystemContainer::addItem(
-            IEntitySampleRepository::class,
-            EntitySampleRepository::class
-        );
-
-        SystemContainer::addItem(
-            IStateRepository::class,
-            StateRepository::class
-        );
-
-        SystemContainer::addItem(
-            IStateSampleRepository::class,
-            StateSampleRepository::class
-        );
-
-        SystemContainer::addItem(
-            ITransitionRepository::class,
-            TransitionRepository::class
-        );
-
-        SystemContainer::addItem(
-            ITransitionSampleRepository::class,
-            TransitionSampleRepository::class
-        );
+        $this->addReposForExt([
+            'workflowEntityRepository' => EntityRepository::class,
+            'workflowEntitySampleRepository' => EntitySampleRepository::class,
+            'workflowStateRepository' => StateRepository::class,
+            'workflowStateSampleRepository' => StateSampleRepository::class,
+            'workflowTransitionRepository' => TransitionRepository::class,
+            'workflowTransitionSampleRepository' => TransitionSampleRepository::class
+        ]);
+        $this->createRepoExt([
+            'workflowEntityRepository',
+            'workflowEntitySampleRepository',
+            'workflowStateRepository',
+            'workflowStateSampleRepository',
+            'workflowTransitionRepository',
+            'workflowTransitionSampleRepository'
+        ]);
     }
 
     public function tearDown(): void
     {
-        $this->entityRepo->delete([IEntity::FIELD__SAMPLE_NAME => 'test']);
+        $this->entityRepo->delete([IEntity::FIELD__SAMPLE_NAME => ['test', 'test2']]);
         $this->entitySampleRepo->delete([IEntitySample::FIELD__TITLE => 'Test']);
         $this->stateRepo->delete([IState::FIELD__SAMPLE_NAME => 'test']);
         $this->stateSampleRepo->delete([IState::FIELD__NAME => 'test']);
@@ -189,7 +144,7 @@ class SchemaTest extends TestCase
     public function testEntity()
     {
         $schema = new Schema([Schema::FIELD__NAME => 'test']);
-        $this->assertEmpty($schema->getEntityName());
+        $this->assertEmpty($schema->getEntityName(), 'Schema has entity: ' . $schema->getEntityName());
         $this->entitySampleRepo->create(new EntitySample([
             EntitySample::FIELD__NAME => 'test',
             EntitySample::FIELD__TITLE => 'Test'

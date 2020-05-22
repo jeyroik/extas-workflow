@@ -2,17 +2,15 @@
 namespace tests\workflows;
 
 use Dotenv\Dotenv;
-use extas\interfaces\workflows\transits\ITransitResult;
 use PHPUnit\Framework\TestCase;
+use extas\components\extensions\TSnuffExtensions;
+use extas\interfaces\workflows\transits\ITransitResult;
 use extas\interfaces\repositories\IRepository;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcherRepository;
-use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherRepository;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
-use extas\components\SystemContainer;
 use extas\components\workflows\transitions\Transition;
 use extas\components\workflows\entities\Entity;
 use extas\components\workflows\entities\EntityContext;
-
 use extas\components\workflows\Workflow;
 use tests\TriggerChangeEntity;
 
@@ -23,6 +21,8 @@ use tests\TriggerChangeEntity;
  */
 class WorkflowTest extends TestCase
 {
+    use TSnuffExtensions;
+
     /**
      * @var IRepository|null
      */
@@ -34,11 +34,10 @@ class WorkflowTest extends TestCase
         $env->load();
 
         $this->transitionDispatcherRepo = new TransitionDispatcherRepository();
-
-        SystemContainer::addItem(
-            ITransitionDispatcherRepository::class,
-            TransitionDispatcherRepository::class
-        );
+        $this->addReposForExt([
+            'workflowTransitionDispatcherRepository' => TransitionDispatcherRepository::class
+        ]);
+        $this->createRepoExt(['workflowTransitionDispatcherRepository']);
     }
 
     public function tearDown(): void
