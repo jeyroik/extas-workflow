@@ -8,7 +8,8 @@
     "jeyroik/extas-errors": "0.*",
     "jeyroik/extas-fields-conditions": "1.*",
     "jeyroik/extas-values-self": "0.*",
-    "jeyroik/extas-values-repository-items": "1.*"
+    "jeyroik/extas-values-repository-items": "1.*",
+    "jeyroik/extas-repositories-get": "0.*"
   },
   "require-dev": {
     "phpunit/phpunit": "^9",
