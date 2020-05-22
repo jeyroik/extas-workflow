@@ -144,7 +144,7 @@ class SchemaTest extends TestCase
     public function testEntity()
     {
         $schema = new Schema([Schema::FIELD__NAME => 'test']);
-        $this->assertEmpty($schema->getEntityName());
+        $this->assertEmpty($schema->getEntityName(), 'Schema has entity: ' . $schema->getEntityName());
         $this->entitySampleRepo->create(new EntitySample([
             EntitySample::FIELD__NAME => 'test',
             EntitySample::FIELD__TITLE => 'Test'
