@@ -74,7 +74,7 @@ class SchemaTest extends TestCase
 
     public function tearDown(): void
     {
-        $this->entityRepo->delete([IEntity::FIELD__SAMPLE_NAME => 'test']);
+        $this->entityRepo->delete([IEntity::FIELD__SAMPLE_NAME => ['test', 'test2']]);
         $this->entitySampleRepo->delete([IEntitySample::FIELD__TITLE => 'Test']);
         $this->stateRepo->delete([IState::FIELD__SAMPLE_NAME => 'test']);
         $this->stateSampleRepo->delete([IState::FIELD__NAME => 'test']);
