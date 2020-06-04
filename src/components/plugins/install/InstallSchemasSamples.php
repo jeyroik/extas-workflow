@@ -1,17 +1,16 @@
 <?php
-namespace extas\components\plugins\workflows;
+namespace extas\components\plugins\install;
 
-use extas\components\plugins\PluginInstallDefault;
 use extas\components\workflows\schemas\SchemaSample;
 use extas\interfaces\workflows\schemas\ISchemaSampleRepository;
 
 /**
- * Class PluginInstallSchemasSamples
+ * Class InstallSchemasSamples
  *
- * @package extas\components\plugins
+ * @package extas\components\plugins\install
  * @author jeyroik@gmail.com
  */
-class PluginInstallSchemasSamples extends PluginInstallDefault
+class InstallSchemasSamples extends InstallSection
 {
     protected string $selfItemClass = SchemaSample::class;
     protected string $selfName = 'workflow schema sample';

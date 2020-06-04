@@ -1,17 +1,16 @@
 <?php
-namespace extas\components\plugins\workflows;
+namespace extas\components\plugins\install;
 
-use extas\components\plugins\PluginInstallDefault;
 use extas\components\workflows\states\StateSample;
 use extas\interfaces\workflows\states\IStateSampleRepository;
 
 /**
- * Class PluginInstallStatesSamples
+ * Class InstallStatesSamples
  *
- * @package extas\components\plugins
+ * @package extas\components\plugins\install
  * @author jeyroik@gmail.com
  */
-class PluginInstallStatesSamples extends PluginInstallDefault
+class InstallStatesSamples extends InstallSection
 {
     protected string $selfItemClass = StateSample::class;
     protected string $selfName = 'workflow state sample';

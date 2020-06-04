@@ -1,17 +1,16 @@
 <?php
-namespace extas\components\plugins\workflows;
+namespace extas\components\plugins\install;
 
-use extas\components\plugins\PluginInstallDefault;
 use extas\components\workflows\transitions\TransitionSample;
 use extas\interfaces\workflows\transitions\ITransitionSampleRepository;
 
 /**
- * Class PluginInstallTransitionsSamples
+ * Class InstallTransitionsSamples
  *
- * @package extas\components\plugins
+ * @package extas\components\plugins\install
  * @author jeyroik@gmail.com
  */
-class PluginInstallTransitionsSamples extends PluginInstallDefault
+class InstallTransitionsSamples extends InstallSection
 {
     protected string $selfRepositoryClass = ITransitionSampleRepository::class;
     protected string $selfUID = TransitionSample::FIELD__NAME;

@@ -2,9 +2,8 @@
   "name": "jeyroik/extas-workflow",
   "description": "Extas workflow package",
   "require": {
-    "jeyroik/extas-installer": "2.*",
     "jeyroik/extas-repositories-fields-sample-names": "0.*",
-    "jeyroik/extas-samples": "2.*",
+    "jeyroik/extas-samples": "3.*",
     "jeyroik/extas-errors": "0.*",
     "jeyroik/extas-fields-conditions": "1.*",
     "jeyroik/extas-values-self": "0.*",
