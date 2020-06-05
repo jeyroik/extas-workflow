@@ -2,6 +2,7 @@
 namespace tests\workflows;
 
 use Dotenv\Dotenv;
+use extas\components\repositories\TSnuffRepository;
 use PHPUnit\Framework\TestCase;
 use extas\components\extensions\TSnuffExtensions;
 use extas\interfaces\workflows\transits\ITransitResult;
@@ -21,28 +22,21 @@ use tests\TriggerChangeEntity;
  */
 class WorkflowTest extends TestCase
 {
-    use TSnuffExtensions;
-
-    /**
-     * @var IRepository|null
-     */
-    protected ?IRepository $transitionDispatcherRepo = null;
+    use TSnuffRepository;
 
     protected function setUp(): void
     {
         $env = Dotenv::create(getcwd() . '/tests/');
         $env->load();
 
-        $this->transitionDispatcherRepo = new TransitionDispatcherRepository();
-        $this->addReposForExt([
+        $this->registerSnuffRepos([
             'workflowTransitionDispatcherRepository' => TransitionDispatcherRepository::class
         ]);
-        $this->createRepoExt(['workflowTransitionDispatcherRepository']);
     }
 
     public function tearDown(): void
     {
-        $this->transitionDispatcherRepo->delete([TransitionDispatcher::FIELD__TITLE => 'test']);
+        $this->unregisterSnuffRepos();
     }
 
     public function testTransit()
@@ -121,7 +115,7 @@ class WorkflowTest extends TestCase
 
     protected function installDispatcher(string $name, string $className, string $type)
     {
-        $this->transitionDispatcherRepo->create(new TransitionDispatcher([
+        $this->createWithSnuffRepo('workflowTransitionDispatcherRepository', new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => $name,
             TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__CLASS => $className,

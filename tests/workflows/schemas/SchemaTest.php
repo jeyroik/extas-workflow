@@ -1,9 +1,8 @@
 <?php
 namespace tests\schemas;
 
-use Dotenv\Dotenv;
-use PHPUnit\Framework\TestCase;
-use extas\components\extensions\TSnuffExtensions;
+use extas\components\extensions\ExtensionRepository;
+use extas\components\repositories\TSnuffRepository;
 use extas\components\plugins\Plugin;
 use extas\components\plugins\PluginRepository;
 use extas\components\plugins\repositories\PluginFieldSampleName;
@@ -15,14 +14,11 @@ use extas\components\workflows\states\StateSample;
 use extas\components\workflows\states\StateSampleRepository;
 use extas\components\workflows\transitions\TransitionSample;
 use extas\components\workflows\transitions\TransitionSampleRepository;
-use extas\interfaces\plugins\IPlugin;
-use extas\interfaces\workflows\entities\IEntity;
-use extas\interfaces\workflows\entities\IEntitySample;
-use extas\interfaces\workflows\states\IState;
-use extas\interfaces\workflows\transitions\ITransition;
-use extas\interfaces\repositories\IRepository;
 use extas\components\workflows\schemas\Schema;
 use extas\components\workflows\transitions\TransitionRepository;
+
+use Dotenv\Dotenv;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class WorkflowSchemaTest
@@ -31,15 +27,7 @@ use extas\components\workflows\transitions\TransitionRepository;
  */
 class SchemaTest extends TestCase
 {
-    use TSnuffExtensions;
-
-    protected IRepository $stateRepo;
-    protected IRepository $stateSampleRepo;
-    protected IRepository $entityRepo;
-    protected IRepository $entitySampleRepo;
-    protected IRepository $transitionRepo;
-    protected IRepository $transitionSampleRepo;
-    protected IRepository $pluginRepo;
+    use TSnuffRepository;
 
     protected function setUp(): void
     {
@@ -47,14 +35,9 @@ class SchemaTest extends TestCase
         $env = Dotenv::create(getcwd() . '/tests/');
         $env->load();
 
-        $this->stateRepo = new StateRepository();
-        $this->stateSampleRepo = new StateSampleRepository();
-        $this->entityRepo = new EntityRepository();
-        $this->entitySampleRepo = new EntitySampleRepository();
-        $this->transitionRepo = new TransitionRepository();
-        $this->transitionSampleRepo = new TransitionSampleRepository();
-        $this->pluginRepo = new PluginRepository();
-        $this->addReposForExt([
+        $this->registerSnuffRepos([
+            'extensionRepository' => ExtensionRepository::class,
+            'pluginRepository' => PluginRepository::class,
             'workflowEntityRepository' => EntityRepository::class,
             'workflowEntitySampleRepository' => EntitySampleRepository::class,
             'workflowStateRepository' => StateRepository::class,
@@ -62,28 +45,11 @@ class SchemaTest extends TestCase
             'workflowTransitionRepository' => TransitionRepository::class,
             'workflowTransitionSampleRepository' => TransitionSampleRepository::class
         ]);
-        $this->createRepoExt([
-            'workflowEntityRepository',
-            'workflowEntitySampleRepository',
-            'workflowStateRepository',
-            'workflowStateSampleRepository',
-            'workflowTransitionRepository',
-            'workflowTransitionSampleRepository'
-        ]);
     }
 
     public function tearDown(): void
     {
-        $this->entityRepo->delete([IEntity::FIELD__SAMPLE_NAME => ['test', 'test2']]);
-        $this->entitySampleRepo->delete([IEntitySample::FIELD__TITLE => 'Test']);
-        $this->stateRepo->delete([IState::FIELD__SAMPLE_NAME => 'test']);
-        $this->stateSampleRepo->delete([IState::FIELD__NAME => 'test']);
-        $this->transitionRepo->delete([ITransition::FIELD__SAMPLE_NAME => 'test']);
-        $this->transitionSampleRepo->delete([ITransition::FIELD__NAME => 'test']);
-        $this->pluginRepo->delete([IPlugin::FIELD__STAGE => [
-            'extas.workflow_states.create.before',
-            'extas.workflow_transitions.create.before',
-        ]]);
+        $this->unregisterSnuffRepos();
     }
 
     public function testStates()
@@ -91,11 +57,11 @@ class SchemaTest extends TestCase
         $schema = new Schema([Schema::FIELD__NAME => 'test']);
         $this->assertFalse($schema->hasState('test'));
 
-        $this->stateSampleRepo->create(new StateSample([
+        $this->createWithSnuffRepo('workflowStateSampleRepository', new StateSample([
             StateSample::FIELD__NAME => 'test',
             StateSample::FIELD__TITLE => 'Test'
         ]));
-        $this->pluginRepo->create(new Plugin([
+        $this->createWithSnuffRepo('pluginRepository', new Plugin([
             Plugin::FIELD__CLASS => PluginFieldSampleName::class,
             Plugin::FIELD__STAGE => 'extas.workflow_states.create.before'
         ]));
@@ -119,11 +85,11 @@ class SchemaTest extends TestCase
         $schema = new Schema([Schema::FIELD__NAME => 'test']);
         $this->assertFalse($schema->hasTransition('test'));
 
-        $this->transitionSampleRepo->create(new TransitionSample([
+        $this->createWithSnuffRepo('workflowTransitionSampleRepository', new TransitionSample([
             TransitionSample::FIELD__NAME => 'test',
             TransitionSample::FIELD__TITLE => 'Test'
         ]));
-        $this->pluginRepo->create(new Plugin([
+        $this->createWithSnuffRepo('pluginRepository', new Plugin([
             Plugin::FIELD__CLASS => PluginFieldSampleName::class,
             Plugin::FIELD__STAGE => 'extas.workflow_transitions.create.before'
         ]));
@@ -145,11 +111,11 @@ class SchemaTest extends TestCase
     {
         $schema = new Schema([Schema::FIELD__NAME => 'test']);
         $this->assertEmpty($schema->getEntityName(), 'Schema has entity: ' . $schema->getEntityName());
-        $this->entitySampleRepo->create(new EntitySample([
+        $this->createWithSnuffRepo('workflowEntitySampleRepository', new EntitySample([
             EntitySample::FIELD__NAME => 'test',
             EntitySample::FIELD__TITLE => 'Test'
         ]));
-        $this->entitySampleRepo->create(new EntitySample([
+        $this->createWithSnuffRepo('workflowEntitySampleRepository', new EntitySample([
             EntitySample::FIELD__NAME => 'test2',
             EntitySample::FIELD__TITLE => 'Test'
         ]));
