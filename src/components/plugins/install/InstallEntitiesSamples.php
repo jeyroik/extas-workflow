@@ -1,17 +1,16 @@
 <?php
-namespace extas\components\plugins\workflows;
+namespace extas\components\plugins\install;
 
-use extas\components\plugins\PluginInstallDefault;
 use extas\components\workflows\entities\EntitySample;
 use extas\interfaces\workflows\entities\IEntitySampleRepository;
 
 /**
- * Class PluginInstallWorkflowEntityTemplates
+ * Class InstallEntitiesSamples
  *
- * @package extas\components\plugins
+ * @package extas\components\plugins\install
  * @author jeyroik@gmail.com
  */
-class PluginInstallEntitiesSamples extends PluginInstallDefault
+class InstallEntitiesSamples extends InstallSection
 {
     protected string $selfRepositoryClass = IEntitySampleRepository::class;
     protected string $selfUID = EntitySample::FIELD__NAME;

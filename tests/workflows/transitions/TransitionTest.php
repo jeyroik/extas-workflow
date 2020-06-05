@@ -1,16 +1,18 @@
 <?php
 namespace tests\transitions;
 
-use Dotenv\Dotenv;
-use PHPUnit\Framework\TestCase;
-use extas\components\extensions\TSnuffExtensions;
+use extas\interfaces\repositories\IRepository;
+use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
+
+use extas\components\repositories\TSnuffRepository;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcherRepository;
-use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
 use extas\components\workflows\transitions\Transition;
 use extas\components\workflows\states\State;
 use extas\components\workflows\states\StateRepository;
-use extas\interfaces\repositories\IRepository;
+
+use Dotenv\Dotenv;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class WorkflowTransitionTest
@@ -19,35 +21,27 @@ use extas\interfaces\repositories\IRepository;
  */
 class TransitionTest extends TestCase
 {
-    use TSnuffExtensions;
-
-    protected IRepository $stateRepo;
-    protected IRepository $dispatcherRepo;
+    use TSnuffRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
         $env = Dotenv::create(getcwd() . '/tests/');
         $env->load();
-
-        $this->stateRepo = new StateRepository();
-        $this->dispatcherRepo = new TransitionDispatcherRepository();
-        $this->addReposForExt([
+        $this->registerSnuffRepos([
             'workflowStateRepository' => StateRepository::class,
             'workflowTransitionDispatcherRepository' => TransitionDispatcherRepository::class
         ]);
-        $this->createRepoExt(['workflowStateRepository', 'workflowTransitionDispatcherRepository']);
     }
 
     public function tearDown(): void
     {
-        $this->stateRepo->delete([State::FIELD__NAME => 'test']);
-        $this->dispatcherRepo->delete([ITransitionDispatcher::FIELD__TITLE => 'test']);
+        $this->unregisterSnuffRepos();
     }
 
     public function testBaseMethods()
     {
-        $this->stateRepo->create(new State([
+        $this->createWithSnuffRepo('workflowStateRepository', new State([
             State::FIELD__NAME => 'test'
         ]));
 
@@ -74,17 +68,17 @@ class TransitionTest extends TestCase
             Transition::FIELD__TRIGGERS_NAMES => ['test_trigger']
         ]);
 
-        $this->dispatcherRepo->create(new TransitionDispatcher([
+        $this->createWithSnuffRepo('workflowTransitionDispatcherRepository', new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_condition',
             TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__CONDITION
         ]));
-        $this->dispatcherRepo->create(new TransitionDispatcher([
+        $this->createWithSnuffRepo('workflowTransitionDispatcherRepository', new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_validator',
             TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__VALIDATOR
         ]));
-        $this->dispatcherRepo->create(new TransitionDispatcher([
+        $this->createWithSnuffRepo('workflowTransitionDispatcherRepository', new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_trigger',
             TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__TRIGGER

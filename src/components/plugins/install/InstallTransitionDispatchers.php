@@ -1,17 +1,16 @@
 <?php
-namespace extas\components\plugins\workflows;
+namespace extas\components\plugins\install;
 
-use extas\components\plugins\PluginInstallDefault;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcherRepository;
 
 /**
- * Class PluginInstallTransitionDispatchers
+ * Class InstallTransitionDispatchers
  *
- * @package extas\components\plugins
+ * @package extas\components\plugins\install
  * @author jeyroik@gmail.com
  */
-class PluginInstallTransitionDispatchers extends PluginInstallDefault
+class InstallTransitionDispatchers extends InstallSection
 {
     protected string $selfRepositoryClass = ITransitionDispatcherRepository::class;
     protected string $selfUID = TransitionDispatcher::FIELD__NAME;

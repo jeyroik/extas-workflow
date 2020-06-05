@@ -1,17 +1,16 @@
 <?php
-namespace extas\components\plugins\workflows;
+namespace extas\components\plugins\install;
 
-use extas\components\plugins\PluginInstallDefault;
 use extas\components\workflows\entities\Entity;
 use extas\interfaces\packages\entities\IEntityRepository;
 
 /**
- * Class PluginInstallEntities
+ * Class InstallEntities
  *
- * @package extas\components\plugins\workflows
+ * @package extas\components\plugins\install
  * @author jeyroik@gmail.com
  */
-class PluginInstallEntities extends PluginInstallDefault
+class InstallEntities extends InstallSection
 {
     protected string $selfSection = 'workflow_entities';
     protected string $selfName = 'workflow entity';
