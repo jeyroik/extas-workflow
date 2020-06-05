@@ -123,7 +123,7 @@ class SchemaTest extends TestCase
         $this->assertEquals('test', $entity->getSampleName());
 
         $schema->setEntity('test2');
-        $this->assertCount(1, $this->entityRepo->all([]));
+        $this->assertCount(1, $this->allSnuffRepos('workflowEntityRepository'));
 
         $this->expectExceptionMessage('Entity sample "unknown" missed');
         $schema->setEntity('unknown');
