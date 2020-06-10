@@ -1,15 +1,15 @@
 <?php
-namespace extas\components\plugins\install;
+namespace extas\components\plugins\uninstall;
 
 use extas\components\workflows\entities\Entity;
 
 /**
- * Class InstallEntities
+ * Class UninstallEntities
  *
- * @package extas\components\plugins\install
+ * @package extas\components\plugins\uninstall
  * @author jeyroik@gmail.com
  */
-class InstallEntities extends InstallSection
+class UninstallEntities extends UninstallSection
 {
     protected string $selfSection = 'workflow_entities';
     protected string $selfName = 'workflow entity';

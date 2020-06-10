@@ -1,15 +1,15 @@
 <?php
-namespace extas\components\plugins\install;
+namespace extas\components\plugins\uninstall;
 
 use extas\components\workflows\transitions\Transition;
 
 /**
- * Class InstallTransitions
+ * Class UninstallTransitions
  *
- * @package extas\components\plugins\install
+ * @package extas\components\plugins\uninstall
  * @author jeyroik@gmail.com
  */
-class InstallTransitions extends InstallSection
+class UninstallTransitions extends UninstallSection
 {
     protected string $selfRepositoryClass = 'transitionRepository';
     protected string $selfUID = Transition::FIELD__NAME;

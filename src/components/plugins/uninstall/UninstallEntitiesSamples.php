@@ -1,15 +1,15 @@
 <?php
-namespace extas\components\plugins\install;
+namespace extas\components\plugins\uninstall;
 
 use extas\components\workflows\entities\EntitySample;
 
 /**
- * Class InstallEntitiesSamples
+ * Class UninstallEntitiesSamples
  *
- * @package extas\components\plugins\install
+ * @package extas\components\plugins\uninstall
  * @author jeyroik@gmail.com
  */
-class InstallEntitiesSamples extends InstallSection
+class UninstallEntitiesSamples extends UninstallSection
 {
     protected string $selfRepositoryClass = 'entitySampleRepository';
     protected string $selfUID = EntitySample::FIELD__NAME;

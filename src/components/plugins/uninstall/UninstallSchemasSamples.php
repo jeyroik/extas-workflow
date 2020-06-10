@@ -1,15 +1,15 @@
 <?php
-namespace extas\components\plugins\install;
+namespace extas\components\plugins\uninstall;
 
 use extas\components\workflows\schemas\SchemaSample;
 
 /**
- * Class InstallSchemasSamples
+ * Class UninstallSchemasSamples
  *
- * @package extas\components\plugins\install
+ * @package extas\components\plugins\uninstall
  * @author jeyroik@gmail.com
  */
-class InstallSchemasSamples extends InstallSection
+class UninstallSchemasSamples extends UninstallSection
 {
     protected string $selfItemClass = SchemaSample::class;
     protected string $selfName = 'workflow schema sample';
