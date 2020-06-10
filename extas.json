@@ -45,43 +45,103 @@
   "plugins": [
     {
       "class": "extas\\components\\plugins\\workflows\\install\\InstallSchemas",
-      "stage": "extas.install.section.workflow_schemas"
+      "stage": "extas.install.section.workflow_schemas",
+      "install_on": "initialization"
     },
     {
       "class": "extas\\components\\plugins\\workflows\\install\\InstallSchemasSamples",
-      "stage": "extas.install.section.workflow_schemas_samples"
+      "stage": "extas.install.section.workflow_schemas_samples",
+      "install_on": "initialization"
     },
     {
       "class": "extas\\components\\plugins\\workflows\\install\\InstallTransitions",
-      "stage": "extas.install.section.workflow_transitions"
+      "stage": "extas.install.section.workflow_transitions",
+      "install_on": "initialization"
     },
     {
       "class": "extas\\components\\plugins\\workflows\\install\\InstallTransitionsSamples",
-      "stage": "extas.install.section.workflow_transitions_samples"
+      "stage": "extas.install.section.workflow_transitions_samples",
+      "install_on": "initialization"
     },
     {
       "class": "extas\\components\\plugins\\workflows\\install\\InstallStates",
-      "stage": "extas.install.section.workflow_states"
+      "stage": "extas.install.section.workflow_states",
+      "install_on": "initialization"
     },
     {
       "class": "extas\\components\\plugins\\workflows\\install\\InstallStatesSamples",
-      "stage": "extas.install.section.workflow_states_samples"
+      "stage": "extas.install.section.workflow_states_samples",
+      "install_on": "initialization"
     },
     {
       "class": "extas\\components\\plugins\\workflows\\install\\InstallTransitionDispatchers",
-      "stage": "extas.install.section.workflow_transition_dispatchers"
+      "stage": "extas.install.section.workflow_transition_dispatchers",
+      "install_on": "initialization"
     },
     {
       "class": "extas\\components\\plugins\\workflows\\install\\InstallTransitionDispatcherSamples",
-      "stage": "extas.install.section.workflow_transition_dispatchers_samples"
+      "stage": "extas.install.section.workflow_transition_dispatchers_samples",
+      "install_on": "initialization"
     },
     {
       "class": "extas\\components\\plugins\\workflows\\install\\InstallEntities",
-      "stage": "extas.install.section.workflow_entities"
+      "stage": "extas.install.section.workflow_entities",
+      "install_on": "initialization"
     },
     {
       "class": "extas\\components\\plugins\\workflows\\install\\InstallEntitiesSamples",
-      "stage": "extas.install.section.workflow_entities_samples"
+      "stage": "extas.install.section.workflow_entities_samples",
+      "install_on": "initialization"
+    },
+    {
+      "class": "extas\\components\\plugins\\workflows\\uninstall\\UninstallSchemas",
+      "stage": "extas.uninstall.section.workflow_schemas",
+      "install_on": "initialization"
+    },
+    {
+      "class": "extas\\components\\plugins\\workflows\\uninstall\\UninstallSchemasSamples",
+      "stage": "extas.uninstall.section.workflow_schemas_samples",
+      "install_on": "initialization"
+    },
+    {
+      "class": "extas\\components\\plugins\\workflows\\uninstall\\UninstallTransitions",
+      "stage": "extas.uninstall.section.workflow_transitions",
+      "install_on": "initialization"
+    },
+    {
+      "class": "extas\\components\\plugins\\workflows\\uninstall\\UninstallTransitionsSamples",
+      "stage": "extas.uninstall.section.workflow_transitions_samples",
+      "install_on": "initialization"
+    },
+    {
+      "class": "extas\\components\\plugins\\workflows\\uninstall\\UninstallStates",
+      "stage": "extas.uninstall.section.workflow_states",
+      "install_on": "initialization"
+    },
+    {
+      "class": "extas\\components\\plugins\\workflows\\uninstall\\UninstallStatesSamples",
+      "stage": "extas.uninstall.section.workflow_states_samples",
+      "install_on": "initialization"
+    },
+    {
+      "class": "extas\\components\\plugins\\workflows\\uninstall\\UninstallTransitionDispatchers",
+      "stage": "extas.uninstall.section.workflow_transition_dispatchers",
+      "install_on": "initialization"
+    },
+    {
+      "class": "extas\\components\\plugins\\workflows\\uninstall\\UninstallTransitionDispatcherSamples",
+      "stage": "extas.uninstall.section.workflow_transition_dispatchers_samples",
+      "install_on": "initialization"
+    },
+    {
+      "class": "extas\\components\\plugins\\workflows\\uninstall\\UninstallEntities",
+      "stage": "extas.uninstall.section.workflow_entities",
+      "install_on": "initialization"
+    },
+    {
+      "class": "extas\\components\\plugins\\workflows\\uninstall\\UninstallEntitiesSamples",
+      "stage": "extas.uninstall.section.workflow_entities_samples",
+      "install_on": "initialization"
     },
     {
       "class": "extas\\components\\plugins\\repositories\\PluginFieldSampleName",
@@ -91,7 +151,8 @@
         "extas.workflow_states.create.before",
         "extas.workflow_transitions.create.before",
         "extas.workflow_transition_dispatchers.create.before"
-      ]
+      ],
+      "install_on": "initialization"
     }
   ],
   "extensions": [
