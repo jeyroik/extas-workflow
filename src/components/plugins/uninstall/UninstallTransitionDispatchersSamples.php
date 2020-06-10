@@ -1,15 +1,15 @@
 <?php
-namespace extas\components\plugins\install;
+namespace extas\components\plugins\uninstall;
 
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcherSample;
 
 /**
- * Class InstallTransitionDispatchersSamples
+ * Class UninstallTransitionDispatchersSamples
  *
- * @package extas\components\plugins\install
+ * @package extas\components\plugins\uninstall
  * @author jeyroik@gmail.com
  */
-class InstallTransitionDispatchersSamples extends InstallSection
+class UninstallTransitionDispatchersSamples extends UninstallSection
 {
     protected string $selfItemClass = TransitionDispatcherSample::class;
     protected string $selfName = 'workflow transition dispatcher sample';

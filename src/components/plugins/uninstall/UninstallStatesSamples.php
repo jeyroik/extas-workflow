@@ -1,15 +1,15 @@
 <?php
-namespace extas\components\plugins\install;
+namespace extas\components\plugins\uninstall;
 
 use extas\components\workflows\states\StateSample;
 
 /**
- * Class InstallStatesSamples
+ * Class UninstallStatesSamples
  *
- * @package extas\components\plugins\install
+ * @package extas\components\plugins\uninstall
  * @author jeyroik@gmail.com
  */
-class InstallStatesSamples extends InstallSection
+class UninstallStatesSamples extends UninstallSection
 {
     protected string $selfItemClass = StateSample::class;
     protected string $selfName = 'workflow state sample';

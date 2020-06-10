@@ -1,15 +1,15 @@
 <?php
-namespace extas\components\plugins\install;
+namespace extas\components\plugins\uninstall;
 
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
 
 /**
- * Class InstallTransitionDispatchers
+ * Class UninstallTransitionDispatchers
  *
- * @package extas\components\plugins\install
+ * @package extas\components\plugins\uninstall
  * @author jeyroik@gmail.com
  */
-class InstallTransitionDispatchers extends InstallSection
+class UninstallTransitionDispatchers extends UninstallSection
 {
     protected string $selfRepositoryClass = 'transitionDispatcherRepository';
     protected string $selfUID = TransitionDispatcher::FIELD__NAME;
