@@ -4,7 +4,9 @@ namespace tests\workflows;
 use Dotenv\Dotenv;
 use extas\components\Item;
 use extas\components\repositories\TSnuffRepositoryDynamic;
+use extas\components\THasContext;
 use extas\components\THasMagicClass;
+use extas\components\THasName;
 use extas\components\workflows\entities\Entity;
 use extas\components\workflows\entities\EntitySample;
 use extas\components\workflows\entities\THasEntitySample;
@@ -16,6 +18,7 @@ use extas\components\workflows\states\THasState;
 use extas\components\workflows\transitions\THasTransition;
 use extas\components\workflows\transitions\Transition;
 use extas\components\workflows\transitions\TransitionSample;
+use extas\interfaces\IHasContext;
 use extas\interfaces\workflows\entities\IHasEntitySample;
 use extas\interfaces\workflows\schemas\IHasSchema;
 use extas\interfaces\workflows\states\IHasState;
@@ -119,5 +122,30 @@ class TraitsTest extends TestCase
 
         $this->assertEquals('test', $item->getSchemaName());
         $this->assertEquals('test', $item->getSchema()->getName());
+    }
+
+    public function testHasContext()
+    {
+        $item = new class extends Item implements IHasContext {
+            use THasContext;
+
+            protected function getSubjectForExtension(): string
+            {
+                return '';
+            }
+        };
+
+        $context = new class extends Item {
+            use THasName;
+            protected function getSubjectForExtension(): string
+            {
+                return '';
+            }
+        };
+
+        $context->setName('test');
+
+        $item->setContext($context);
+        $this->assertEquals('test', $item->getContext()->getName());
     }
 }

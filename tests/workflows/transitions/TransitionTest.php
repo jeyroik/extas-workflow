@@ -3,6 +3,7 @@ namespace tests\transitions;
 
 use extas\components\repositories\TSnuffRepositoryDynamic;
 use extas\components\THasMagicClass;
+use extas\components\workflows\transitions\dispatchers\TransitionDispatcherSample;
 use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
 
@@ -70,6 +71,9 @@ class TransitionTest extends TestCase
             Transition::FIELD__VALIDATORS_NAMES => ['test_validator'],
             Transition::FIELD__TRIGGERS_NAMES => ['test_trigger']
         ]);
+
+        $sample = new TransitionDispatcherSample();
+        $this->assertEquals($sample->__subject(), 'extas.workflow.transition.dispatcher.sample');
 
         $this->getMagicClass('workflowTransitionsDispatchers')->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_condition',
