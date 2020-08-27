@@ -12,5 +12,5 @@ use extas\interfaces\workflows\exceptions\transitions\dispatchers\IExceptionDisp
  */
 class ExceptionDispatcherMissed extends ExceptionMissed implements IExceptionDispatcherMissed
 {
-    protected string $missedName = 'Transition dispatcher';
+    protected string $missedName = 'transition dispatcher';
 }

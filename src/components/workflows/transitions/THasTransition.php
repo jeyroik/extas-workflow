@@ -1,6 +1,7 @@
 <?php
 namespace extas\components\workflows\transitions;
 
+use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\transitions\IHasTransition;
 use extas\interfaces\workflows\transitions\ITransition;
 
@@ -8,7 +9,7 @@ use extas\interfaces\workflows\transitions\ITransition;
  * Trait THasTransition
  *
  * @property array $config
- * @method workflowTransitionRepository()
+ * @method IRepository workflowTransitions()
  *
  * @package extas\components\workflows\transitions
  * @author jeyroik@gmail.com
@@ -28,7 +29,7 @@ trait THasTransition
      */
     public function getTransition(): ?ITransition
     {
-        return $this->workflowTransitionRepository()->one([ITransition::FIELD__NAME => $this->getTransitionName()]);
+        return $this->workflowTransitions()->one([ITransition::FIELD__NAME => $this->getTransitionName()]);
     }
 
     /**

@@ -1,8 +1,9 @@
 <?php
 namespace extas\components\workflows\transitions\dispatchers;
 
+use extas\components\exceptions\MissedOrUnknown;
 use extas\components\workflows\exceptions\transitions\dispatchers\ExceptionDispatcherMissed;
-use extas\interfaces\workflows\exceptions\transitions\dispatchers\IExceptionDispatcherMissed;
+use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\transitions\dispatchers\IHasDispatchers;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
 
@@ -10,7 +11,7 @@ use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
  * Trait THasDispatchers
  *
  * @property array $config
- * @method workflowTransitionDispatcherRepository()
+ * @method IRepository workflowTransitionsDispatchers()
  *
  * @package extas\components\workflows\transitions\dispatchers
  * @author jeyroik@gmail.com
@@ -143,7 +144,7 @@ trait THasDispatchers
     /**
      * @param string $name
      * @return $this
-     * @throws IExceptionDispatcherMissed
+     * @throws MissedOrUnknown
      */
     public function removeConditionName(string $name)
     {
@@ -162,7 +163,7 @@ trait THasDispatchers
     /**
      * @param string $name
      * @return $this
-     * @throws IExceptionDispatcherMissed
+     * @throws MissedOrUnknown
      */
     public function removeValidatorName(string $name)
     {
@@ -181,7 +182,7 @@ trait THasDispatchers
     /**
      * @param string $name
      * @return $this
-     * @throws IExceptionDispatcherMissed
+     * @throws MissedOrUnknown
      */
     public function removeTriggerName(string $name)
     {
@@ -204,7 +205,7 @@ trait THasDispatchers
      */
     protected function getDispatchers(array $names, string $type)
     {
-        return $this->workflowTransitionDispatcherRepository()->all(
+        return $this->workflowTransitionsDispatchers()->all(
             [
                 ITransitionDispatcher::FIELD__NAME => $names,
                 ITransitionDispatcher::FIELD__TYPE => $type

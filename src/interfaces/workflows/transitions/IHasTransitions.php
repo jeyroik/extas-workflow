@@ -44,9 +44,10 @@ interface IHasTransitions
 
     /**
      * @param string $transitionSampleName
+     * @param ITransitionSample|null $sample
      * @return ITransition
      */
-    public function addTransition(string $transitionSampleName): ITransition;
+    public function addTransition(string $transitionSampleName, ITransitionSample $sample = null): ITransition;
 
     /**
      * @param string $transitionName

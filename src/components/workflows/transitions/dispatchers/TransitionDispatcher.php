@@ -32,9 +32,7 @@ class TransitionDispatcher extends TransitionDispatcherSample implements ITransi
         $buildParams = $this->__toArray();
         $buildParams[ITransitionDispatcherExecutor::FIELD__CONTEXT] = $context;
 
-        $executor = $this->buildClassWithParameters($buildParams);
-
-        return $executor($result, $entityEdited);
+        return $this->runWithParameters($buildParams, '__invoke', $result, $entityEdited);
     }
 
     /**

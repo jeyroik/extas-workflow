@@ -1,10 +1,8 @@
 <?php
 namespace extas\components\workflows\transitions;
 
-use extas\components\workflows\exceptions\transitions\ExceptionTransitionMissed;
-use extas\components\workflows\ItemsCollection;
-use extas\interfaces\IItem;
-use extas\interfaces\workflows\exceptions\transitions\IExceptionTransitionMissed;
+use extas\components\exceptions\MissedOrUnknown;
+use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\IItemsCollection;
 use extas\interfaces\workflows\transitions\ITransition;
 use extas\interfaces\workflows\transitions\ITransitionSample;
@@ -13,22 +11,26 @@ use extas\interfaces\workflows\transitions\ITransitionSample;
  * Trait THasTransitions
  *
  * @property array $config
- * @method workflowTransitionRepository()
- * @method workflowTransitionSampleRepository()
+ *
+ * @method IRepository workflowTransitions()
+ * @method IRepository workflowTransitionsSamples()
  *
  * @package extas\components\workflows\transitions
  * @author jeyroik@gmail.com
  */
 trait THasTransitions
 {
-    protected ?IItemsCollection $transitCollection = null;
-
     /**
      * @return string[]
      */
     public function getTransitionsNames(): array
     {
-        return $this->getTransitionCollection()->getItemsNames();
+        return array_column(
+            $this->workflowTransitions()->all([
+                ITransition::FIELD__SCHEMA_NAME => $this->getName()
+            ]),
+            ITransition::FIELD__NAME
+        );
     }
 
     /**
@@ -36,7 +38,9 @@ trait THasTransitions
      */
     public function getTransitions(): array
     {
-        return $this->getTransitionCollection()->getItems();
+        return $this->workflowTransitions()->all([
+            ITransition::FIELD__SCHEMA_NAME => $this->getName()
+        ]);
     }
 
     /**
@@ -45,7 +49,10 @@ trait THasTransitions
      */
     public function getTransition(string $transitionName): ?ITransition
     {
-        return $this->getTransitionCollection()->getItem($transitionName);
+        return $this->workflowTransitions()->one([
+            ITransition::FIELD__SCHEMA_NAME => $this->getName(),
+            ITransition::FIELD__NAME => $transitionName
+        ]);
     }
 
     /**
@@ -54,7 +61,7 @@ trait THasTransitions
      */
     public function hasTransition(string $transitionName): bool
     {
-        return $this->getTransitionCollection()->hasItem($transitionName);
+        return $this->getTransition($transitionName) ? true : false;
     }
 
     /**
@@ -63,59 +70,42 @@ trait THasTransitions
      */
     public function addTransitions(array $transitionsSamplesNames): array
     {
-        $samples = $this->workflowTransitionSampleRepository()->all([
+        $samples = $this->workflowTransitionsSamples()->all([
             ITransitionSample::FIELD__NAME => $transitionsSamplesNames
         ]);
         $items = [];
         foreach ($samples as $sample) {
-            $new = new Transition();
-            $new->buildFromSample($sample, '@sample(uuid6)');
-            $items[] = $new->setSchemaName($this->getName());
+            $items[] = $this->addTransition($sample->getName(), $sample);
         }
 
-        return $this->getTransitionCollection()->addItems($items);
+        return $items;
     }
 
     /**
      * @param string $transitionSampleName
-     * @return ITransition|IItem
+     * @param ITransitionSample|null $sample
+     * @return ITransition
      */
-    public function addTransition(string $transitionSampleName): ITransition
+    public function addTransition(string $transitionSampleName, ITransitionSample $sample = null): ITransition
     {
-        $sample = $this->workflowTransitionSampleRepository()->one([
+        $sample = $sample ?? $this->workflowTransitionsSamples()->one([
             ITransitionSample::FIELD__NAME => $transitionSampleName
         ]);
         $new = new Transition();
         $new->buildFromSample($sample, '@sample(uuid6)');
         $new->setSchemaName($this->getName());
 
-        return $this->getTransitionCollection()->addItem($new);
+        return $this->workflowTransitions()->create($new);
     }
 
     /**
      * @param string $transitionName
      * @return $this
-     * @throws IExceptionTransitionMissed
      */
     public function removeTransition(string $transitionName)
     {
-        try {
-            $this->getTransitionCollection()->removeItem($transitionName);
-        } catch (\Exception $e) {
-            throw new ExceptionTransitionMissed($transitionName);
-        }
+        $this->workflowTransitions()->delete([ITransition::FIELD__NAME => $transitionName]);
 
         return $this;
-    }
-
-    /**
-     * @return IItemsCollection
-     */
-    protected function getTransitionCollection(): IItemsCollection
-    {
-        return $this->transitCollection ?: $this->transitCollection = new ItemsCollection([
-            IItemsCollection::FIELD__REPOSITORY => $this->workflowTransitionRepository(),
-            IItemsCollection::FIELD__REPOSITORY_QUERY => [ITransition::FIELD__SCHEMA_NAME => $this->getName()]
-        ]);
     }
 }

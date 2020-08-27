@@ -12,5 +12,5 @@ use extas\interfaces\workflows\exceptions\schemas\IExceptionSchemaMissed;
  */
 class ExceptionSchemaMissed extends ExceptionMissed implements IExceptionSchemaMissed
 {
-    protected string $missedName = 'Schema';
+    protected string $missedName = 'schema';
 }

@@ -1,6 +1,9 @@
 <?php
 namespace tests\transitions;
 
+use extas\components\repositories\TSnuffRepositoryDynamic;
+use extas\components\THasMagicClass;
+use extas\components\workflows\transitions\dispatchers\TransitionDispatcherSample;
 use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
 
@@ -21,27 +24,28 @@ use PHPUnit\Framework\TestCase;
  */
 class TransitionTest extends TestCase
 {
-    use TSnuffRepository;
+    use TSnuffRepositoryDynamic;
+    use THasMagicClass;
 
     protected function setUp(): void
     {
         parent::setUp();
         $env = Dotenv::create(getcwd() . '/tests/');
         $env->load();
-        $this->registerSnuffRepos([
-            'workflowStateRepository' => StateRepository::class,
-            'workflowTransitionDispatcherRepository' => TransitionDispatcherRepository::class
+        $this->createSnuffDynamicRepositories([
+            ['workflowStates', 'name', State::class],
+            ['workflowTransitionsDispatchers', 'name', TransitionDispatcher::class]
         ]);
     }
 
     public function tearDown(): void
     {
-        $this->unregisterSnuffRepos();
+        $this->deleteSnuffDynamicRepositories();
     }
 
     public function testBaseMethods()
     {
-        $this->createWithSnuffRepo('workflowStateRepository', new State([
+        $this->getMagicClass('workflowStates')->create(new State([
             State::FIELD__NAME => 'test'
         ]));
 
@@ -68,17 +72,20 @@ class TransitionTest extends TestCase
             Transition::FIELD__TRIGGERS_NAMES => ['test_trigger']
         ]);
 
-        $this->createWithSnuffRepo('workflowTransitionDispatcherRepository', new TransitionDispatcher([
+        $sample = new TransitionDispatcherSample();
+        $this->assertEquals($sample->__subject(), 'extas.workflow.transition.dispatcher.sample');
+
+        $this->getMagicClass('workflowTransitionsDispatchers')->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_condition',
             TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__CONDITION
         ]));
-        $this->createWithSnuffRepo('workflowTransitionDispatcherRepository', new TransitionDispatcher([
+        $this->getMagicClass('workflowTransitionsDispatchers')->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_validator',
             TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__VALIDATOR
         ]));
-        $this->createWithSnuffRepo('workflowTransitionDispatcherRepository', new TransitionDispatcher([
+        $this->getMagicClass('workflowTransitionsDispatchers')->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_trigger',
             TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__TRIGGER
@@ -116,21 +123,21 @@ class TransitionTest extends TestCase
     public function testMissedCondition()
     {
         $transition = new Transition();
-        $this->expectExceptionMessage('Transition dispatcher "test" missed');
+        $this->expectExceptionMessage('Missed or unknown transition dispatcher "test"');
         $transition->removeConditionName('test');
     }
 
     public function testMissedValidator()
     {
         $transition = new Transition();
-        $this->expectExceptionMessage('Transition dispatcher "test" missed');
+        $this->expectExceptionMessage('Missed or unknown transition dispatcher "test"');
         $transition->removeValidatorName('test');
     }
 
     public function testMissedTrigger()
     {
         $transition = new Transition();
-        $this->expectExceptionMessage('Transition dispatcher "test" missed');
+        $this->expectExceptionMessage('Missed or unknown transition dispatcher "test"');
         $transition->removeTriggerName('test');
     }
 }

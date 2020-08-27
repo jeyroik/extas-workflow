@@ -12,5 +12,5 @@ use extas\interfaces\workflows\exceptions\entities\IExceptionEntitySampleMissed;
  */
 class ExceptionEntitySampleMissed extends ExceptionMissed implements IExceptionEntitySampleMissed
 {
-    protected string $missedName = 'Entity sample';
+    protected string $missedName = 'entity sample';
 }
