@@ -1,3 +1,7 @@
+# 4.1.0
+
+- Rebuilt `IHasEntity`/`THasEntity`.
+
 # 4.0.0
 
 - Dynamic repositories support added.
