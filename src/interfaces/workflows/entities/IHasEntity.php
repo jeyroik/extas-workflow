@@ -22,8 +22,8 @@ interface IHasEntity
     public function getEntity(): ?IEntity;
 
     /**
-     * @param string $entitySampleName
-     * @return IEntity
+     * @param string $entityName
+     * @return $this
      */
-    public function setEntity(string $entitySampleName): IEntity;
+    public function setEntityName(string $entityName);
 }

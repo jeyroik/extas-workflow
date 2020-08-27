@@ -116,17 +116,11 @@ class SchemaTest extends TestCase
             EntitySample::FIELD__NAME => 'test',
             EntitySample::FIELD__TITLE => 'Test'
         ]));
-        $this->getMagicClass('workflowEntitiesSamples')->create(new EntitySample([
-            EntitySample::FIELD__NAME => 'test2',
-            EntitySample::FIELD__TITLE => 'Test'
+        $this->getMagicClass('workflowEntities')->create(new EntitySample([
+            EntitySample::FIELD__NAME => 'test',
+            EntitySample::FIELD__TITLE => 'test'
         ]));
-        $entity = $schema->setEntity('test');
-        $this->assertEquals('test', $entity->getSampleName());
-
-        $schema->setEntity('test2');
-        $this->assertCount(1, $this->getMagicClass('workflowEntities')->all([]));
-
-        $this->expectExceptionMessage('Missed or unknown entity sample "unknown"');
-        $schema->setEntity('unknown');
+        $schema->setEntityName('test');
+        $this->assertEquals('test', $schema->getEntityName());
     }
 }
