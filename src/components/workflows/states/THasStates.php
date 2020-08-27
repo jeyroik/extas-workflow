@@ -1,11 +1,8 @@
 <?php
 namespace extas\components\workflows\states;
 
-use extas\components\workflows\exceptions\states\ExceptionStateMissed;
-use extas\components\workflows\ItemsCollection;
 use extas\interfaces\IItem;
-use extas\interfaces\workflows\exceptions\states\IExceptionStateMissed;
-use extas\interfaces\workflows\IItemsCollection;
+use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\states\IState;
 use extas\interfaces\workflows\states\IStateSample;
 
@@ -14,22 +11,25 @@ use extas\interfaces\workflows\states\IStateSample;
  *
  * @property $config
  * @method getName(): string
- * @method workflowStateRepository()
- * @method workflowStateSampleRepository()
+ * @method IRepository workflowStates()
+ * @method IRepository workflowStatesSamples()
  *
  * @package extas\components\workflows\states
  * @author jeyroik@gmail.com
  */
 trait THasStates
 {
-    protected ?IItemsCollection $statesCollection = null;
-
     /**
      * @return string[]
      */
     public function getStatesNames(): array
     {
-        return $this->getStatesCollection()->getItemsNames();
+        return array_column(
+            $this->workflowStates()->all([
+                IState::FIELD__SCHEMA_NAME => $this->getName()
+            ]),
+            IState::FIELD__NAME
+        );
     }
 
     /**
@@ -37,7 +37,9 @@ trait THasStates
      */
     public function getStates(): array
     {
-        return $this->getStatesCollection()->getItems();
+        return $this->workflowStates()->all([
+            IState::FIELD__SCHEMA_NAME => $this->getName()
+        ]);
     }
 
     /**
@@ -46,7 +48,7 @@ trait THasStates
      */
     public function getState(string $name): ?IState
     {
-        return $this->getStatesCollection()->getItem($name);
+        return $this->workflowStates()->one([IState::FIELD__NAME => $name]);
     }
 
     /**
@@ -55,7 +57,7 @@ trait THasStates
      */
     public function hasState(string $name): bool
     {
-        return $this->getStatesCollection()->hasItem($name);
+        return $this->getState($name) ? true : false;
     }
 
     /**
@@ -64,54 +66,39 @@ trait THasStates
      */
     public function addStates(array $sampleNames): array
     {
-        $samples = $this->workflowStateSampleRepository()->all([IStateSample::FIELD__NAME => $sampleNames]);
+        $samples = $this->workflowStatesSamples()->all([IStateSample::FIELD__NAME => $sampleNames]);
         $items = [];
+
         foreach ($samples as $sample) {
-            $newState = new State();
-            $newState->buildFromSample($sample, '@sample(uuid6)');
-            $items[] = $newState->setSchemaName($this->getName());
+            $items[] = $this->addState($sample->getName(), $sample);
         }
-        return $this->getStatesCollection()->addItems($items);
+
+        return $items;
     }
 
     /**
      * @param string $sampleName
-     * @return IItem|IState
+     * @param IStateSample|null $sample
+     * @return IState
      */
-    public function addState(string $sampleName): IState
+    public function addState(string $sampleName, IStateSample $sample = null): IState
     {
-        $sample = $this->workflowStateSampleRepository()->one([IStateSample::FIELD__NAME => $sampleName]);
+        $sample = $sample ?: $this->workflowStatesSamples()->one([IStateSample::FIELD__NAME => $sampleName]);
         $state = new State();
         $state->buildFromSample($sample, '@sample(uuid6)');
         $state->setSchemaName($this->getName());
 
-        return $this->getStatesCollection()->addItem($state);
+        return $this->workflowStates()->create($state);
     }
 
     /**
      * @param string $name
      * @return $this
-     * @throws IExceptionStateMissed
      */
     public function removeState(string $name)
     {
-        try {
-            $this->getStatesCollection()->removeItem($name);
-        } catch (\Exception $e) {
-            throw new ExceptionStateMissed($name);
-        }
+        $this->workflowStates()->delete([IState::FIELD__NAME => $name]);
 
         return $this;
-    }
-
-    /**
-     * @return IItemsCollection
-     */
-    protected function getStatesCollection(): IItemsCollection
-    {
-        return $this->statesCollection ?: $this->statesCollection = new ItemsCollection([
-            IItemsCollection::FIELD__REPOSITORY => $this->workflowStateRepository(),
-            IItemsCollection::FIELD__REPOSITORY_QUERY => [IState::FIELD__SCHEMA_NAME => $this->getName()]
-        ]);
     }
 }

@@ -2,6 +2,7 @@
 namespace extas\components\workflows\entities;
 
 use extas\components\workflows\exceptions\entities\ExceptionEntitySampleMissed;
+use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\entities\IEntity;
 use extas\interfaces\workflows\entities\IEntitySample;
 
@@ -10,8 +11,8 @@ use extas\interfaces\workflows\entities\IEntitySample;
  *
  * @property array $config
  * @method getName(): string
- * @method workflowEntityRepository()
- * @method workflowEntitySampleRepository()
+ * @method IRepository workflowEntities()
+ * @method IRepository workflowEntitiesSamples()
  *
  * @package extas\components\workflows\entities
  * @author jeyroik@gmail.com
@@ -33,7 +34,7 @@ trait THasEntity
      */
     public function getEntity(): ?IEntity
     {
-        return $this->workflowEntityRepository()->one([IEntity::FIELD__SCHEMA_NAME => $this->getName()]);
+        return $this->workflowEntities()->one([IEntity::FIELD__SCHEMA_NAME => $this->getName()]);
     }
 
     /**
@@ -43,17 +44,17 @@ trait THasEntity
      */
     public function setEntity(string $entitySampleName): IEntity
     {
-        $sample = $this->workflowEntitySampleRepository()->one([IEntitySample::FIELD__NAME => $entitySampleName]);
+        $sample = $this->workflowEntitiesSamples()->one([IEntitySample::FIELD__NAME => $entitySampleName]);
 
         if (!$sample) {
             throw new ExceptionEntitySampleMissed($entitySampleName);
         }
 
-        $this->workflowEntityRepository()->delete([IEntity::FIELD__SCHEMA_NAME => $this->getName()]);
+        $this->workflowEntities()->delete([IEntity::FIELD__SCHEMA_NAME => $this->getName()]);
         $entity = new Entity();
         $entity->buildFromSample($sample, '@sample(uuid6)');
         $entity->setSchemaName($this->getName());
 
-        return $this->workflowEntityRepository()->create($entity);
+        return $this->workflowEntities()->create($entity);
     }
 }

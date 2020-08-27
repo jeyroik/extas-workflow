@@ -6,12 +6,17 @@ use extas\components\repositories\TSnuffRepository;
 use extas\components\plugins\Plugin;
 use extas\components\plugins\PluginRepository;
 use extas\components\plugins\repositories\PluginFieldSampleName;
+use extas\components\repositories\TSnuffRepositoryDynamic;
+use extas\components\THasMagicClass;
+use extas\components\workflows\entities\Entity;
 use extas\components\workflows\entities\EntityRepository;
 use extas\components\workflows\entities\EntitySample;
 use extas\components\workflows\entities\EntitySampleRepository;
+use extas\components\workflows\states\State;
 use extas\components\workflows\states\StateRepository;
 use extas\components\workflows\states\StateSample;
 use extas\components\workflows\states\StateSampleRepository;
+use extas\components\workflows\transitions\Transition;
 use extas\components\workflows\transitions\TransitionSample;
 use extas\components\workflows\transitions\TransitionSampleRepository;
 use extas\components\workflows\schemas\Schema;
@@ -27,29 +32,27 @@ use PHPUnit\Framework\TestCase;
  */
 class SchemaTest extends TestCase
 {
-    use TSnuffRepository;
+    use TSnuffRepositoryDynamic;
+    use THasMagicClass;
 
     protected function setUp(): void
     {
         parent::setUp();
         $env = Dotenv::create(getcwd() . '/tests/');
         $env->load();
-
-        $this->registerSnuffRepos([
-            'extensionRepository' => ExtensionRepository::class,
-            'pluginRepository' => PluginRepository::class,
-            'workflowEntityRepository' => EntityRepository::class,
-            'workflowEntitySampleRepository' => EntitySampleRepository::class,
-            'workflowStateRepository' => StateRepository::class,
-            'workflowStateSampleRepository' => StateSampleRepository::class,
-            'workflowTransitionRepository' => TransitionRepository::class,
-            'workflowTransitionSampleRepository' => TransitionSampleRepository::class
+        $this->createSnuffDynamicRepositories([
+            ['workflowEntities', 'name', Entity::class],
+            ['workflowEntitiesSamples', 'name', EntitySample::class],
+            ['workflowStates', 'name', State::class],
+            ['workflowStatesSamples', 'name', StateSample::class],
+            ['workflowTransitions', 'name', Transition::class],
+            ['workflowTransitionsSamples', 'name', TransitionSample::class],
         ]);
     }
 
     public function tearDown(): void
     {
-        $this->unregisterSnuffRepos();
+        $this->deleteSnuffDynamicRepositories();
     }
 
     public function testStates()
@@ -57,7 +60,7 @@ class SchemaTest extends TestCase
         $schema = new Schema([Schema::FIELD__NAME => 'test']);
         $this->assertFalse($schema->hasState('test'));
 
-        $this->createWithSnuffRepo('workflowStateSampleRepository', new StateSample([
+        $this->getMagicClass('workflowStatesSamples')->create(new StateSample([
             StateSample::FIELD__NAME => 'test',
             StateSample::FIELD__TITLE => 'Test'
         ]));
@@ -72,11 +75,10 @@ class SchemaTest extends TestCase
         $this->assertEquals('Test', $schema->getState($state->getName())->getTitle());
 
         $states = $schema->addStates(['test']);
+        $this->assertNotEmpty($states, 'State is not created');
         $test2 = array_shift($states);
         $schema->removeState($test2->getName());
         $this->assertFalse($schema->hasState($test2->getName()));
-
-        $this->expectExceptionMessage('State "' . $test2->getName() . '" missed');
         $schema->removeState($test2->getName());
     }
 
@@ -85,7 +87,7 @@ class SchemaTest extends TestCase
         $schema = new Schema([Schema::FIELD__NAME => 'test']);
         $this->assertFalse($schema->hasTransition('test'));
 
-        $this->createWithSnuffRepo('workflowTransitionSampleRepository', new TransitionSample([
+        $this->getMagicClass('workflowTransitionsSamples')->create(new TransitionSample([
             TransitionSample::FIELD__NAME => 'test',
             TransitionSample::FIELD__TITLE => 'Test'
         ]));
@@ -102,8 +104,6 @@ class SchemaTest extends TestCase
         $test2 = array_shift($transitions);
         $schema->removeTransition($test2->getName());
         $this->assertFalse($schema->hasTransition($test2->getName()));
-
-        $this->expectExceptionMessage('Transition "' . $test2->getName() . '" missed');
         $schema->removeTransition($test2->getName());
     }
 
@@ -111,11 +111,12 @@ class SchemaTest extends TestCase
     {
         $schema = new Schema([Schema::FIELD__NAME => 'test']);
         $this->assertEmpty($schema->getEntityName(), 'Schema has entity: ' . $schema->getEntityName());
-        $this->createWithSnuffRepo('workflowEntitySampleRepository', new EntitySample([
+
+        $this->getMagicClass('workflowEntitiesSamples')->create(new EntitySample([
             EntitySample::FIELD__NAME => 'test',
             EntitySample::FIELD__TITLE => 'Test'
         ]));
-        $this->createWithSnuffRepo('workflowEntitySampleRepository', new EntitySample([
+        $this->getMagicClass('workflowEntitiesSamples')->create(new EntitySample([
             EntitySample::FIELD__NAME => 'test2',
             EntitySample::FIELD__TITLE => 'Test'
         ]));
@@ -123,9 +124,9 @@ class SchemaTest extends TestCase
         $this->assertEquals('test', $entity->getSampleName());
 
         $schema->setEntity('test2');
-        $this->assertCount(1, $this->allSnuffRepos('workflowEntityRepository'));
+        $this->assertCount(1, $this->getMagicClass('workflowEntities')->all([]));
 
-        $this->expectExceptionMessage('Entity sample "unknown" missed');
+        $this->expectExceptionMessage('Missed or unknown entity sample "unknown"');
         $schema->setEntity('unknown');
     }
 }

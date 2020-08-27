@@ -2,13 +2,14 @@
 namespace extas\components\workflows\transitions;
 
 use extas\components\samples\Sample;
+use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\states\IState;
 use extas\interfaces\workflows\transitions\ITransitionSample;
 
 /**
  * Class TransitionSample
  *
- * @method workflowStateRepository()
+ * @method IRepository workflowStates()
  *
  * @package extas\components\workflows\transitions
  * @author jeyroik@gmail.com
@@ -75,6 +76,6 @@ class TransitionSample extends Sample implements ITransitionSample
      */
     protected function getState(string $name): ?IState
     {
-        return $this->workflowStateRepository()->one([IState::FIELD__NAME => $name]);
+        return $this->workflowStates()->one([IState::FIELD__NAME => $name]);
     }
 }

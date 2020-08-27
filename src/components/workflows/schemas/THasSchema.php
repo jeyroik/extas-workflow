@@ -1,6 +1,7 @@
 <?php
 namespace extas\components\workflows\schemas;
 
+use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\schemas\IHasSchema;
 use extas\interfaces\workflows\schemas\ISchema;
 
@@ -8,7 +9,7 @@ use extas\interfaces\workflows\schemas\ISchema;
  * Trait THasSchema
  *
  * @property array $config
- * @method workflowSchemaRepository()
+ * @method IRepository workflowSchemas()
  *
  * @package extas\components\workflows\schemas
  * @author jeyroik@gmail.com
@@ -28,7 +29,7 @@ trait THasSchema
      */
     public function getSchema(): ?ISchema
     {
-        return $this->workflowSchemaRepository()->one([ISchema::FIELD__NAME => $this->getSchemaName()]);
+        return $this->workflowSchemas()->one([ISchema::FIELD__NAME => $this->getSchemaName()]);
     }
 
     /**

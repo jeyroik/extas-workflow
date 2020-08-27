@@ -1,6 +1,7 @@
 <?php
 namespace extas\components\workflows\exceptions;
 
+use extas\components\exceptions\MissedOrUnknown;
 use Throwable;
 
 /**
@@ -9,7 +10,7 @@ use Throwable;
  * @package extas\components\workflows\exceptions
  * @author jeyroik@gmail.com
  */
-class ExceptionMissed extends \Exception
+class ExceptionMissed extends MissedOrUnknown
 {
     protected string $missedName = '';
 
@@ -21,6 +22,6 @@ class ExceptionMissed extends \Exception
      */
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {
-        parent::__construct($this->missedName . ' "' . $message . '" missed', $code, $previous);
+        parent::__construct($this->missedName . ' "' . $message . '"', $code, $previous);
     }
 }

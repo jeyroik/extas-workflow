@@ -12,5 +12,5 @@ use extas\interfaces\workflows\exceptions\transitions\IExceptionTransitionMissed
  */
 class ExceptionTransitionMissed extends ExceptionMissed implements IExceptionTransitionMissed
 {
-    protected string $missedName = 'Transition';
+    protected string $missedName = 'transition';
 }

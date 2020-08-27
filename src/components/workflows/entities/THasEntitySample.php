@@ -1,6 +1,7 @@
 <?php
 namespace extas\components\workflows\entities;
 
+use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\entities\IEntitySample;
 use extas\interfaces\workflows\entities\IHasEntitySample;
 
@@ -8,7 +9,7 @@ use extas\interfaces\workflows\entities\IHasEntitySample;
  * Trait THasEntitySample
  *
  * @property array $config
- * @method workflowEntitySampleRepository()
+ * @method IRepository workflowEntitiesSamples()
  *
  * @package extas\components\workflows\entities
  * @author jeyroik@gmail.com
@@ -28,7 +29,7 @@ trait THasEntitySample
      */
     public function getEntitySample(): ?IEntitySample
     {
-        return $this->workflowEntitySampleRepository()->one([
+        return $this->workflowEntitiesSamples()->one([
             IEntitySample::FIELD__NAME => $this->getEntitySampleName()
         ]);
     }

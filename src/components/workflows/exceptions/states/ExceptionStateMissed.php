@@ -12,5 +12,5 @@ use extas\interfaces\workflows\exceptions\states\IExceptionStateMissed;
  */
 class ExceptionStateMissed extends ExceptionMissed implements IExceptionStateMissed
 {
-    protected string $missedName = 'State';
+    protected string $missedName = 'state';
 }
