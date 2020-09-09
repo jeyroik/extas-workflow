@@ -90,6 +90,7 @@ class SchemaTest extends TestCase
 
         $this->assertTrue($schema->hasTransition('test'));
         $this->assertCount(1, $schema->getTransitions(), 'Incorrect transitions count');
+        $this->assertEquals(['test'], $schema->getTransitionsNames());
     }
 
     public function testEntity()
