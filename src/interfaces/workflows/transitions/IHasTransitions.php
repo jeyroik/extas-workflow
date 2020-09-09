@@ -35,24 +35,4 @@ interface IHasTransitions
      * @return bool
      */
     public function hasTransition(string $transitionName): bool;
-
-    /**
-     * @param array $transitionsSamplesNames
-     * @return ITransition[]
-     */
-    public function addTransitions(array $transitionsSamplesNames): array;
-
-    /**
-     * @param string $transitionSampleName
-     * @param ITransitionSample|null $sample
-     * @return ITransition
-     */
-    public function addTransition(string $transitionSampleName, ITransitionSample $sample = null): ITransition;
-
-    /**
-     * @param string $transitionName
-     * @return $this
-     * @throws IExceptionTransitionMissed
-     */
-    public function removeTransition(string $transitionName);
 }

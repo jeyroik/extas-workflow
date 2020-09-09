@@ -4,15 +4,10 @@ namespace tests\transitions;
 use extas\components\repositories\TSnuffRepositoryDynamic;
 use extas\components\THasMagicClass;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcherSample;
-use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
-
-use extas\components\repositories\TSnuffRepository;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
-use extas\components\workflows\transitions\dispatchers\TransitionDispatcherRepository;
 use extas\components\workflows\transitions\Transition;
 use extas\components\workflows\states\State;
-use extas\components\workflows\states\StateRepository;
 
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;

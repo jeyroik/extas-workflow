@@ -1,26 +1,17 @@
 <?php
 namespace tests\schemas;
 
-use extas\components\extensions\ExtensionRepository;
-use extas\components\repositories\TSnuffRepository;
 use extas\components\plugins\Plugin;
-use extas\components\plugins\PluginRepository;
 use extas\components\plugins\repositories\PluginFieldSampleName;
 use extas\components\repositories\TSnuffRepositoryDynamic;
 use extas\components\THasMagicClass;
 use extas\components\workflows\entities\Entity;
-use extas\components\workflows\entities\EntityRepository;
 use extas\components\workflows\entities\EntitySample;
-use extas\components\workflows\entities\EntitySampleRepository;
 use extas\components\workflows\states\State;
-use extas\components\workflows\states\StateRepository;
 use extas\components\workflows\states\StateSample;
-use extas\components\workflows\states\StateSampleRepository;
 use extas\components\workflows\transitions\Transition;
 use extas\components\workflows\transitions\TransitionSample;
-use extas\components\workflows\transitions\TransitionSampleRepository;
 use extas\components\workflows\schemas\Schema;
-use extas\components\workflows\transitions\TransitionRepository;
 
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
@@ -87,24 +78,18 @@ class SchemaTest extends TestCase
         $schema = new Schema([Schema::FIELD__NAME => 'test']);
         $this->assertFalse($schema->hasTransition('test'));
 
-        $this->getMagicClass('workflowTransitionsSamples')->create(new TransitionSample([
-            TransitionSample::FIELD__NAME => 'test',
-            TransitionSample::FIELD__TITLE => 'Test'
-        ]));
         $this->createWithSnuffRepo('pluginRepository', new Plugin([
             Plugin::FIELD__CLASS => PluginFieldSampleName::class,
             Plugin::FIELD__STAGE => 'extas.workflow_transitions.create.before'
         ]));
 
-        $transition = $schema->addTransition('test');
-        $this->assertTrue($schema->hasTransition($transition->getName()));
-        $this->assertEquals([$transition->getName()], $schema->getTransitionsNames());
+        $this->getMagicClass('workflowTransitions')->create(new Transition([
+            Transition::FIELD__NAME => 'test',
+            Transition::FIELD__SCHEMA_NAME => 'test'
+        ]));
 
-        $transitions = $schema->addTransitions(['test']);
-        $test2 = array_shift($transitions);
-        $schema->removeTransition($test2->getName());
-        $this->assertFalse($schema->hasTransition($test2->getName()));
-        $schema->removeTransition($test2->getName());
+        $this->assertTrue($schema->hasTransition('test'));
+        $this->assertCount(1, $schema->getTransitions(), 'Incorrect transitions count');
     }
 
     public function testEntity()
