@@ -4,6 +4,8 @@
   - Removed all methods for getting/setting dispatchers names.
   - Removed constants with dispatchers names fields.
   - Dispatchers are extracting by transition name now.
+- Redundant transition methods from `IHasTransitions`/`THasTransitions` removed. 
+- Redundant state methods from `IHasStates`/`THasStates` removed. 
 
 # 4.1.0
 
