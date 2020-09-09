@@ -57,9 +57,7 @@ class WorkflowTest extends TestCase
         $entity = $this->getEntity();
 
         $transition = new Transition([
-            Transition::FIELD__CONDITIONS_NAMES => [
-                'test_condition'
-            ]
+            Transition::FIELD__NAME => 'test'
         ]);
         $this->installDispatcher(
             'test_condition',
@@ -76,9 +74,7 @@ class WorkflowTest extends TestCase
         $entity = $this->getEntity();
 
         $transition = new Transition([
-            Transition::FIELD__VALIDATORS_NAMES => [
-                'test_validator'
-            ]
+            Transition::FIELD__NAME => 'test'
         ]);
         $this->installDispatcher(
             'test_validator',
@@ -95,9 +91,7 @@ class WorkflowTest extends TestCase
         $entity = $this->getEntity();
 
         $transition = new Transition([
-            Transition::FIELD__TRIGGERS_NAMES => [
-                'test_trigger'
-            ]
+            Transition::FIELD__NAME => 'test'
         ]);
         $this->installDispatcher(
             'test_trigger',
@@ -117,7 +111,8 @@ class WorkflowTest extends TestCase
             TransitionDispatcher::FIELD__NAME => $name,
             TransitionDispatcher::FIELD__TITLE => 'test',
             TransitionDispatcher::FIELD__CLASS => $className,
-            TransitionDispatcher::FIELD__TYPE => $type
+            TransitionDispatcher::FIELD__TYPE => $type,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test'
         ]));
     }
 

@@ -1,3 +1,10 @@
+# 5.0.0
+
+- Working with transition dispatchers rebuilt:
+  - Removed all methods for getting/setting dispatchers names.
+  - Removed constants with dispatchers names fields.
+  - Dispatchers are extracting by transition name now.
+
 # 4.1.0
 
 - Rebuilt `IHasEntity`/`THasEntity`.
