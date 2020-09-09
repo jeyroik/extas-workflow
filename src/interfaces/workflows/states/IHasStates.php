@@ -34,23 +34,4 @@ interface IHasStates
      * @return bool
      */
     public function hasState(string $name): bool;
-
-    /**
-     * @param array $sampleNames
-     * @return IState[]
-     */
-    public function addStates(array $sampleNames): array;
-
-    /**
-     * @param string $sampleName
-     * @return IState
-     */
-    public function addState(string $sampleName): IState;
-
-    /**
-     * @param string $name
-     * @return $this
-     * @throws IExceptionStateMissed
-     */
-    public function removeState(string $name);
 }

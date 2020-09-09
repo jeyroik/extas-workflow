@@ -60,17 +60,15 @@ class SchemaTest extends TestCase
             Plugin::FIELD__STAGE => 'extas.workflow_states.create.before'
         ]));
 
-        $state = $schema->addState('test');
-        $this->assertTrue($schema->hasState($state->getName()));
-        $this->assertEquals([$state->getName()], $schema->getStatesNames());
-        $this->assertEquals('Test', $schema->getState($state->getName())->getTitle());
+        $this->getMagicClass('workflowStates')->create(new State([
+            State::FIELD__NAME => 'test',
+            State::FIELD__SCHEMA_NAME => 'test'
+        ]));
 
-        $states = $schema->addStates(['test']);
-        $this->assertNotEmpty($states, 'State is not created');
-        $test2 = array_shift($states);
-        $schema->removeState($test2->getName());
-        $this->assertFalse($schema->hasState($test2->getName()));
-        $schema->removeState($test2->getName());
+        $this->assertTrue($schema->hasState('test'));
+
+        $this->assertCount(1, $schema->getStates(), 'Incorrect states count');
+        $this->assertEquals(['test'], $schema->getStatesNames());
     }
 
     public function testTransitions()

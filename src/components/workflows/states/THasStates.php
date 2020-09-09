@@ -59,46 +59,4 @@ trait THasStates
     {
         return $this->getState($name) ? true : false;
     }
-
-    /**
-     * @param array $sampleNames
-     * @return IItem[]|IState[]
-     */
-    public function addStates(array $sampleNames): array
-    {
-        $samples = $this->workflowStatesSamples()->all([IStateSample::FIELD__NAME => $sampleNames]);
-        $items = [];
-
-        foreach ($samples as $sample) {
-            $items[] = $this->addState($sample->getName(), $sample);
-        }
-
-        return $items;
-    }
-
-    /**
-     * @param string $sampleName
-     * @param IStateSample|null $sample
-     * @return IState
-     */
-    public function addState(string $sampleName, IStateSample $sample = null): IState
-    {
-        $sample = $sample ?: $this->workflowStatesSamples()->one([IStateSample::FIELD__NAME => $sampleName]);
-        $state = new State();
-        $state->buildFromSample($sample, '@sample(uuid6)');
-        $state->setSchemaName($this->getName());
-
-        return $this->workflowStates()->create($state);
-    }
-
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function removeState(string $name)
-    {
-        $this->workflowStates()->delete([IState::FIELD__NAME => $name]);
-
-        return $this;
-    }
 }
