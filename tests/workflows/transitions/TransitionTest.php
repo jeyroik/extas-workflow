@@ -4,15 +4,10 @@ namespace tests\transitions;
 use extas\components\repositories\TSnuffRepositoryDynamic;
 use extas\components\THasMagicClass;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcherSample;
-use extas\interfaces\repositories\IRepository;
 use extas\interfaces\workflows\transitions\dispatchers\ITransitionDispatcher;
-
-use extas\components\repositories\TSnuffRepository;
 use extas\components\workflows\transitions\dispatchers\TransitionDispatcher;
-use extas\components\workflows\transitions\dispatchers\TransitionDispatcherRepository;
 use extas\components\workflows\transitions\Transition;
 use extas\components\workflows\states\State;
-use extas\components\workflows\states\StateRepository;
 
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
@@ -67,9 +62,7 @@ class TransitionTest extends TestCase
     public function testDispatchers()
     {
         $transition = new Transition([
-            Transition::FIELD__CONDITIONS_NAMES => ['test_condition'],
-            Transition::FIELD__VALIDATORS_NAMES => ['test_validator'],
-            Transition::FIELD__TRIGGERS_NAMES => ['test_trigger']
+            Transition::FIELD__NAME => 'test'
         ]);
 
         $sample = new TransitionDispatcherSample();
@@ -78,66 +71,35 @@ class TransitionTest extends TestCase
         $this->getMagicClass('workflowTransitionsDispatchers')->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_condition',
             TransitionDispatcher::FIELD__TITLE => 'test',
-            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__CONDITION
+            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__CONDITION,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test'
         ]));
         $this->getMagicClass('workflowTransitionsDispatchers')->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_validator',
             TransitionDispatcher::FIELD__TITLE => 'test',
-            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__VALIDATOR
+            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__VALIDATOR,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test'
         ]));
         $this->getMagicClass('workflowTransitionsDispatchers')->create(new TransitionDispatcher([
             TransitionDispatcher::FIELD__NAME => 'test_trigger',
             TransitionDispatcher::FIELD__TITLE => 'test',
-            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__TRIGGER
+            TransitionDispatcher::FIELD__TYPE => TransitionDispatcher::TYPE__TRIGGER,
+            TransitionDispatcher::FIELD__TRANSITION_NAME => 'test'
         ]));
 
-        $this->assertEquals(['test_condition'], $transition->getConditionsNames());
-        $this->assertEquals(['test_validator'], $transition->getValidatorsNames());
-        $this->assertEquals(['test_trigger'], $transition->getTriggersNames());
-
-        $transition->removeConditionName('test_condition');
-        $transition->removeValidatorName('test_validator');
-        $transition->removeTriggerName('test_trigger');
-
-        $this->assertEquals([], $transition->getConditionsNames());
-        $this->assertEquals([], $transition->getValidatorsNames());
-        $this->assertEquals([], $transition->getTriggersNames());
-
-        $transition->addConditionName('test_condition');
-        $transition->addValidatorName('test_validator');
-        $transition->addTriggerName('test_trigger');
-
         $conditions = $transition->getConditions();
+        $this->assertCount(1, $conditions);
         $condition = array_shift($conditions);
         $this->assertTrue($condition instanceof ITransitionDispatcher);
 
         $validators = $transition->getValidators();
+        $this->assertCount(1, $validators);
         $validator = array_shift($validators);
         $this->assertTrue($validator instanceof ITransitionDispatcher);
 
         $triggers = $transition->getTriggers();
+        $this->assertCount(1, $triggers);
         $trigger = array_shift($triggers);
         $this->assertTrue($trigger instanceof ITransitionDispatcher);
-    }
-
-    public function testMissedCondition()
-    {
-        $transition = new Transition();
-        $this->expectExceptionMessage('Missed or unknown transition dispatcher "test"');
-        $transition->removeConditionName('test');
-    }
-
-    public function testMissedValidator()
-    {
-        $transition = new Transition();
-        $this->expectExceptionMessage('Missed or unknown transition dispatcher "test"');
-        $transition->removeValidatorName('test');
-    }
-
-    public function testMissedTrigger()
-    {
-        $transition = new Transition();
-        $this->expectExceptionMessage('Missed or unknown transition dispatcher "test"');
-        $transition->removeTriggerName('test');
     }
 }

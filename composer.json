@@ -20,6 +20,10 @@
     "jeyroik/extas-snuffbox-repositories": "0.*",
     "phpstan/phpstan": "0.*"
   },
+  "suggest": {
+    "jeyroik/extas-workflow-dashboard": "JSON PRC API for a Workflow",
+    "jeyroik/extas-workflow-dispatchers": "Default transition dispatchers"
+  },
   "autoload": {
     "psr-4": {
       "extas\\": "src/",

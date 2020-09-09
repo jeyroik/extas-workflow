@@ -13,7 +13,6 @@ use extas\interfaces\workflows\transitions\ITransitionSample;
  * @property array $config
  *
  * @method IRepository workflowTransitions()
- * @method IRepository workflowTransitionsSamples()
  *
  * @package extas\components\workflows\transitions
  * @author jeyroik@gmail.com
@@ -62,50 +61,5 @@ trait THasTransitions
     public function hasTransition(string $transitionName): bool
     {
         return $this->getTransition($transitionName) ? true : false;
-    }
-
-    /**
-     * @param array $transitionsSamplesNames
-     * @return ITransition[]
-     */
-    public function addTransitions(array $transitionsSamplesNames): array
-    {
-        $samples = $this->workflowTransitionsSamples()->all([
-            ITransitionSample::FIELD__NAME => $transitionsSamplesNames
-        ]);
-        $items = [];
-        foreach ($samples as $sample) {
-            $items[] = $this->addTransition($sample->getName(), $sample);
-        }
-
-        return $items;
-    }
-
-    /**
-     * @param string $transitionSampleName
-     * @param ITransitionSample|null $sample
-     * @return ITransition
-     */
-    public function addTransition(string $transitionSampleName, ITransitionSample $sample = null): ITransition
-    {
-        $sample = $sample ?? $this->workflowTransitionsSamples()->one([
-            ITransitionSample::FIELD__NAME => $transitionSampleName
-        ]);
-        $new = new Transition();
-        $new->buildFromSample($sample, '@sample(uuid6)');
-        $new->setSchemaName($this->getName());
-
-        return $this->workflowTransitions()->create($new);
-    }
-
-    /**
-     * @param string $transitionName
-     * @return $this
-     */
-    public function removeTransition(string $transitionName)
-    {
-        $this->workflowTransitions()->delete([ITransition::FIELD__NAME => $transitionName]);
-
-        return $this;
     }
 }

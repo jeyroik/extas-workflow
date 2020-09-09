@@ -7,17 +7,14 @@ use extas\components\repositories\TSnuffRepositoryDynamic;
 use extas\components\THasContext;
 use extas\components\THasMagicClass;
 use extas\components\THasName;
-use extas\components\workflows\entities\Entity;
 use extas\components\workflows\entities\EntitySample;
 use extas\components\workflows\entities\THasEntitySample;
 use extas\components\workflows\schemas\Schema;
 use extas\components\workflows\schemas\THasSchema;
 use extas\components\workflows\states\State;
-use extas\components\workflows\states\StateSample;
 use extas\components\workflows\states\THasState;
 use extas\components\workflows\transitions\THasTransition;
 use extas\components\workflows\transitions\Transition;
-use extas\components\workflows\transitions\TransitionSample;
 use extas\interfaces\IHasContext;
 use extas\interfaces\workflows\entities\IHasEntitySample;
 use extas\interfaces\workflows\schemas\IHasSchema;
@@ -25,6 +22,12 @@ use extas\interfaces\workflows\states\IHasState;
 use extas\interfaces\workflows\transitions\IHasTransition;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class TraitsTest
+ *
+ * @package tests\workflows
+ * @author jeyroik <jeyroik@gmail.com>
+ */
 class TraitsTest extends TestCase
 {
     use TSnuffRepositoryDynamic;
