@@ -1,3 +1,8 @@
+# 5.1.0
+
+- Added the `IHasStateSample` interface.
+- Added the `THasStateSample` trait.
+
 # 5.0.0
 
 - Working with transition dispatchers rebuilt:
