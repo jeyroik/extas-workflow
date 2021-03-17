@@ -1,3 +1,7 @@
+# 5.1.1
+
+- Updated docs.
+
 # 5.1.0
 
 - Added the `IHasStateSample` interface.
